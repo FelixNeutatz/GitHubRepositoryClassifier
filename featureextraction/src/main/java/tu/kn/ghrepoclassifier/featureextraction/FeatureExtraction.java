@@ -39,6 +39,7 @@ public class FeatureExtraction {
 		int numberContributors = repo.listContributors().asList().size();	//number of contributors
 		int hasDownloads = repo.hasDownloads() ? 1 : 0;						//was the repo downloaded
 		int numberProgrammingLanguages = repo.listLanguages().size();		//number of programming languages
+		int hasLicense = repo.getLicense() == null ? 0 : 1;					//repo has a license
 		
 		long readmeSize;													//size of the readme
 		try {
@@ -74,6 +75,7 @@ public class FeatureExtraction {
 			+ "," + numberContributors			//number of contributors 
 			+ "," + hasDownloads				//was the repo downloaded
 			+ "," + numberProgrammingLanguages	//number of programming languages
+			+ "," + hasLicense					//repo has a license
 			+ "," + readmeSize					//size of the readme
 			+ "," + numberTeams 				//number of owning organizations
 			;

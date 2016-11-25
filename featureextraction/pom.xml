@@ -51,6 +51,11 @@
       <artifactId>github-api</artifactId>
       <version>1.80</version>
     </dependency>
+      <dependency>
+          <groupId>com.squareup.okhttp</groupId>
+          <artifactId>okhttp-urlconnection</artifactId>
+          <version>2.7.5</version>
+      </dependency>
 
       <!-- csv reader dependencies-->
       <dependency>

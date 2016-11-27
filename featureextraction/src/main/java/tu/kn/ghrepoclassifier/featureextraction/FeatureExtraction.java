@@ -13,13 +13,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+
+import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
 
 /**
  * Created by felix on 24.11.16.
  */
 public class FeatureExtraction {
 
+	static HashSet<String> languages = new HashSet<>();
 
 	public static String extractFeatures(String url, GitHub github) throws IOException {
 		String [] splits = url.split("/");
@@ -48,8 +53,22 @@ public class FeatureExtraction {
 		int numberReleases = repo.listReleases().asList().size();			//number of releases
 		
 		int hasDownloads = repo.hasDownloads() ? 1 : 0;						//was the repo downloaded
-		int hasDescription = (repo.getDescription() != null) ? 1 : 0;	//has a decription
-		int numberProgrammingLanguages = repo.listLanguages().size();		//number of programming languages
+		int hasDescription = (repo.getDescription() != null) ? 1 : 0;		//has a decription
+		
+		Map<String, Long> programmingLanguages = repo.listLanguages();		//number of programming languages
+
+		/*
+		languages.addAll(programmingLanguages.keySet());
+		for (String s : languages) {
+			System.out.print(s + ", ");
+		}
+		System.out.println();
+		*/
+		
+		String languages = extractProgrammingLanguages(programmingLanguages);
+		
+		int numberProgrammingLanguages = programmingLanguages.size();
+		
 		int hasLicense = repo.getLicense() == null ? 0 : 1;					//repo has a license
 
 
@@ -93,6 +112,7 @@ public class FeatureExtraction {
 			+ "," + numberProgrammingLanguages	//number of programming languages
 			+ "," + hasLicense					//repo has a license
 			+ "," + readmeSize					//size of the readme
+			+ languages							//top 50 language contribution
 			;
 	}
 

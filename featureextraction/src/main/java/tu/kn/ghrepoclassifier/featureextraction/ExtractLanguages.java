@@ -67,7 +67,7 @@ public class ExtractLanguages {
 		
 		for (String p: top50ProgrammingLanguages) {
 			if (languages.containsKey(p)) {
-				l += "," + languages.get(p).toString();
+				l += "," + languages.get(p);
 			} else {
 				l += ",0";
 			}

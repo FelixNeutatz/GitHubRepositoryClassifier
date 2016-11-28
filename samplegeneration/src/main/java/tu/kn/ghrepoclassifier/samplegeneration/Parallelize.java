@@ -5,6 +5,7 @@ import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.PagedIterable;
 import org.kohsuke.github.PagedSearchIterable;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.File;
@@ -45,9 +46,19 @@ public class Parallelize {
 									int maximumRecords) {
 		AtomicInteger count = new AtomicInteger(0);
 
+		ArrayList <Thread> threads = new ArrayList<>();
 		for (int i = 0; i < propertyFiles.length; i++) {
 			Thread t = new GenerateThread(i, queue, propertyFiles[i], category, outputDir, count, maximumRecords);
 			t.start();
+			threads.add(t);
+		}
+		//wait for the threads to finish
+		for (Thread t : threads) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

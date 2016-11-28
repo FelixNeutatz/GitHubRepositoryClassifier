@@ -8,9 +8,6 @@ import org.kohsuke.github.extras.OkHttpConnector;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,15 +58,12 @@ public class GenerateThread extends Thread {
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 				File file = new File(outputDir.getPath() + "/" + "data" + category + id + ".csv");
 
-				extractIterableToFile(search, file, category, count, maximumRecords);
+				if (extractIterableToFile(search, file, category, count, maximumRecords)){
+					break;
+				}
 				
 				search = queue.poll();
 			}
-
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
-			System.out.println(dateFormat.format(date));
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

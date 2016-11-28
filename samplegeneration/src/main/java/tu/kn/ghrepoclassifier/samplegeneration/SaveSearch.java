@@ -21,11 +21,12 @@ public class SaveSearch {
 	/*
 	save extracted features in a file
 	 */
-	public static void extractIterableToFile(PagedIterable<GHRepository> searchResult, 
+	public static boolean extractIterableToFile(PagedIterable<GHRepository> searchResult, 
 											 File out, 
 											 String category, 
 											 AtomicInteger count,
 											 int maximumRecords){
+		boolean isFinished = false;
 		CSVWriter writer = null;
 		try {
 			writer = new CSVWriter(new FileWriter(out,true), ',', CSVWriter.NO_QUOTE_CHARACTER);
@@ -47,6 +48,7 @@ public class SaveSearch {
 						writer.writeNext(entries);
 						writer.flush();
 					} else {
+						isFinished = true;
 						break;
 					}
 				} else {
@@ -57,6 +59,7 @@ public class SaveSearch {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return isFinished;
 	}
 
 

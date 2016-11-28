@@ -57,14 +57,7 @@ public class FeatureExtraction {
 		
 		Map<String, Long> programmingLanguages = repo.listLanguages();		//number of programming languages
 
-		/*
-		languages.addAll(programmingLanguages.keySet());
-		for (String s : languages) {
-			System.out.print(s + ", ");
-		}
-		System.out.println();
-		*/
-		
+		//this introduces sparsity
 		String languages = extractProgrammingLanguages(programmingLanguages);
 		
 		int numberProgrammingLanguages = programmingLanguages.size();

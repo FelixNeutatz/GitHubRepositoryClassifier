@@ -170,6 +170,11 @@ public class GenerateSamples {
 		GitHub github = GitHubBuilder.fromPropertyFile( propertyFiles[0]).build();
 		System.out.println(github.getMyself());
 
+		GHRateLimit limit = github.getRateLimit();
+		System.out.println("remaining requests: " + limit.remaining);
+		System.out.println("limit: " + limit.limit);
+		System.out.println("reset date: " + limit.reset);
+		
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File outputDir = new File(classLoader.getResource("data/").getFile());
 		FileUtils.cleanDirectory(outputDir);
@@ -177,9 +182,9 @@ public class GenerateSamples {
 		//EDU
 		//Repositories mit didaktischen Inhalten und Quelltexten für Vorlesungen und Tutorien
 		generateEDU1(github, propertyFiles, outputDir, 750);
-		//generateEDU2(github, propertyFiles, outputDir, 250);
+		generateEDU2(github, propertyFiles, outputDir, 250);
 
-		/*
+		
 		//HOMEWORK
 		//Repositories mit Lösungen und Quelltexten für Hausaufgaben und Übungsblätter
 		generateHW1(github,propertyFiles, outputDir, 1000);
@@ -200,7 +205,7 @@ public class GenerateSamples {
 		
 		//DATA
 		//Repositories für die Speicherung von Datensätzen
-		generateDATA(github, propertyFiles, outputDir, 1000);*/
+		generateDATA(github, propertyFiles, outputDir, 1000);
 		
 		
 	}

@@ -2,6 +2,7 @@ package tu.kn.ghrepoclassifier.samplegeneration;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.PagedIterable;
 import org.kohsuke.github.PagedSearchIterable;
 import tu.kn.ghrepoclassifier.featureextraction.FeatureExtraction;
 
@@ -20,15 +21,16 @@ public class SaveSearch {
 	/*
 	save extracted features in a file
 	 */
-	public static void extractIterableToFile(PagedSearchIterable<GHRepository> searchResult, 
-									   File out, String category, AtomicInteger count){
+	public static void extractIterableToFile(PagedIterable<GHRepository> searchResult, 
+											 File out, 
+											 String category, 
+											 AtomicInteger count,
+											 int maximumRecords){
 		CSVWriter writer = null;
 		try {
 			writer = new CSVWriter(new FileWriter(out,true), ',', CSVWriter.NO_QUOTE_CHARACTER);
 
 			String[] entries = {"","", category};
-
-			System.out.println("search:" + searchResult + "size: " + searchResult.getTotalCount());
 
 			//TODO: check why we need this to prevent duplicates??
 			HashSet<Integer> idList = new HashSet<Integer>();
@@ -40,10 +42,13 @@ public class SaveSearch {
 					entries[1] = FeatureExtraction.extractFeatures(repo);
 					entries[0] = repo.getHtmlUrl().toString();
 
-					count.incrementAndGet();
-					System.out.println(count.get() + ": " + entries[0] + ", " + entries[1]);
-					writer.writeNext(entries);
-					writer.flush();
+					if (count.incrementAndGet() <= maximumRecords) {
+						System.out.println(count.get() + ": " + entries[0] + ", " + entries[1]);
+						writer.writeNext(entries);
+						writer.flush();
+					} else {
+						break;
+					}
 				} else {
 					System.err.println("there were duplicates");
 				}

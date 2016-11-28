@@ -3,10 +3,7 @@ package tu.kn.ghrepoclassifier.samplegeneration;
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.OkUrlFactory;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
-import org.kohsuke.github.GitHubBuilder;
-import org.kohsuke.github.PagedSearchIterable;
+import org.kohsuke.github.*;
 import org.kohsuke.github.extras.OkHttpConnector;
 
 import java.io.File;
@@ -24,22 +21,28 @@ import static tu.kn.ghrepoclassifier.samplegeneration.SaveSearch.extractIterable
  */
 public class GenerateThread extends Thread {
 	
-	private ConcurrentLinkedQueue<PagedSearchIterable<GHRepository>> queue;
+	private ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue;
 	private int id;
 	private String propertyFile;
 	private String category;
 	private AtomicInteger count;
+	private int  maximumRecords;
+	private File outputDir;
 	
 	public GenerateThread(int id,  
-						  ConcurrentLinkedQueue<PagedSearchIterable<GHRepository>> queue, 
+						  ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue, 
 						  String propertyFile,
 						  String category,
-						  AtomicInteger count) {
+						  File outputDir,
+						  AtomicInteger count,
+						  int maximumRecords) {
 		this.id = id;
 		this.queue = queue;
 		this.propertyFile = propertyFile;
 		this.category = category;
 		this.count = count;
+		this.maximumRecords = maximumRecords;
+		this.outputDir = outputDir;
 	}
 	
 	public void run() {
@@ -51,14 +54,14 @@ public class GenerateThread extends Thread {
 				.build();
 			github.refreshCache();
 			
-			PagedSearchIterable<GHRepository> search = queue.poll();
+			PagedIterable<GHRepository> search = queue.poll();
 			
 			while(search != null) {
 
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				File file = new File(classLoader.getResource("data/").getFile() + "data" + category + id + ".csv");
+				File file = new File(outputDir.getPath() + "/" + "data" + category + id + ".csv");
 
-				extractIterableToFile(search, file, category, count);
+				extractIterableToFile(search, file, category, count, maximumRecords);
 				
 				search = queue.poll();
 			}

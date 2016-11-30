@@ -23,7 +23,7 @@ public class Parallelize {
 									 File outputDir,
 									 int maximumRecords) {
 		ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue = new ConcurrentLinkedQueue();
-		splitSearch(search, queue);
+		splitSearch(search, queue, 1000, maximumRecords);
 
 		startThreads(propertyFiles, queue, category, outputDir, maximumRecords);
 	}

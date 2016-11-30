@@ -177,8 +177,10 @@ public class GenerateSamples {
 		
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File outputDir = new File(classLoader.getResource("data/").getFile());
-		FileUtils.cleanDirectory(outputDir);
 		
+		
+		FileUtils.cleanDirectory(outputDir);
+		/*
 		//EDU
 		//Repositories mit didaktischen Inhalten und Quelltexten für Vorlesungen und Tutorien
 		generateEDU1(github, propertyFiles, outputDir, 750);
@@ -206,6 +208,12 @@ public class GenerateSamples {
 		//DATA
 		//Repositories für die Speicherung von Datensätzen
 		generateDATA(github, propertyFiles, outputDir, 1000);
+		
+		*/
+		
+		//WEB
+		//Repositories für das Hosting persönlicher Web-Seiten oder Blogs
+		generateWEB(github, propertyFiles, outputDir, 1000);
 		
 		
 	}

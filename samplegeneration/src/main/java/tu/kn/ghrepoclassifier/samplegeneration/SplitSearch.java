@@ -1,5 +1,6 @@
 package tu.kn.ghrepoclassifier.samplegeneration;
 
+import org.apache.commons.lang.mutable.MutableInt;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.PagedSearchIterable;
@@ -20,54 +21,56 @@ public class SplitSearch {
 	public static void splitRecursive(final GHRepositorySearchBuilder search,
 									  Date startDate,
 									  Date endDate,
-									  Queue<PagedSearchIterable<GHRepository>> resultSearches) {
-		splitRecursive(search, startDate, endDate, resultSearches, 1000);
-	}
-	
-	public static void splitRecursive(final GHRepositorySearchBuilder search,
-									  Date startDate,
-									  Date endDate,
 									  Queue<PagedSearchIterable<GHRepository>> resultSearches,
-									  int maxRequestPerSearch) {
+									  int maxRequestPerSearch,
+									  MutableInt currentNumberRequests,
+									  int totalRequests) {
+		
+		if (currentNumberRequests.intValue() < totalRequests) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		String range = "\"" + sdf.format(startDate) + " .. " + sdf.format(endDate) + "\"";
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String range = "\"" + sdf.format(startDate) + " .. " + sdf.format(endDate) + "\"";
 
-		GHRepositorySearchBuilder copy = cloneSearchBuilder(search);
+			GHRepositorySearchBuilder copy = cloneSearchBuilder(search);
 
-		//first only query with pagesize one becaus we only need the total count
-		PagedSearchIterable<GHRepository> result = copy.created(range).list().withPageSize(1);
+			//first only query with pagesize one becaus we only need the total count
+			PagedSearchIterable<GHRepository> result = copy.created(range).list().withPageSize(1);
 
-		System.out.println(range + " : " + result.getTotalCount());
+			System.out.println(range + " : " + result.getTotalCount());
 
-		if (result.getTotalCount() < maxRequestPerSearch) {
-			//fire the search query again, but this time with maximum page size
-			GHRepositorySearchBuilder copy2 = cloneSearchBuilder(search);
-			PagedSearchIterable<GHRepository> result2 = copy2.created(range).list().withPageSize(100);
-			resultSearches.add(result2);
-		} else {
-			Date middleDate = new Date((long)(startDate.getTime() +
-				((endDate.getTime() - startDate.getTime()) * 0.5)));
-			
-			splitRecursive(search, startDate, middleDate, resultSearches, maxRequestPerSearch);
+			if (result.getTotalCount() < maxRequestPerSearch) {
+				//fire the search query again, but this time with maximum page size
+				GHRepositorySearchBuilder copy2 = cloneSearchBuilder(search);
+				PagedSearchIterable<GHRepository> result2 = copy2.created(range).list().withPageSize(100);
+				resultSearches.add(result2);
+				currentNumberRequests.add(result.getTotalCount());
+			} else {
+				Date middleDate = new Date((long) (startDate.getTime() +
+					((endDate.getTime() - startDate.getTime()) * 0.5)));
 
-			long timeadj = 24*60*60*1000;
-			Date middleDatePlusDay = new Date (middleDate.getTime() + timeadj);
+				splitRecursive(search, startDate, middleDate, resultSearches,
+					maxRequestPerSearch, currentNumberRequests, totalRequests);
 
-			splitRecursive(search, middleDatePlusDay, endDate, resultSearches, maxRequestPerSearch);
+				long timeadj = 24 * 60 * 60 * 1000;
+				Date middleDatePlusDay = new Date(middleDate.getTime() + timeadj);
+
+				splitRecursive(search, middleDatePlusDay, endDate, resultSearches,
+					maxRequestPerSearch, currentNumberRequests, totalRequests);
+			}
 		}
 	}
 
 	public static Queue<PagedSearchIterable<GHRepository>> splitSearch(GHRepositorySearchBuilder search,
 																	   ConcurrentLinkedQueue rQueue,
-																	   int maxRequestPerSearch) {
+																	   int maxRequestPerSearch,
+																	   int totalRequests) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar c = new GregorianCalendar(2008, 2 - 1, 8); //founding date of Github 2008-02-08
 
 		Date startDate = c.getTime();
 		Date endDate = Calendar.getInstance().getTime();
 
-		splitRecursive(search, startDate, endDate, rQueue, maxRequestPerSearch);
+		splitRecursive(search, startDate, endDate, rQueue, maxRequestPerSearch, new MutableInt(0), totalRequests);
 
 		return rQueue;
 	}
@@ -82,7 +85,8 @@ public class SplitSearch {
 	We return a concurrent queue of subsearches.
 	 */
 	public static Queue<PagedSearchIterable<GHRepository>> splitSearch(GHRepositorySearchBuilder search,
-																	   ConcurrentLinkedQueue rQueue) {
-		return splitSearch(search,rQueue,1000);
+																	   ConcurrentLinkedQueue rQueue,
+																	   int totalRequests) {
+		return splitSearch(search,rQueue,1000, totalRequests);
 	}
 }

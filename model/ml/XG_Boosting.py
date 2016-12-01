@@ -18,7 +18,7 @@ def run():
     train_matrix, test_matrix = dataframe_to_numpy_matrix(train_frame, test_frame, mask)
 
     train_x, train_y = split_target_from_data(train_matrix)
-    test_x, test_y = split_target_from_data(train_matrix)
+    test_x, test_y = split_target_from_data(test_matrix)
 
 
     cv_params = {'max_depth': [3, 5, 7], 'min_child_weight': [1, 3, 5]}
@@ -26,7 +26,7 @@ def run():
                   'objective': 'multi:softmax'}
     optimized_GBM = GridSearchCV(xgb.XGBClassifier(**ind_params),
                                  cv_params,
-                                 scoring='accuracy', cv=5, n_jobs=-1)
+                                 scoring='accuracy', cv=5, n_jobs=4, verbose=10)
 
     optimized_GBM.fit(train_x, train_y)
 

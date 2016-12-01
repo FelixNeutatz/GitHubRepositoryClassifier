@@ -2,8 +2,13 @@
 
 from myio import *
 from sklearn.svm import SVC
+from sklearn.svm import LinearSVC
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_iris
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import GridSearchCV
 
 
 def run():
@@ -17,17 +22,43 @@ def run():
     train_matrix, test_matrix = dataframe_to_numpy_matrix(train_frame, test_frame, mask)
 
     train_x, train_y = split_target_from_data(train_matrix)
-    test_x, test_y = split_target_from_data(train_matrix)
+    test_x, test_y = split_target_from_data(test_matrix)
 
-    clf = SVC(decision_function_shape='ovo')
+    # It is usually a good idea to scale the data for SVM training.
+
+    scaler = StandardScaler()
+    train_x = scaler.fit_transform(train_x)
+    test_x = scaler.transform(test_x)
+
+
+    C_range = np.logspace(-2, 10, 13)
+    gamma_range = np.logspace(-9, 3, 13)
+    param_grid = dict(gamma=gamma_range, C=C_range)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    grid = GridSearchCV(SVC(decision_function_shape='ovo'), param_grid=param_grid, cv=cv, verbose=10, n_jobs=4)
+    grid.fit(train_x, train_y)
+
+    print("The best parameters are %s with a score of %0.2f"
+          % (grid.best_params_, grid.best_score_))
+
+    '''
+
+    clf = SVC(decision_function_shape='ovo', C=1)
+    #clf = LinearSVC(multi_class='ovr', C=10)
     clf.fit(train_x, train_y)
+
+    y_train_pred = clf.predict(train_x)
+
+    print confusion_matrix(train_y, y_train_pred)
+    print f1_score(train_y, y_train_pred, average='weighted')
+
 
     y_test_pred = clf.predict(test_x)
 
     print confusion_matrix(test_y, y_test_pred)
-
     print f1_score(test_y, y_test_pred, average='weighted')
 
+    '''
 
 
 

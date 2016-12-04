@@ -40,7 +40,6 @@ public class SaveSearch {
 							GHMyself me = github.getMyself();
 							GHRateLimit limit = github.getRateLimit();
 							
-							
 							System.out.println(me + ":" + " current limit: " + limit.remaining + " count: " + count.get() + ": " + data.getName() + " id: " + data.getId());
 						}
 					} else {

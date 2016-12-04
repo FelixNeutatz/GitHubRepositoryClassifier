@@ -43,6 +43,7 @@ public class GenerateThread extends Thread {
 	}
 	
 	public void run() {
+		Parallelize.runningThreads.incrementAndGet();
 		try {
 			Cache cache = new Cache(new File("/tmp/ghrepoclassifier" + id), 1000 * 1024 * 1024); // 1000MB cache
 			
@@ -52,14 +53,13 @@ public class GenerateThread extends Thread {
 			github.refreshCache();
 			
 			PagedIterable<GHRepository> search = queue.poll();
+
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+			File file = new File(outputDir.getPath() + "/"  + category);
+			file.mkdir();
 			
 			while(search != null) {
-
-				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				File file = new File(outputDir.getPath() + "/"  + category);
-				file.mkdir();
-
-				if (extractIterableToFile(search, file, category, count, maximumRecords)){
+				if (extractIterableToFile(search, file, category, count, maximumRecords, github)){
 					break;
 				}
 				
@@ -68,6 +68,7 @@ public class GenerateThread extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		Parallelize.runningThreads.decrementAndGet();
 	}
 
 }

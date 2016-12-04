@@ -14,6 +14,7 @@ import static tu.kn.ghrepoclassifier.serialization.Parallelize.runThread;
  * Created by felix on 24.11.16.
  */
 public class GenerateSamples {
+	
 	/*
 		repositories which contain "homework" and have no forks and no stars, 
 		are very likely to fit the homework description:
@@ -161,15 +162,14 @@ public class GenerateSamples {
 	}
 
 	public static void main(String[] args) throws IOException {
-
-		/*
-		String [] propertyFiles = {"/home/felix/.github"
-			, "/home/felix/gitpropmax"
-			, "/home/felix/maxpropgit2"
-		};*/
+		
+		String [] propertyFiles = {"/home/felix/.github",
+			"/home/felix/gitpropmax",
+			"/home/felix/maxpropgit2"
+		};
 
 		//String [] propertyFiles = {"/home/felix/.github"};
-		String [] propertyFiles = {"/home/felix/gitpropmax"};
+		//String [] propertyFiles = {"/home/felix/gitpropmax"};
 		//String [] propertyFiles = {"/home/felix/gitpropmax", "/home/felix/maxpropgit2"};
 
 
@@ -184,7 +184,7 @@ public class GenerateSamples {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File outputDir = new File(classLoader.getResource("data/").getFile());
 		
-		/*
+		
 		//FileUtils.cleanDirectory(outputDir);
 		
 		//EDU
@@ -199,7 +199,7 @@ public class GenerateSamples {
 		
 		//DEV
 		//Repositories für die Entwicklung eines Tools, einer Softwareanwendung, einer App, einer Bibliothek, einer API,
-		//oder ähnliche Softwareentwicklungsprojekte 
+		//oder ähnliche Softwareentwicklungsprojekte */
 		generateDEV1(github, propertyFiles[0], outputDir, 500);
 		generateDEV2(github, propertyFiles[1], outputDir, 250);
 		generateDEV3(github, propertyFiles[2], outputDir, 230);
@@ -219,8 +219,6 @@ public class GenerateSamples {
 		//WEB
 		//Repositories für das Hosting persönlicher Web-Seiten oder Blogs
 		generateWEB(github, propertyFiles, outputDir, 1000);
-		
-		*/
 		
 	}
 }

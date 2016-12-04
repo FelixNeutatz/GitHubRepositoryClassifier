@@ -1,7 +1,6 @@
 package tu.kn.ghrepoclassifier.serialization;
 
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.PagedIterable;
+import org.kohsuke.github.*;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
 import java.io.File;
@@ -16,11 +15,12 @@ public class SaveSearch {
 	/*
 	save extracted features in a file
 	 */
-	public static boolean extractIterableToFile(PagedIterable<GHRepository> searchResult, 
-											 File out, 
-											 String category, 
-											 AtomicInteger count,
-											 int maximumRecords){
+	public static boolean extractIterableToFile(PagedIterable<GHRepository> searchResult,
+												File out,
+												String category,
+												AtomicInteger count,
+												int maximumRecords,
+												GitHub github){
 		boolean isFinished = false;
 		try {
 			String[] entries = {"","", category};
@@ -36,7 +36,12 @@ public class SaveSearch {
 						if (!Serializer.exists(repo, out)) {
 							RepoData data = new RepoData(repo, category);
 							Serializer.writeToDir(out, data);
-							System.out.println(count.get() + ": " + data.getName() + " id: " + data.getId());
+
+							GHMyself me = github.getMyself();
+							GHRateLimit limit = github.getRateLimit();
+							
+							
+							System.out.println(me + ":" + " current limit: " + limit.remaining + " count: " + count.get() + ": " + data.getName() + " id: " + data.getId());
 						}
 					} else {
 						isFinished = true;

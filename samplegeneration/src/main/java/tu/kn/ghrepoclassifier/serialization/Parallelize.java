@@ -4,7 +4,6 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.PagedIterable;
 
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.File;
@@ -16,6 +15,9 @@ import static tu.kn.ghrepoclassifier.serialization.SplitSearch.splitSearch;
  * Created by felix on 28.11.16.
  */
 public class Parallelize {
+	static volatile AtomicInteger runningThreads = new AtomicInteger(0);
+	static int maxThreads = 5;
+	
 	public static void runInParallel(String [] propertyFiles, 
 									 GHRepositorySearchBuilder search, 
 									 String category,
@@ -45,20 +47,16 @@ public class Parallelize {
 									int maximumRecords) {
 		AtomicInteger count = new AtomicInteger(0);
 
-		ArrayList <Thread> threads = new ArrayList<>();
 		for (int i = 0; i < propertyFiles.length; i++) {
+			while (runningThreads.get() >= maxThreads) {
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 			Thread t = new GenerateThread(i, queue, propertyFiles[i], category, outputDir, count, maximumRecords);
 			t.start();
-			threads.add(t);
 		}
-		/*
-		//wait for the threads to finish
-		for (Thread t : threads) {
-			try {
-				t.join();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}*/
 	}
 }

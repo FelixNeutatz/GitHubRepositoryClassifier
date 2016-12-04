@@ -19,17 +19,13 @@ public class Serializer {
 		ObjectOutputStream oos = null;
 
 		try {
-
 			fout = new FileOutputStream(dir.getAbsolutePath() + "/data" + data.getId() + ".bin");
 			oos = new ObjectOutputStream(fout);
 			oos.writeObject(data);
-
 		} catch (Exception ex) {
-
 			ex.printStackTrace();
-
 		} finally {
-
+			
 			if (fout != null) {
 				try {
 					fout.close();
@@ -45,7 +41,6 @@ public class Serializer {
 					e.printStackTrace();
 				}
 			}
-
 		}
 	}
 
@@ -88,6 +83,5 @@ public class Serializer {
 		}
 
 		return repo;
-
 	}
 }

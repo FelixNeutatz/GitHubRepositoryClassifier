@@ -1,5 +1,7 @@
 package tu.kn.ghrepoclassifier.serialization.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.github.GHContent;
 
 import java.io.IOException;
@@ -104,5 +106,47 @@ public class ContentData implements Serializable{
 
 	public String getDownload_url() {
 		return download_url;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31) // two randomly chosen prime numbers
+			// if deriving: appendSuper(super.hashCode()).
+			.append(type)
+			.append(encoding)
+			.append(size)
+			.append(sha)
+			.append(name)
+			.append(path)
+			.append(content)
+			.append(url)
+			.append(git_url)
+			.append(html_url)
+			.append(download_url)
+			.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ContentData))
+			return false;
+		if (obj == this)
+			return true;
+
+		ContentData rhs = (ContentData) obj;
+		return new EqualsBuilder()
+			// if deriving: appendSuper(super.equals(obj)).
+			.append(type, rhs.type)
+			.append(encoding, rhs.encoding)
+			.append(size, rhs.size)
+			.append(sha, rhs.sha)
+			.append(name, rhs.name)
+			.append(path, rhs.path)
+			.append(content, rhs.content)
+			.append(url, rhs.url)
+			.append(git_url, rhs.git_url)
+			.append(html_url, rhs.html_url)
+			.append(download_url, rhs.download_url)
+			.isEquals();
 	}
 }

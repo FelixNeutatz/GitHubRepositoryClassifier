@@ -1,5 +1,7 @@
 package tu.kn.ghrepoclassifier.serialization.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.github.GHCommit;
 
 import java.io.IOException;
@@ -14,12 +16,11 @@ public class CommitData implements Serializable{
 	
 	private Date authoredDate;
 	private Date commitDate;
-
 	private String message;
-
 	private int comment_count;
-
-	private int total,additions,deletions;
+	private int total;
+	private int additions;
+	private int deletions;
 	
 	public CommitData(GHCommit commit) {
 		try {
@@ -80,5 +81,39 @@ public class CommitData implements Serializable{
 
 	public int getLinesDeleted() {
 		return deletions;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31) // two randomly chosen prime numbers
+			// if deriving: appendSuper(super.hashCode()).
+			.append(authoredDate)
+			.append(commitDate)
+			.append(message)
+			.append(comment_count)
+			.append(total)
+			.append(additions)
+			.append(deletions)
+			.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CommitData))
+			return false;
+		if (obj == this)
+			return true;
+
+		CommitData rhs = (CommitData) obj;
+		return new EqualsBuilder()
+			// if deriving: appendSuper(super.equals(obj)).
+			.append(authoredDate, rhs.authoredDate)
+			.append(commitDate, rhs.commitDate)
+			.append(message, rhs.message)
+			.append(comment_count, rhs.comment_count)
+			.append(total, rhs.total)
+			.append(additions, rhs.additions)
+			.append(deletions, rhs.deletions)
+			.isEquals();
 	}
 }

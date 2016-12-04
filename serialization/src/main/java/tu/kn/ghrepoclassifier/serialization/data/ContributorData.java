@@ -1,5 +1,7 @@
 package tu.kn.ghrepoclassifier.serialization.data;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.kohsuke.github.GHRepository;
 
 import java.io.Serializable;
@@ -20,5 +22,29 @@ public class ContributorData implements Serializable{
 
 	public int getContributions() {
 		return contributions;
+	}
+
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31) // two randomly chosen prime numbers
+			// if deriving: appendSuper(super.hashCode()).
+			.append(this.contributions)
+			.append(this.login)
+			.toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof ContributorData))
+			return false;
+		if (obj == this)
+			return true;
+
+		ContributorData rhs = (ContributorData) obj;
+		return new EqualsBuilder()
+			// if deriving: appendSuper(super.equals(obj)).
+			.append(this.contributions, rhs.contributions)
+			.append(this.login, rhs.login)
+			.isEquals();
 	}
 }

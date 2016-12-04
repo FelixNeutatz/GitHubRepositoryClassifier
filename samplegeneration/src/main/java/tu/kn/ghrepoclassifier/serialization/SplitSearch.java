@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.samplegeneration;
+package tu.kn.ghrepoclassifier.serialization;
 
 import org.apache.commons.lang.mutable.MutableInt;
 import org.kohsuke.github.GHRepository;
@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import static tu.kn.ghrepoclassifier.samplegeneration.ReflectionUtils.cloneSearchBuilder;
+import static tu.kn.ghrepoclassifier.serialization.ReflectionUtils.cloneSearchBuilder;
 
 /**
  * Created by felix on 27.11.16.

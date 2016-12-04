@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.samplegeneration;
+package tu.kn.ghrepoclassifier.serialization;
 
 import java.io.*;
 

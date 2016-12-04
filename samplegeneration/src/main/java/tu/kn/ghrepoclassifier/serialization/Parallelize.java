@@ -1,9 +1,8 @@
-package tu.kn.ghrepoclassifier.samplegeneration;
+package tu.kn.ghrepoclassifier.serialization;
 
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.PagedIterable;
-import org.kohsuke.github.PagedSearchIterable;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -11,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.io.File;
 
 
-import static tu.kn.ghrepoclassifier.samplegeneration.SplitSearch.splitSearch;
+import static tu.kn.ghrepoclassifier.serialization.SplitSearch.splitSearch;
 
 /**
  * Created by felix on 28.11.16.
@@ -52,6 +51,7 @@ public class Parallelize {
 			t.start();
 			threads.add(t);
 		}
+		/*
 		//wait for the threads to finish
 		for (Thread t : threads) {
 			try {
@@ -59,6 +59,6 @@ public class Parallelize {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 	}
 }

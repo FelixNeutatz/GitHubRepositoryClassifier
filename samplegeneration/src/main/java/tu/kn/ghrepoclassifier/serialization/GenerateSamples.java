@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.samplegeneration;
+package tu.kn.ghrepoclassifier.serialization;
 
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.github.*;
@@ -6,8 +6,8 @@ import org.kohsuke.github.*;
 import java.io.File;
 import java.io.IOException;
 
-import static tu.kn.ghrepoclassifier.samplegeneration.Parallelize.runInParallel;
-import static tu.kn.ghrepoclassifier.samplegeneration.Parallelize.runThread;
+import static tu.kn.ghrepoclassifier.serialization.Parallelize.runInParallel;
+import static tu.kn.ghrepoclassifier.serialization.Parallelize.runThread;
 
 
 /**
@@ -162,14 +162,20 @@ public class GenerateSamples {
 
 	public static void main(String[] args) throws IOException {
 
+		/*
 		String [] propertyFiles = {"/home/felix/.github"
 			, "/home/felix/gitpropmax"
 			, "/home/felix/maxpropgit2"
-		};
-		
-		GitHub github = GitHubBuilder.fromPropertyFile( propertyFiles[0]).build();
-		System.out.println(github.getMyself());
+		};*/
 
+		//String [] propertyFiles = {"/home/felix/.github"};
+		String [] propertyFiles = {"/home/felix/gitpropmax"};
+		//String [] propertyFiles = {"/home/felix/gitpropmax", "/home/felix/maxpropgit2"};
+
+
+		GitHub github = GitHubBuilder.fromPropertyFile(propertyFiles[0]).build();
+		System.out.println(github.getMyself());
+ 
 		GHRateLimit limit = github.getRateLimit();
 		System.out.println("remaining requests: " + limit.remaining);
 		System.out.println("limit: " + limit.limit);
@@ -178,9 +184,9 @@ public class GenerateSamples {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File outputDir = new File(classLoader.getResource("data/").getFile());
 		
-		
-		FileUtils.cleanDirectory(outputDir);
 		/*
+		//FileUtils.cleanDirectory(outputDir);
+		
 		//EDU
 		//Repositories mit didaktischen Inhalten und Quelltexten für Vorlesungen und Tutorien
 		generateEDU1(github, propertyFiles, outputDir, 750);
@@ -199,6 +205,7 @@ public class GenerateSamples {
 		generateDEV3(github, propertyFiles[2], outputDir, 230);
 		generateDEV4(github, propertyFiles[0], outputDir, 20);
 
+	
 		//DOCS
 		//Repositories für die Verwaltung und 
 		//Speicherung von nicht-didaktischen (d.h. nicht EDU) Inhalten und Quelltexten
@@ -209,12 +216,11 @@ public class GenerateSamples {
 		//Repositories für die Speicherung von Datensätzen
 		generateDATA(github, propertyFiles, outputDir, 1000);
 		
-		*/
-		
 		//WEB
 		//Repositories für das Hosting persönlicher Web-Seiten oder Blogs
 		generateWEB(github, propertyFiles, outputDir, 1000);
 		
+		*/
 		
 	}
 }

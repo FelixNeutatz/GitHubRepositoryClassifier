@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.samplegeneration;
+package tu.kn.ghrepoclassifier.serialization;
 
 import com.squareup.okhttp.Cache;
 import com.squareup.okhttp.OkHttpClient;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static tu.kn.ghrepoclassifier.samplegeneration.SaveSearch.extractIterableToFile;
+import static tu.kn.ghrepoclassifier.serialization.SaveSearch.extractIterableToFile;
 
 /**
  * Created by felix on 27.11.16.
@@ -56,7 +56,8 @@ public class GenerateThread extends Thread {
 			while(search != null) {
 
 				ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-				File file = new File(outputDir.getPath() + "/" + "data" + category + id + ".csv");
+				File file = new File(outputDir.getPath() + "/"  + category);
+				file.mkdir();
 
 				if (extractIterableToFile(search, file, category, count, maximumRecords)){
 					break;

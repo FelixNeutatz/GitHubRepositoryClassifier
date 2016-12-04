@@ -9,6 +9,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
+from sklearn.multiclass import OneVsRestClassifier
 
 
 def run():
@@ -31,11 +32,19 @@ def run():
     test_x = scaler.transform(test_x)
 
 
+    '''
     C_range = np.logspace(-2, 10, 13)
     gamma_range = np.logspace(-9, 3, 13)
     param_grid = dict(gamma=gamma_range, C=C_range)
     cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
     grid = GridSearchCV(SVC(decision_function_shape='ovo'), param_grid=param_grid, cv=cv, verbose=10, n_jobs=4)
+    grid.fit(train_x, train_y)
+    '''
+
+    C_range = np.logspace(-2, 10, 13)
+    param_grid = dict(estimator__C=C_range)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+    grid = GridSearchCV(OneVsRestClassifier(SVC(kernel="linear")), param_grid=param_grid, cv=cv, verbose=10, n_jobs=4)
     grid.fit(train_x, train_y)
 
     print("The best parameters are %s with a score of %0.2f"

@@ -21,16 +21,30 @@ def run():
     test_x, test_y = split_target_from_data(test_matrix)
 
 
-    cv_params = {'max_depth': [3, 5, 7], 'min_child_weight': [1, 3, 5]}
-    ind_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
-                  'objective': 'multi:softmax'}
+    # cv_params = {'max_depth': [3, 5, 7], 'min_child_weight': [1, 3, 5]}
+    # ind_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
+    #               'objective': 'multi:softmax'}
+    # optimized_GBM = GridSearchCV(xgb.XGBClassifier(**ind_params),
+    #                              cv_params,
+    #                              scoring='accuracy', cv=5, n_jobs=4, verbose=10)
+    #
+    # optimized_GBM.fit(train_x, train_y)
+    #
+    # print optimized_GBM.grid_scores_
+
+    '''
+    #grid search learning rate
+    cv_params = {'learning_rate': [0.1, 0.01], 'subsample': [0.7, 0.8, 0.9]}
+    ind_params = {'n_estimators': 1000, 'seed': 0, 'colsample_bytree': 0.8,
+                  'objective': 'binary:logistic', 'max_depth': 3, 'min_child_weight': 1}
+
     optimized_GBM = GridSearchCV(xgb.XGBClassifier(**ind_params),
                                  cv_params,
                                  scoring='accuracy', cv=5, n_jobs=4, verbose=10)
-
     optimized_GBM.fit(train_x, train_y)
 
     print optimized_GBM.grid_scores_
+    '''
 
 
     # see https://jessesw.com/XG-Boost/

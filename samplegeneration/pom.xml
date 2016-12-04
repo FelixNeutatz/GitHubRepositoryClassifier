@@ -34,7 +34,7 @@
 
       <dependency>
           <groupId>tu.kn.ghrepoclassifier</groupId>
-          <artifactId>featureextraction</artifactId>
+          <artifactId>serialization</artifactId>
           <version>1.0-SNAPSHOT</version>
       </dependency>
 

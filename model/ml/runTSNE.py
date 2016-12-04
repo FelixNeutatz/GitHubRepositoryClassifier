@@ -44,7 +44,7 @@ def run():
 
     #http://alexanderfabisch.github.io/t-sne-in-scikit-learn.html
     tsne = manifold.TSNE(n_components=2, init='random', #method='barnes_hut',
-                         random_state=0, learning_rate=1000, n_iter= 1000, perplexity=
+                         random_state=0, learning_rate=1000, n_iter= 1000,
                          verbose=2)
     Y = tsne.fit_transform(train_x)
 

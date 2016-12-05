@@ -180,8 +180,8 @@ public class GenerateSamples {
 	public static void main(String[] args) throws IOException {
 		List<String> list = new ArrayList();
 		list.add("/home/felix/.github");
-		//list.add("/home/felix/gitpropmax");
-		//list.add("/home/felix/maxpropgit2");
+		list.add("/home/felix/gitpropmax");
+		list.add("/home/felix/maxpropgit2");
 
 		int numberAccounts = list.size();
 		Iterator<String> propertyFiles = Iterators.cycle(list);
@@ -201,40 +201,40 @@ public class GenerateSamples {
 		File outputDir = new File(classLoader.getResource("data/").getFile());
 		
 		
-		FileUtils.cleanDirectory(outputDir);
+		//FileUtils.cleanDirectory(outputDir);
 		
 		//EDU
 		//Repositories mit didaktischen Inhalten und Quelltexten für Vorlesungen und Tutorien
-		generateEDU1(github, propertyFiles, outputDir, 750, numberAccounts);
+		generateEDU1(github, propertyFiles, outputDir, 1750, numberAccounts);
 		generateEDU2(github, propertyFiles, outputDir, 250, numberAccounts);
 
 		
 		//HOMEWORK
 		//Repositories mit Lösungen und Quelltexten für Hausaufgaben und Übungsblätter
-		generateHW1(github,propertyFiles, outputDir, 1000, numberAccounts);
+		generateHW1(github,propertyFiles, outputDir, 2000, numberAccounts);
 		
 		//DEV
 		//Repositories für die Entwicklung eines Tools, einer Softwareanwendung, einer App, einer Bibliothek, einer API,
 		//oder ähnliche Softwareentwicklungsprojekte 
-		generateDEV1(github, propertyFiles, outputDir, 500, numberAccounts);
-		generateDEV2(github, propertyFiles, outputDir, 250, numberAccounts);
-		generateDEV3(github, propertyFiles, outputDir, 230, numberAccounts);
+		generateDEV1(github, propertyFiles, outputDir, 850, numberAccounts);
+		generateDEV2(github, propertyFiles, outputDir, 850, numberAccounts);
+		generateDEV3(github, propertyFiles, outputDir, 170, numberAccounts);
 		generateDEV4(github, propertyFiles, outputDir, 20, numberAccounts);
 
 	
 		//DOCS
 		//Repositories für die Verwaltung und 
 		//Speicherung von nicht-didaktischen (d.h. nicht EDU) Inhalten und Quelltexten
-		generateDOCS1(github, propertyFiles, outputDir, 500, numberAccounts);
-		generateDOCS2(github, propertyFiles, outputDir, 500, numberAccounts);
+		generateDOCS1(github, propertyFiles, outputDir, 1000, numberAccounts);
+		generateDOCS2(github, propertyFiles, outputDir, 1000, numberAccounts);
 		
 		//DATA
 		//Repositories für die Speicherung von Datensätzen
-		generateDATA(github, propertyFiles, outputDir, 1000, numberAccounts);
+		generateDATA(github, propertyFiles, outputDir, 2000, numberAccounts);
 		
 		//WEB
 		//Repositories für das Hosting persönlicher Web-Seiten oder Blogs
-		generateWEB(github, propertyFiles, outputDir, 1000, numberAccounts);
+		generateWEB(github, propertyFiles, outputDir, 2000, numberAccounts);
 		
 	}
 }

@@ -17,7 +17,7 @@ import static tu.kn.ghrepoclassifier.serialization.SplitSearch.splitSearch;
  */
 public class Parallelize {
 	static volatile AtomicInteger runningThreads = new AtomicInteger(0);
-	static int maxThreads = 5;
+	static int maxThreads = 3;
 	
 	public static void runInParallel(Iterator<String> propertyFiles,
 									 PagedIterable<GHRepository> repos, 

@@ -4,6 +4,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.PagedIterable;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.io.File;
@@ -18,36 +19,39 @@ public class Parallelize {
 	static volatile AtomicInteger runningThreads = new AtomicInteger(0);
 	static int maxThreads = 5;
 	
-	public static void runInParallel(String [] propertyFiles, 
-									 GHRepositorySearchBuilder search, 
+	public static void runInParallel(Iterator<String> propertyFiles,
+									 PagedIterable<GHRepository> repos, 
 									 String category,
 									 File outputDir,
-									 int maximumRecords) {
-		ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue = new ConcurrentLinkedQueue();
-		splitSearch(search, queue, 1000, maximumRecords);
-
-		startThreads(propertyFiles, queue, category, outputDir, maximumRecords);
-	}
-
-	public static void runThread(String propertyFile, 
-								 PagedIterable<GHRepository> repos, 
-								 String category, 
-								 File outputDir,
-								 int maximumRecords) {
+									 int maximumRecords,
+									 int numberAccounts) {
 		ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue = new ConcurrentLinkedQueue();
 		queue.add(repos);
 
-		startThreads(new String [] {propertyFile}, queue, category, outputDir, maximumRecords);
+		startThreads(propertyFiles, queue, category, outputDir, maximumRecords, numberAccounts);
 	}
 
-	public static void startThreads(String [] propertyFiles,
+	public static void runInParallel(Iterator<String> propertyFiles,
+									 GHRepositorySearchBuilder search,
+									 String category,
+									 File outputDir,
+									 int maximumRecords,
+									 int numberAccounts) {
+		ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue = new ConcurrentLinkedQueue();
+		splitSearch(search, queue, 1000, maximumRecords);
+
+		startThreads(propertyFiles, queue, category, outputDir, maximumRecords, numberAccounts);
+	}
+
+	public static void startThreads(Iterator<String> propertyFiles,
 									ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue, 
 									String category,
 									File outputDir,
-									int maximumRecords) {
+									int maximumRecords,
+									int numberAccounts) {
 		AtomicInteger count = new AtomicInteger(0);
 
-		for (int i = 0; i < propertyFiles.length; i++) {
+		for (int i = 0; i < Math.min(numberAccounts, queue.size()); i++) {
 			while (runningThreads.get() >= maxThreads) {
 				try {
 					Thread.sleep(10000);
@@ -55,7 +59,7 @@ public class Parallelize {
 					e.printStackTrace();
 				}
 			}
-			Thread t = new GenerateThread(i, queue, propertyFiles[i], category, outputDir, count, maximumRecords);
+			Thread t = new GenerateThread(i, queue, propertyFiles, category, outputDir, count, maximumRecords);
 			t.start();
 		}
 	}

@@ -37,10 +37,9 @@ public class SaveSearch {
 							RepoData data = new RepoData(repo, category);
 							Serializer.writeToDir(out, data);
 
-							GHMyself me = github.getMyself();
-							GHRateLimit limit = github.getRateLimit();
-							
-							System.out.println(me + ":" + " current limit: " + limit.remaining + " count: " + count.get() + ": " + data.getName() + " id: " + data.getId());
+							//GHMyself me = github.getMyself();
+							//GHRateLimit limit = github.getRateLimit();
+							//System.out.println(me + ":" + " current limit: " + limit.remaining + " count: " + count.get() + ": " + data.getName() + " id: " + data.getId());
 						}
 					} else {
 						isFinished = true;

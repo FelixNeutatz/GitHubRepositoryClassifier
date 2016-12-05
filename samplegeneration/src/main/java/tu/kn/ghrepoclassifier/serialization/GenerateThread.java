@@ -8,6 +8,7 @@ import org.kohsuke.github.extras.OkHttpConnector;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,7 +21,7 @@ public class GenerateThread extends Thread {
 	
 	private ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue;
 	private int id;
-	private String propertyFile;
+	private Iterator<String> propertyFiles;
 	private String category;
 	private AtomicInteger count;
 	private int  maximumRecords;
@@ -28,14 +29,14 @@ public class GenerateThread extends Thread {
 	
 	public GenerateThread(int id,  
 						  ConcurrentLinkedQueue<PagedIterable<GHRepository>> queue, 
-						  String propertyFile,
+						  Iterator<String> propertyFiles,
 						  String category,
 						  File outputDir,
 						  AtomicInteger count,
 						  int maximumRecords) {
 		this.id = id;
 		this.queue = queue;
-		this.propertyFile = propertyFile;
+		this.propertyFiles = propertyFiles;
 		this.category = category;
 		this.count = count;
 		this.maximumRecords = maximumRecords;
@@ -45,12 +46,21 @@ public class GenerateThread extends Thread {
 	public void run() {
 		Parallelize.runningThreads.incrementAndGet();
 		try {
+			/*
 			Cache cache = new Cache(new File("/tmp/ghrepoclassifier" + id), 1000 * 1024 * 1024); // 1000MB cache
 			
 			GitHub github = GitHubBuilder.fromPropertyFile(propertyFile)
 				.withConnector(new OkHttpConnector(new OkUrlFactory(new OkHttpClient().setCache(cache))))
 				.build();
-			github.refreshCache();
+			github.refreshCache();*/
+
+			String propertyFile = null;
+			synchronized (propertyFiles) {
+				propertyFile = propertyFiles.next();
+			}
+			System.out.println("thread uses: " + propertyFile);
+			
+			GitHub github = GitHubBuilder.fromPropertyFile(propertyFile).build();
 			
 			PagedIterable<GHRepository> search = queue.poll();
 

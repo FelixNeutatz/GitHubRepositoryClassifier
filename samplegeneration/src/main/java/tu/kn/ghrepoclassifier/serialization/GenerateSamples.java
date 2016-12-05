@@ -1,13 +1,16 @@
 package tu.kn.ghrepoclassifier.serialization;
 
+import com.google.common.collect.Iterators;
 import org.apache.commons.io.FileUtils;
 import org.kohsuke.github.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import static tu.kn.ghrepoclassifier.serialization.Parallelize.runInParallel;
-import static tu.kn.ghrepoclassifier.serialization.Parallelize.runThread;
 
 
 /**
@@ -23,9 +26,11 @@ public class GenerateSamples {
 	
 		search result size: 62401
 	 */
-	public static void generateHW1(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	
+	public static void generateHW1(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+								   int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("homework").stars("0").forks("0");
-		runInParallel(propertyFiles, search, "HW", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "HW", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -35,9 +40,10 @@ public class GenerateSamples {
 	
 		search result size: 2081
 	 */
-	public static void generateEDU1(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateEDU1(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("tutorial").forks(">10");
-		runInParallel(propertyFiles, search, "EDU", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "EDU", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -47,9 +53,10 @@ public class GenerateSamples {
 	
 		search result size: 290
 	 */
-	public static void generateEDU2(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateEDU2(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("lecture").forks(">10");
-		runInParallel(propertyFiles, search, "EDU", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "EDU", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -60,9 +67,10 @@ public class GenerateSamples {
 			Repositories für das Hosting persönlicher Web-Seiten oder Blogs
 		search result size: 560623
 	 */
-	public static void generateWEB(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateWEB(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+								   int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q(".github.io");
-		runInParallel(propertyFiles, search, "WEB", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "WEB", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -73,9 +81,10 @@ public class GenerateSamples {
 			einer API, oder ähnliche Softwareentwicklungsprojekte 
 		search result size: 864
 	*/
-	public static void generateDEV1(GitHub github, String propertyFile, File outputDir, int maximumRecords) throws IOException {
+	public static void generateDEV1(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts) throws IOException {
 		PagedIterable<GHRepository> devRepos = github.getOrganization("apache").listRepositories(100);
-		runThread(propertyFile, devRepos, "DEV", outputDir, maximumRecords);
+		runInParallel(propertyFiles, devRepos, "DEV", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -86,9 +95,10 @@ public class GenerateSamples {
 			einer API, oder ähnliche Softwareentwicklungsprojekte 
 		search result size: 866
 	*/
-	public static void generateDEV2(GitHub github, String propertyFile, File outputDir, int maximumRecords) throws IOException {
+	public static void generateDEV2(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts) throws IOException {
 		PagedIterable<GHRepository> devRepos = github.getOrganization("google").listRepositories(100);
-		runThread(propertyFile, devRepos, "DEV", outputDir, maximumRecords);
+		runInParallel(propertyFiles, devRepos, "DEV", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -99,9 +109,10 @@ public class GenerateSamples {
 			einer API, oder ähnliche Softwareentwicklungsprojekte 
 		search result size: 170
 	*/
-	public static void generateDEV3(GitHub github, String propertyFile, File outputDir, int maximumRecords) throws IOException {
+	public static void generateDEV3(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts) throws IOException {
 		PagedIterable<GHRepository> devRepos = github.getOrganization("facebook").listRepositories(100);
-		runThread(propertyFile, devRepos, "DEV", outputDir, maximumRecords);
+		runInParallel(propertyFiles, devRepos, "DEV", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -112,9 +123,10 @@ public class GenerateSamples {
 			einer API, oder ähnliche Softwareentwicklungsprojekte 
 		search result size: 21
 	*/
-	public static void generateDEV4(GitHub github, String propertyFile, File outputDir, int maximumRecords) throws IOException {
+	public static void generateDEV4(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts) throws IOException {
 		PagedIterable<GHRepository> devRepos = github.getOrganization("baidu").listRepositories(100);
-		runThread(propertyFile, devRepos, "DEV", outputDir, maximumRecords);
+		runInParallel(propertyFiles, devRepos, "DEV", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -126,10 +138,11 @@ public class GenerateSamples {
 		To be more sure that it is really in the category DOCS, we can constraint it by its fame.
 		search result size: 30631
 	 */
-	public static void generateDOCS1(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateDOCS1(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									 int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("documentation NOT lecture");
 		//GHRepositorySearchBuilder search = github.searchRepositories().q("documentation NOT lecture").stars(">5");
-		runInParallel(propertyFiles, search, "DOCS", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "DOCS", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -141,10 +154,11 @@ public class GenerateSamples {
 		To be more sure that it is really in the category DOCS, we can constraint it by its fame.
 		search result size: 9020
 	 */
-	public static void generateDOCS2(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateDOCS2(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									 int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("manual NOT lecture");
 		//GHRepositorySearchBuilder search = github.searchRepositories().q("manual NOT lecture").stars(">5");
-		runInParallel(propertyFiles, search, "DOCS", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "DOCS", outputDir, maximumRecords, numberAccounts);
 	}
 
 	/*
@@ -155,25 +169,27 @@ public class GenerateSamples {
 		To be more sure that it is really in the category DATA, we can contraint the repo size to be big.
 		search result size: 14105
 	 */
-	public static void generateDATA(GitHub github, String [] propertyFiles, File outputDir, int maximumRecords){
+	public static void generateDATA(GitHub github, Iterator<String> propertyFiles, File outputDir, 
+									int maximumRecords, int numberAccounts){
 		GHRepositorySearchBuilder search = github.searchRepositories().q("dataset");
 		//GHRepositorySearchBuilder search = github.searchRepositories().q("dataset").size(">100000");
-		runInParallel(propertyFiles, search, "DATA", outputDir, maximumRecords);
+		runInParallel(propertyFiles, search, "DATA", outputDir, maximumRecords, numberAccounts);
 	}
+	
 
 	public static void main(String[] args) throws IOException {
-		
-		String [] propertyFiles = {"/home/felix/.github",
-			"/home/felix/gitpropmax",
-			"/home/felix/maxpropgit2"
-		};
+		List<String> list = new ArrayList();
+		list.add("/home/felix/.github");
+		//list.add("/home/felix/gitpropmax");
+		//list.add("/home/felix/maxpropgit2");
 
-		//String [] propertyFiles = {"/home/felix/.github"};
-		//String [] propertyFiles = {"/home/felix/gitpropmax"};
-		//String [] propertyFiles = {"/home/felix/gitpropmax", "/home/felix/maxpropgit2"};
+		int numberAccounts = list.size();
+		Iterator<String> propertyFiles = Iterators.cycle(list);
 
-
-		GitHub github = GitHubBuilder.fromPropertyFile(propertyFiles[0]).build();
+		GitHub github = null;
+		synchronized (propertyFiles) {
+			github = GitHubBuilder.fromPropertyFile(propertyFiles.next()).build();
+		}
 		System.out.println(github.getMyself());
  
 		GHRateLimit limit = github.getRateLimit();
@@ -185,40 +201,40 @@ public class GenerateSamples {
 		File outputDir = new File(classLoader.getResource("data/").getFile());
 		
 		
-		//FileUtils.cleanDirectory(outputDir);
+		FileUtils.cleanDirectory(outputDir);
 		
 		//EDU
 		//Repositories mit didaktischen Inhalten und Quelltexten für Vorlesungen und Tutorien
-		generateEDU1(github, propertyFiles, outputDir, 750);
-		generateEDU2(github, propertyFiles, outputDir, 250);
+		generateEDU1(github, propertyFiles, outputDir, 750, numberAccounts);
+		generateEDU2(github, propertyFiles, outputDir, 250, numberAccounts);
 
 		
 		//HOMEWORK
 		//Repositories mit Lösungen und Quelltexten für Hausaufgaben und Übungsblätter
-		generateHW1(github,propertyFiles, outputDir, 1000);
+		generateHW1(github,propertyFiles, outputDir, 1000, numberAccounts);
 		
 		//DEV
 		//Repositories für die Entwicklung eines Tools, einer Softwareanwendung, einer App, einer Bibliothek, einer API,
-		//oder ähnliche Softwareentwicklungsprojekte */
-		generateDEV1(github, propertyFiles[0], outputDir, 500);
-		generateDEV2(github, propertyFiles[1], outputDir, 250);
-		generateDEV3(github, propertyFiles[2], outputDir, 230);
-		generateDEV4(github, propertyFiles[0], outputDir, 20);
+		//oder ähnliche Softwareentwicklungsprojekte 
+		generateDEV1(github, propertyFiles, outputDir, 500, numberAccounts);
+		generateDEV2(github, propertyFiles, outputDir, 250, numberAccounts);
+		generateDEV3(github, propertyFiles, outputDir, 230, numberAccounts);
+		generateDEV4(github, propertyFiles, outputDir, 20, numberAccounts);
 
 	
 		//DOCS
 		//Repositories für die Verwaltung und 
 		//Speicherung von nicht-didaktischen (d.h. nicht EDU) Inhalten und Quelltexten
-		generateDOCS1(github, propertyFiles, outputDir, 500);
-		generateDOCS2(github, propertyFiles, outputDir, 500);
+		generateDOCS1(github, propertyFiles, outputDir, 500, numberAccounts);
+		generateDOCS2(github, propertyFiles, outputDir, 500, numberAccounts);
 		
 		//DATA
 		//Repositories für die Speicherung von Datensätzen
-		generateDATA(github, propertyFiles, outputDir, 1000);
+		generateDATA(github, propertyFiles, outputDir, 1000, numberAccounts);
 		
 		//WEB
 		//Repositories für das Hosting persönlicher Web-Seiten oder Blogs
-		generateWEB(github, propertyFiles, outputDir, 1000);
+		generateWEB(github, propertyFiles, outputDir, 1000, numberAccounts);
 		
 	}
 }

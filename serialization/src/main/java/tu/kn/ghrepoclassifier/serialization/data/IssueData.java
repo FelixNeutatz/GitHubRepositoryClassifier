@@ -39,6 +39,30 @@ public class IssueData implements Serializable{
 		this.body = issue.getBody();
 	}
 
+	public int getId() {
+		return id;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public Date getClosed_at() {
+		return closed_at;
+	}
+
+	public int getComments() {
+		return comments;
+	}
+
+	public String getBody() {
+		return body;
+	}
+
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31) // two randomly chosen prime numbers

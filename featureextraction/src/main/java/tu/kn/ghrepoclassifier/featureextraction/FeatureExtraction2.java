@@ -3,6 +3,7 @@ package tu.kn.ghrepoclassifier.featureextraction;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
+import java.io.IOException;
 import java.util.*;
 
 import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
@@ -26,7 +27,17 @@ public class FeatureExtraction2 {
 		int indexHTMLfileLength = repo.getIndexHTML().getContent().length();		//index.html length
 
 		int hasDownloads = repo.hasDownloads() ? 1 : 0;								//was the repo downloaded
-		int hasDescription = repo.getDescription().length();						//decription length
+		int descriptionLength = 0;						//decription length
+		if (repo.getDescription() != null) {
+			descriptionLength = repo.getDescription().length();
+		}
+
+
+		try {
+			ExtractText.extractText(repo);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		Map<String, Long> programmingLanguages = repo.listLanguages();				//number of programming languages
 
@@ -65,7 +76,7 @@ public class FeatureExtraction2 {
 				+ "," + numberCommits				//number of commits
 				+ "," + numberContributors			//number of contributors 
 				+ "," + hasDownloads				//was the repo downloaded
-				+ "," + hasDescription				//decription length
+				+ "," + descriptionLength				//decription length
 				+ "," + numberProgrammingLanguages	//number of programming languages
 				+ "," + hasLicense					//repo has a license
 				+ "," + readmeSize					//size of the readme

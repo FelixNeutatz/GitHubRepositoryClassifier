@@ -179,7 +179,7 @@ public class GenerateSamples {
 
 	public static void main(String[] args) throws IOException {
 		List<String> list = new ArrayList();
-		list.add("/home/felix/.github");
+		//list.add("/home/felix/.github");
 		list.add("/home/felix/gitpropmax");
 		list.add("/home/felix/maxpropgit2");
 

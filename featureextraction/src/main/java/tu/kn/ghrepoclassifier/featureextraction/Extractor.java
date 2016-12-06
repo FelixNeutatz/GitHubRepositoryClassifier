@@ -71,7 +71,7 @@ public class Extractor {
 	public static void main(String[] args) throws IOException {
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		File outputDir = new File(classLoader.getResource("data/features").getFile());
+		File outputDir = new File("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features");
 		
 		String inputDir = "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/samplegeneration/target/classes/data";
 		

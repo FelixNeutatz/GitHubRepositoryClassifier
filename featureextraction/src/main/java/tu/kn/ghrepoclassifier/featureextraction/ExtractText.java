@@ -49,6 +49,8 @@ public class ExtractText {
 
 		l = l.replace("\"", "");
 		
+		System.out.println(l);
+		
 		return "\"" + l + "\"";
 	}
 }

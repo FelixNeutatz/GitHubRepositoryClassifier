@@ -32,6 +32,11 @@ public class FeatureExtraction2 {
 			descriptionLength = repo.getDescription().length();
 		}
 
+		try {
+			ExtractText.extractText(repo);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		try {
 			ExtractText.extractText(repo);

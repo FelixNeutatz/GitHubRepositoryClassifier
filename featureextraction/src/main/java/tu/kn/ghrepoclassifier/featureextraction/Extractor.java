@@ -73,7 +73,7 @@ public class Extractor {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File outputDir = new File("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features");
 		
-		String inputDir = "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/samplegeneration/target/classes/data";
+		String inputDir = "/home/felix/GitHubRepositoryClassifier/data";
 		
 		extract(inputDir, outputDir.getAbsolutePath());
 	}

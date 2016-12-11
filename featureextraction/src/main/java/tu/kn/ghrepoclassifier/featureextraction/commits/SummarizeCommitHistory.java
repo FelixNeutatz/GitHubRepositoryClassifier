@@ -27,6 +27,7 @@ public class SummarizeCommitHistory {
 		long [] weekDayCount = new long [7];
 
 		Date firstCommitDate = null;
+		long startTime = 0L;
 
 		Date lastCommitDate = null;
 
@@ -76,7 +77,11 @@ public class SummarizeCommitHistory {
 			}
 
 			//get total time of the project in days
-			long diff = firstCommitDate.getTime() - lastCommitDate.getTime();
+			long diff = 0;
+			if (firstCommitDate != null && lastCommitDate != null) {
+				startTime = firstCommitDate.getTime();
+				diff = startTime - lastCommitDate.getTime();
+			}
 			projectTotalTime = TimeUnit.MILLISECONDS.toDays(diff);
 
 		} catch (java.lang.Error e) {
@@ -85,6 +90,7 @@ public class SummarizeCommitHistory {
 		System.err.println();
 
 		l += projectTotalTime;
+		l += "," + startTime;
 		l += "," + addedLines.toString();
 		l += "," + changedLines.toString();
 		l += "," + deletedLines.toString();

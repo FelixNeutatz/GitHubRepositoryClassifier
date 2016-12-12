@@ -8,9 +8,9 @@ import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 public class DataCleaner {
 	public static boolean isValid(RepoData repo) {
 		
-		if ((repo.getSize() == 0)
+		if ((repo.getCommits().size() == 0)
 			&& !repo.getOurClassification().equals("OTHER")) {
-			System.err.println("Repo is probably not valid: " + repo.getFull_name() + "\n" + "cause: size = 0");
+			System.err.println("Repo is probably not valid: " + repo.getFull_name() + "\n" + "cause: number commits = 0");
 			return false;
 		}
 		

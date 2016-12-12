@@ -54,11 +54,13 @@ public class Extractor {
 				for (File f: binFiles) {
 					RepoData repo = Serializer.readFromFile(f);
 					
-					entries[1] = extractFeatures(repo);
-					entries[0] = repo.getHtmlUrl().toString();
-	
-					System.out.println(entries[0] + ", " + entries[1]);
-					writer.writeNext(entries);
+					if (DataCleaner.isValid(repo)) {
+						entries[1] = extractFeatures(repo);
+						entries[0] = repo.getHtmlUrl().toString();
+
+						System.out.println(entries[0] + ", " + entries[1]);
+						writer.writeNext(entries);
+					}
 				}
 				writer.flush();
 				writer.close();

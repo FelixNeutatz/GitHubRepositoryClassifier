@@ -27,22 +27,17 @@ public class FeatureExtraction2 {
 		int indexHTMLfileLength = repo.getIndexHTML().getContent().length();		//index.html length
 
 		int hasDownloads = repo.hasDownloads() ? 1 : 0;								//was the repo downloaded
-		int descriptionLength = 0;						//decription length
+		int descriptionLength = 0;													//decription length
 		if (repo.getDescription() != null) {
 			descriptionLength = repo.getDescription().length();
 		}
 
+		/*
 		try {
 			ExtractText.extractText(repo);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
-		try {
-			ExtractText.extractText(repo);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		}*/
 
 		Map<String, Long> programmingLanguages = repo.listLanguages();				//number of programming languages
 

@@ -24,7 +24,10 @@ public class FeatureExtraction {
 		int numberReleases = repo.listReleases().size();							//number of releases
 		
 		int hasDownloads = repo.hasDownloads() ? 1 : 0;								//was the repo downloaded
-		int hasDescription = (repo.getDescription().length() > 0) ? 1 : 0;			//has a decription
+		int descriptionLength = 0;													//decription length
+		if (repo.getDescription() != null) {
+			descriptionLength = repo.getDescription().length();
+		}
 		
 		Map<String, Long> programmingLanguages = repo.listLanguages();				//number of programming languages
 
@@ -57,7 +60,7 @@ public class FeatureExtraction {
 			+ "," + numberCommits				//number of commits
 			+ "," + numberContributors			//number of contributors 
 			+ "," + hasDownloads				//was the repo downloaded
-			+ "," + hasDescription				//has a decription
+			+ "," + descriptionLength			//has a decription
 			+ "," + numberProgrammingLanguages	//number of programming languages
 			+ "," + hasLicense					//repo has a license
 			+ "," + readmeSize					//size of the readme

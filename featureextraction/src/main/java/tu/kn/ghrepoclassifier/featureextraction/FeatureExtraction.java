@@ -67,4 +67,26 @@ public class FeatureExtraction {
 			+ languages							//top 50 language contribution
 			;
 	}
+	
+	public static String getFeatureLabels() {
+		String l = "";
+		l += "numberBranches\n";
+		l += "numberForks\n";
+		l += "numberOpenIssues\n";
+		l += "repoSize\n";
+		l += "numberStars\n";
+		l += "numberSubscribers\n";
+		l += "numberWatchers\n";
+		l += "numberReleases\n";
+		l += "numberCommits\n";
+		l += "numberContributors\n";
+		l += "hasDownloads\n";
+		l += "descriptionLength\n";
+		l += "numberProgrammingLanguages\n";
+		l += "hasLicense\n";
+		l += "readmeSize\n";
+		l += ExtractLanguages.getFeatureLabels();
+		
+		return l;
+	}
 }

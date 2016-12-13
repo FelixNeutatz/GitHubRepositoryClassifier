@@ -5,10 +5,15 @@ import xgboost as xgb
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def run():
-    category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
+    #category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
+    category_frames = read(
+        "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
+        1000)
 
     train_frame, test_frame = split_train_test(category_frames)
 
@@ -23,7 +28,7 @@ def run():
 
     # cv_params = {'max_depth': [3, 5, 7], 'min_child_weight': [1, 3, 5]}
     # ind_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
-    #               'objective': 'multi:softmax'}
+    #               'objective': 'multi:softprob'}
     # optimized_GBM = GridSearchCV(xgb.XGBClassifier(**ind_params),
     #                              cv_params,
     #                              scoring='accuracy', cv=5, n_jobs=4, verbose=10)
@@ -48,13 +53,13 @@ def run():
 
 
     # see https://jessesw.com/XG-Boost/
-    xgdmat = xgb.DMatrix(train_x, train_y)  # Create our DMatrix to make XGBoost more efficient
+    xgdmat = xgb.DMatrix(train_x, train_y, feature_names={"numberBranches","numberForks","numberOpenIssues","totalNumberIssues","repoSize","numberStars","numberSubscribers","numberWatchers","numberReleases","indexHTMLfileLength","numberCommits","numberContributors","hasDownloads","descriptionLength","numberProgrammingLanguages","hasLicense","readmeSize","projectTotalTime","startTime","AddedLinesAverage","AddedLinesStdDev","AddedLinesMin","AddedLinesMax","ChangedLinesAverage","ChangedLinesStdDev","ChangedLinesMin","ChangedLinesMax","DeletedLinesAverage","DeletedLinesStdDev","DeletedLinesMin","DeletedLinesMax","TimeBetweenCommitsAverage","TimeBetweenCommitsStdDev","TimeBetweenCommitsMin","TimeBetweenCommitsMax","weekDayCount0","weekDayCount1","weekDayCount2","weekDayCount3","weekDayCount4","weekDayCount5","weekDayCount6","language_JavaScript","language_Java","language_Python","language_CSS","language_PHP","language_Ruby","language_C++","language_C","language_Shell","language_C#","language_Objective-C","language_R","language_VimL","language_Go","language_Perl","language_CoffeeScript","language_TeX","language_Swift","language_Scala","language_Emacs","language_Lisp","language_Haskell","language_Lua","language_Clojure","language_Matlab","language_Arduino","language_Groovy","language_Puppet","language_Rust","language_PowerShell","language_Erlang","language_Visual_Basic","language_Processing","language_Assembly","language_TypeScript","language_XSLT","language_ActionScript","language_ASP","language_OCaml","language_D","language_Scheme","language_Dart","language_Common_Lisp","language_Julia","language_F#","language_Elixir","language_FORTRAN","language_Haxe","language_Racket","language_Logos"})  # Create our DMatrix to make XGBoost more efficient
 
     our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
-                  'objective': 'multi:softmax', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
+                  'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
     # Grid Search CV optimized settings
 
-    cv_xgb = xgb.cv(params=our_params, dtrain=xgdmat, num_boost_round=3000, nfold=5,
+    cv_xgb = xgb.cv(params=our_params, dtrain=xgdmat, num_boost_round=324, nfold=5,
                     metrics=['merror'],  # Make sure you enter metrics inside a list or you may encounter issues!
                     early_stopping_rounds=100)  # Look for early stopping that minimizes error
 
@@ -63,8 +68,21 @@ def run():
     #print confusion_matrix(test_y, y_test_pred)
 
     #print f1_score(test_y, y_test_pred, average='weighted')
+    '''
+    our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
+                  'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
 
-    
+    final_gb = xgb.train(our_params, xgdmat, num_boost_round=3000)
+
+    sns.set(font_scale=1.5)
+    xgb.plot_importance(final_gb)
+    plt.show()
+
+    xgdmat.feature_names
+
+    #importances = final_gb.get_fscore()
+    #print importances
+    '''
 
 
 run()

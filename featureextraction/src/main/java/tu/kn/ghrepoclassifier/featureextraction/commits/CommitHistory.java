@@ -10,30 +10,38 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by felix on 27.11.16.
  */
-public class SummarizeCommitHistory {
+public class CommitHistory {
 
-	public static String summarizeCommitHistory(RepoData repo) {
-		return summarizeCommitHistory(repo, Integer.MAX_VALUE);
-	}
+	private Stats timeBetweenCommits;
+	private Stats changedLines;
+	private Stats addedLines;
+	private Stats deletedLines;
+	private long [] weekDayCount;
+	private long projectTotalTime;
+	private long n;
+	private long startTime;
 	
-	public static String summarizeCommitHistory(RepoData repo, int commitNumber) {
-		String l = "";
+	private RepoData repo;
+	
+	public CommitHistory(RepoData repo) {
+		this.repo = repo;
+		timeBetweenCommits = new Stats("TimeBetweenCommits");
+		changedLines = new Stats("ChangedLines");
+		addedLines = new Stats("AddedLines");
+		deletedLines = new Stats("DeletedLines");
+		weekDayCount = new long [7];
+		projectTotalTime = 0;
+		n = 0;
+		startTime = 0L;
+		
+		calculate();
+	}
 
-		Stats timeBetweenCommits = new Stats("TimeBetweenCommits");
-		Stats changedLines = new Stats("ChangedLines");
-		Stats addedLines = new Stats("AddedLines");
-		Stats deletedLines = new Stats("DeletedLines");
-
-		long [] weekDayCount = new long [7];
-
+	public void calculate() {
 		Date firstCommitDate = null;
 		long startTime = 0L;
 
 		Date lastCommitDate = null;
-
-		long projectTotalTime = 0;
-
-		long n = 0;
 
 		try {
 			for (CommitData commit: repo.getCommits()) {
@@ -70,10 +78,6 @@ public class SummarizeCommitHistory {
 
 				//total number of commits
 				n++;
-
-				if (n >= commitNumber) {
-					break;
-				}
 			}
 
 			//get total time of the project in days
@@ -87,7 +91,10 @@ public class SummarizeCommitHistory {
 		} catch (java.lang.Error e) {
 
 		}
-		System.err.println();
+	}
+	
+	public String summarizeCommitHistory() {
+		String l = "";
 
 		l += projectTotalTime;
 		l += "," + startTime;
@@ -104,6 +111,22 @@ public class SummarizeCommitHistory {
 			}
 		}
 
+		return l;
+	}
+
+	public static String getFeatureLabels() {
+		String l = "";
+		l += "projectTotalTime\n";
+		l += "startTime\n";
+		l += new Stats("AddedLines").getFeatureLabels();
+		l += new Stats("ChangedLines").getFeatureLabels();
+		l += new Stats("DeletedLines").getFeatureLabels();
+		l += new Stats("TimeBetweenCommits").getFeatureLabels();
+
+		for (int d = 0; d < 7; d++) {
+			l += "weekDayCount" + d + "\n";
+		}
+		
 		return l;
 	}
 }

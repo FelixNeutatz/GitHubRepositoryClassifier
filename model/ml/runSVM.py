@@ -13,9 +13,9 @@ from sklearn.multiclass import OneVsRestClassifier
 
 
 def run():
-    category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
+    category_frames = read("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data", 100)
 
-    train_frame, test_frame = split_train_test(category_frames)
+    train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
     mask[0] = False

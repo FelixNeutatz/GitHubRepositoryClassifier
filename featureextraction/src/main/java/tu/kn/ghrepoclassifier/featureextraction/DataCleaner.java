@@ -19,15 +19,14 @@ public class DataCleaner {
 			return false;
 		}
 
-		/*
-		if ((repo.getName().contains("documentation")
-		     || (repo.getDescription() != null && repo.getDescription().contains("documentation"))
-		    ) 
+		
+		if ((repo.getName().toLowerCase().contains("documentation"))
+		    
 			 && !repo.getOurClassification().equals("DOCS")) {
 			System.err.println("Repo is probably not valid: " + repo.getFull_name() + "\n" + "cause: docs");
 			return false;
 		}
-		*/
+		
 		
 		return true;
 	}

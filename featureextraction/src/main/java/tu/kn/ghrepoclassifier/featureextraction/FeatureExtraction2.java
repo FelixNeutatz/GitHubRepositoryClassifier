@@ -3,11 +3,10 @@ package tu.kn.ghrepoclassifier.featureextraction;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
-import java.io.IOException;
 import java.util.*;
 
 import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
-import static tu.kn.ghrepoclassifier.featureextraction.commits.SummarizeCommitHistory.summarizeCommitHistory;
+import tu.kn.ghrepoclassifier.featureextraction.commits.CommitHistory;
 
 /**
  * Created by felix on 24.11.16.
@@ -48,7 +47,8 @@ public class FeatureExtraction2 {
 
 		int hasLicense = (repo.getLicense().length() > 0) ? 0 : 1;					//repo has a license
 
-		String commitHistory = summarizeCommitHistory(repo);						//summarized commit history
+		CommitHistory h = new CommitHistory(repo);
+		String commitHistory = h.summarizeCommitHistory();							//summarized commit history
 
 
 		int numberContributors = 0;													//number of contributors
@@ -83,5 +83,30 @@ public class FeatureExtraction2 {
 				+ "," + commitHistory				//summarized commit history
 				+ 		languages					//top 50 language contribution
 			;
+	}
+
+	public static String getFeatureLabels() {
+		String l = "";
+		l += "numberBranches\n";
+		l += "numberForks\n";
+		l += "numberOpenIssues\n";
+		l += "totalNumberIssues\n";
+		l += "repoSize\n";
+		l += "numberStars\n";
+		l += "numberSubscribers\n";
+		l += "numberWatchers\n";
+		l += "numberReleases\n";
+		l += "indexHTMLfileLength\n";
+		l += "numberCommits\n";
+		l += "numberContributors\n";
+		l += "hasDownloads\n";
+		l += "descriptionLength\n";
+		l += "numberProgrammingLanguages\n";
+		l += "hasLicense\n";
+		l += "readmeSize\n";
+		l += CommitHistory.getFeatureLabels();
+		l += ExtractLanguages.getFeatureLabels();
+
+		return l;
 	}
 }

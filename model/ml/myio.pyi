@@ -10,7 +10,7 @@ def find_csv_filenames( path_to_dir: str, suffix: Optional[str] ) -> List[str]: 
 
 # read data
 @overload
-def read(input_dir: str) -> List[pd.DataFrame]: ...
+def read(input_dir: str, max_samples_per_category: int) -> List[pd.DataFrame]: ...
 
 # split into train and test set
 @overload

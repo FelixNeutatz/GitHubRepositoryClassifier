@@ -11,7 +11,7 @@ def find_csv_filenames(path_to_dir, suffix=".csv"):
 
 
 # read data
-def read(input_dir):
+def read(input_dir, max_samples_per_category):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
 
     all_csv_files = find_csv_filenames(input_dir)
@@ -25,7 +25,7 @@ def read(input_dir):
         for file_ in category_files:
             df = pd.read_csv(input_dir + "/" + file_, index_col=None, header=None)
 
-            frame = frame.append(df)
+            frame = frame.append(df.head(n=max_samples_per_category))
 
         category_frames.append(frame)
 

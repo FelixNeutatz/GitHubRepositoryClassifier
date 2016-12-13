@@ -53,4 +53,13 @@ public class Stats {
 	public String toString(){
 		return getAverage() + "," + getStdDev() + "," + min + "," + max;
 	}
+
+	public String getFeatureLabels() {
+		String l = "";
+		l += name + "Average\n";
+		l += name + "StdDev\n";
+		l += name + "Min\n";
+		l += name + "Max\n";
+		return l;
+	}
 }

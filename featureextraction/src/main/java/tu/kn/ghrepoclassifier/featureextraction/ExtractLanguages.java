@@ -74,4 +74,12 @@ public class ExtractLanguages {
 		}
 		return l;
 	}
+
+	public static String getFeatureLabels() {
+		String l = "";
+		for (String p: top50ProgrammingLanguages) {
+			l += "language_" + p.replace(' ','_') + "\n";
+		}
+		return l;
+	}
 }

@@ -1,6 +1,7 @@
 package tu.kn.ghrepoclassifier.featureextraction;
 
 import au.com.bytecode.opencsv.CSVWriter;
+import org.apache.commons.io.FileUtils;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -73,10 +74,14 @@ public class Extractor {
 	public static void main(String[] args) throws IOException {
 
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		File outputDir = new File("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features");
+		File outputDir = new File("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data");
+
+		FileUtils.cleanDirectory(outputDir);
 		
 		String inputDir = "/home/felix/GitHubRepositoryClassifier/data";
 		
 		extract(inputDir, outputDir.getAbsolutePath());
+		
+		System.out.println(FeatureExtraction2.getFeatureLabels());
 	}
 }

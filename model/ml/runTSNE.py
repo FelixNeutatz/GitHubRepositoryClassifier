@@ -8,24 +8,8 @@ from sklearn.preprocessing import StandardScaler
 import matplotlib.lines as mlines
 import colorsys
 
-def on_click(event):
-    # get the x and y coords, flip y from top to bottom
-    x, y = event.x, event.y
-    print "click"
 
-def on_move(event):
-    # get the x and y pixel coords
-    x, y = event.x, event.y
-
-    if event.inaxes:
-        ax = event.inaxes  # the axes instance
-        print('data coords %f %f' % (event.xdata, event.ydata))
-
-def onpick(event):
-    ind = event.ind
-    print('onpick points:', ind)
-
-def plot (Y, train_y, train_repo_names):
+def plot(Y, train_y, train_repo_names):
     category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
 
     fig, (ax) = plt.subplots(1, 1)
@@ -85,7 +69,7 @@ def run():
                          verbose=2)
     Y = tsne.fit_transform(train_x)
 
-    plot(Y,train_y,train_repo_names)
+    plot(Y, train_y, train_repo_names)
 
 
 run()

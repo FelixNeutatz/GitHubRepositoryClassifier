@@ -6,14 +6,15 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.preprocessing import StandardScaler
-from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
 from sklearn.multiclass import OneVsRestClassifier
 
 
 def run():
-    category_frames = read("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data", 100)
+    category_frames = read(
+        "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
+        2000)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 

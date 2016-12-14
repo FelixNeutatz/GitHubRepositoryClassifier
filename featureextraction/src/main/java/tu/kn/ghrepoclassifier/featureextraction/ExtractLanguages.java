@@ -67,7 +67,7 @@ public class ExtractLanguages {
 	public static String extractProgrammingLanguages(Map<String, Long> languages) {
 		String l = "";
 		
-		for (String p: top50ProgrammingLanguages) {
+		for (String p: allProgrammingLanguages) {
 			if (languages.containsKey(p)) {
 				l += "," + languages.get(p);
 			} else {
@@ -79,7 +79,7 @@ public class ExtractLanguages {
 
 	public static List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
-		for (String p: top50ProgrammingLanguages) {
+		for (String p: allProgrammingLanguages) {
 			features.add("language_" + p.replace(' ','_'));
 		}
 		return features;

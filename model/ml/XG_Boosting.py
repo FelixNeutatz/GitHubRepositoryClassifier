@@ -17,9 +17,6 @@ def run():
 
     schema = get_schema("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data")
 
-
-    print schema
-
     train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]

@@ -1,2 +1,6 @@
-nose
-sphinx
+matplotlib
+numpy
+pandas
+sklearn
+xgboost
+seaborn

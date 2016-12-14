@@ -1,17 +1,19 @@
 package tu.kn.ghrepoclassifier.featureextraction;
 
+import tu.kn.ghrepoclassifier.featureextraction.commits.CommitHistory;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
-import tu.kn.ghrepoclassifier.featureextraction.commits.CommitHistory;
 
 /**
  * Created by felix on 24.11.16.
  */
-public class FeatureExtraction2 {
+public class FeatureExtractionUnbiased {
 
 	public static String extractFeatures(RepoData repo) {
 		int numberBranches = repo.getBranches().size(); 							//number of branches
@@ -64,11 +66,11 @@ public class FeatureExtraction2 {
 		
 		return
 						numberBranches				//number of branches
-				+ "," + numberForks 				//number of branches
+				//+ "," + numberForks 				//number of branches
 				+ "," + numberOpenIssues			//number of open issues
 				+ "," + totalNumberIssues			//number of total issues
 				+ "," + repoSize					//size of the repository in bytes
-				+ "," + numberStars					//number of stars
+				//+ "," + numberStars					//number of stars
 				+ "," + numberSubscribers			//number of subscribers
 				+ "," + numberWatchers				//number of watchers
 				+ "," + numberReleases				//number of releases
@@ -88,11 +90,11 @@ public class FeatureExtraction2 {
 	public static List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
 		features.add("numberBranches");
-		features.add("numberForks");
+		//features.add("numberForks");
 		features.add("numberOpenIssues");
 		features.add("totalNumberIssues");
 		features.add("repoSize");
-		features.add("numberStars");
+		//features.add("numberStars");
 		features.add("numberSubscribers");
 		features.add("numberWatchers");
 		features.add("numberReleases");

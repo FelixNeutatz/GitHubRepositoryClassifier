@@ -1,5 +1,8 @@
 package tu.kn.ghrepoclassifier.featureextraction.commits;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by felix on 03.12.16.
  */
@@ -54,12 +57,12 @@ public class Stats {
 		return getAverage() + "," + getStdDev() + "," + min + "," + max;
 	}
 
-	public String getFeatureLabels() {
-		String l = "";
-		l += name + "Average\n";
-		l += name + "StdDev\n";
-		l += name + "Min\n";
-		l += name + "Max\n";
-		return l;
+	public List<String> getFeatureLabels() {
+		List<String> features = new ArrayList();
+		features.add(name + "Average");
+		features.add(name + "StdDev");
+		features.add(name + "Min");
+		features.add(name + "Max");
+		return features;
 	}
 }

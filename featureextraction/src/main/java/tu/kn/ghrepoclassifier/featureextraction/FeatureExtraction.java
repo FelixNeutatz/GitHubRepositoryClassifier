@@ -4,6 +4,8 @@ package tu.kn.ghrepoclassifier.featureextraction;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
@@ -68,25 +70,25 @@ public class FeatureExtraction {
 			;
 	}
 	
-	public static String getFeatureLabels() {
-		String l = "";
-		l += "numberBranches\n";
-		l += "numberForks\n";
-		l += "numberOpenIssues\n";
-		l += "repoSize\n";
-		l += "numberStars\n";
-		l += "numberSubscribers\n";
-		l += "numberWatchers\n";
-		l += "numberReleases\n";
-		l += "numberCommits\n";
-		l += "numberContributors\n";
-		l += "hasDownloads\n";
-		l += "descriptionLength\n";
-		l += "numberProgrammingLanguages\n";
-		l += "hasLicense\n";
-		l += "readmeSize\n";
-		l += ExtractLanguages.getFeatureLabels();
+	public static List<String> getFeatureLabels() {
+		List<String> features = new ArrayList();
+		features.add("numberBranches");
+		features.add("numberForks");
+		features.add("numberOpenIssues");
+		features.add("repoSize");
+		features.add("numberStars");
+		features.add("numberSubscribers");
+		features.add("numberWatchers");
+		features.add("numberReleases");
+		features.add("numberCommits");
+		features.add("numberContributors");
+		features.add("hasDownloads");
+		features.add("descriptionLength");
+		features.add("numberProgrammingLanguages");
+		features.add("hasLicense");
+		features.add("readmeSize");
+		features.addAll(ExtractLanguages.getFeatureLabels());
 		
-		return l;
+		return features;
 	}
 }

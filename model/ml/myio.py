@@ -10,6 +10,23 @@ def find_csv_filenames(path_to_dir, suffix=".csv"):
     return [filename for filename in filenames if filename.endswith(suffix)]
 
 
+def to_tuple(a):
+    try:
+        return tuple(to_tuple(i) for i in a)
+    except TypeError:
+        return a
+
+
+def get_schema(input_dir):
+    schema_df = pd.read_csv(input_dir + "/" + "schema.csv", index_col=None, header=None)
+
+    schema_list = []
+    for e in schema_df.as_matrix().tolist():
+        schema_list.append(e[0])
+
+    return tuple(schema_list)
+
+
 # read data
 def read(input_dir, max_samples_per_category):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}

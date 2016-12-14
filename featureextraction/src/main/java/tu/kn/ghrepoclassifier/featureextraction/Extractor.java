@@ -7,8 +7,9 @@ import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.List;
 
-import static tu.kn.ghrepoclassifier.featureextraction.FeatureExtraction2.extractFeatures;
+import static tu.kn.ghrepoclassifier.featureextraction.FeatureExtractionUnbiased.extractFeatures;
 
 /**
  * Created by felix on 04.12.16.
@@ -47,7 +48,7 @@ public class Extractor {
 
 			try {
 				writer = new CSVWriter(new FileWriter(
-					new File(outputDir + "/" + "data" + category + ".csv"),true), 
+					new File(outputDir + "/" + "data" + category + ".csv"),false), 
 					',', CSVWriter.NO_QUOTE_CHARACTER);
 
 				String[] entries = {"","", category};
@@ -70,6 +71,24 @@ public class Extractor {
 			}
 		}
 	}
+	
+	public static void createSchema(File outputDir, List<String> labelList) {
+		CSVWriter writer = null;
+		try {
+			writer = new CSVWriter(new FileWriter(
+				new File(outputDir + "/" + "schema" + ".csv"),false),
+				',', CSVWriter.NO_QUOTE_CHARACTER);
+
+			for(String labels: labelList) {
+				writer.writeNext(new String[]{labels});
+			}
+			
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 
@@ -82,6 +101,7 @@ public class Extractor {
 		
 		extract(inputDir, outputDir.getAbsolutePath());
 		
-		System.out.println(FeatureExtraction2.getFeatureLabels());
+		List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
+		createSchema(outputDir, labels);
 	}
 }

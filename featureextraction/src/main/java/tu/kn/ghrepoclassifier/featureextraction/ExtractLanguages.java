@@ -1,5 +1,7 @@
 package tu.kn.ghrepoclassifier.featureextraction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,11 +77,11 @@ public class ExtractLanguages {
 		return l;
 	}
 
-	public static String getFeatureLabels() {
-		String l = "";
+	public static List<String> getFeatureLabels() {
+		List<String> features = new ArrayList();
 		for (String p: top50ProgrammingLanguages) {
-			l += "language_" + p.replace(' ','_') + "\n";
+			features.add("language_" + p.replace(' ','_'));
 		}
-		return l;
+		return features;
 	}
 }

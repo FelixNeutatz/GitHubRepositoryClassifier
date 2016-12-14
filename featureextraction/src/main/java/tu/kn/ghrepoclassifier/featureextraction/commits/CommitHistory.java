@@ -3,8 +3,10 @@ package tu.kn.ghrepoclassifier.featureextraction.commits;
 import tu.kn.ghrepoclassifier.serialization.data.CommitData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -114,19 +116,19 @@ public class CommitHistory {
 		return l;
 	}
 
-	public static String getFeatureLabels() {
-		String l = "";
-		l += "projectTotalTime\n";
-		l += "startTime\n";
-		l += new Stats("AddedLines").getFeatureLabels();
-		l += new Stats("ChangedLines").getFeatureLabels();
-		l += new Stats("DeletedLines").getFeatureLabels();
-		l += new Stats("TimeBetweenCommits").getFeatureLabels();
+	public static List<String> getFeatureLabels() {
+		List<String> features = new ArrayList();
+		features.add("projectTotalTime");
+		features.add("startTime");
+		features.addAll(new Stats("AddedLines").getFeatureLabels());
+		features.addAll(new Stats("ChangedLines").getFeatureLabels());
+		features.addAll(new Stats("DeletedLines").getFeatureLabels());
+		features.addAll(new Stats("TimeBetweenCommits").getFeatureLabels());
 
 		for (int d = 0; d < 7; d++) {
-			l += "weekDayCount" + d + "\n";
+			features.add("weekDayCount" + d);
 		}
 		
-		return l;
+		return features;
 	}
 }

@@ -15,7 +15,7 @@ def run():
         "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
         1000)
 
-    train_frame, test_frame = split_train_test(category_frames)
+    train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
     mask[0] = False
@@ -68,21 +68,41 @@ def run():
     #print confusion_matrix(test_y, y_test_pred)
 
     #print f1_score(test_y, y_test_pred, average='weighted')
-    '''
+
     our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
                   'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
 
     final_gb = xgb.train(our_params, xgdmat, num_boost_round=3000)
 
     sns.set(font_scale=1.5)
-    xgb.plot_importance(final_gb)
+
+    '''
+     importance_type : str, default "weight"
+        How the importance is calculated: either "weight", "gain", or "cover"
+        "weight" is the number of times a feature appears in a tree
+        "gain" is the average gain of splits which use the feature
+        "cover" is the average coverage of splits which use the feature
+            where coverage is defined as the number of samples affected by the split
+    '''
+    xgb.plot_importance(final_gb, importance_type='gain') # try weight, gain, cover
     plt.show()
 
     xgdmat.feature_names
 
     #importances = final_gb.get_fscore()
     #print importances
-    '''
 
+
+    print cv_xgb.tail(5)
+
+    testdmat = xgb.DMatrix(test_x, feature_names={"numberBranches","numberForks","numberOpenIssues","totalNumberIssues","repoSize","numberStars","numberSubscribers","numberWatchers","numberReleases","indexHTMLfileLength","numberCommits","numberContributors","hasDownloads","descriptionLength","numberProgrammingLanguages","hasLicense","readmeSize","projectTotalTime","startTime","AddedLinesAverage","AddedLinesStdDev","AddedLinesMin","AddedLinesMax","ChangedLinesAverage","ChangedLinesStdDev","ChangedLinesMin","ChangedLinesMax","DeletedLinesAverage","DeletedLinesStdDev","DeletedLinesMin","DeletedLinesMax","TimeBetweenCommitsAverage","TimeBetweenCommitsStdDev","TimeBetweenCommitsMin","TimeBetweenCommitsMax","weekDayCount0","weekDayCount1","weekDayCount2","weekDayCount3","weekDayCount4","weekDayCount5","weekDayCount6","language_JavaScript","language_Java","language_Python","language_CSS","language_PHP","language_Ruby","language_C++","language_C","language_Shell","language_C#","language_Objective-C","language_R","language_VimL","language_Go","language_Perl","language_CoffeeScript","language_TeX","language_Swift","language_Scala","language_Emacs","language_Lisp","language_Haskell","language_Lua","language_Clojure","language_Matlab","language_Arduino","language_Groovy","language_Puppet","language_Rust","language_PowerShell","language_Erlang","language_Visual_Basic","language_Processing","language_Assembly","language_TypeScript","language_XSLT","language_ActionScript","language_ASP","language_OCaml","language_D","language_Scheme","language_Dart","language_Common_Lisp","language_Julia","language_F#","language_Elixir","language_FORTRAN","language_Haxe","language_Racket","language_Logos"})  # Create our DMatrix to make XGBoost more efficient
+
+
+    y_pred = final_gb.predict(testdmat)
+
+    ypred_test = np.argmax(y_pred, axis=1) #choose class with highest probability per sample
+
+    print confusion_matrix(test_y, ypred_test)
+    print f1_score(test_y, ypred_test, average='weighted')
 
 run()

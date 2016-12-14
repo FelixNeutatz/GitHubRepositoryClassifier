@@ -45,7 +45,6 @@ class PointBrowser(object):
 
     def onpick(self, event):
 
-
         N = len(event.ind)
         if not N:
             return True
@@ -53,8 +52,6 @@ class PointBrowser(object):
         # the click locations
         x = event.mouseevent.xdata
         y = event.mouseevent.ydata
-
-        print "ind:" + str(event.ind)
 
         distances = np.hypot(x - self.xs[event.ind], y - self.ys[event.ind])
         indmin = distances.argmin()
@@ -72,7 +69,8 @@ class PointBrowser(object):
         self.selected.set_visible(True)
         self.selected.set_data(self.xs[dataind], self.ys[dataind])
 
-        self.text.set_text('selected:' + self.labels[dataind])
+        splits = self.labels[dataind].split("/")
+        self.text.set_text('selected: ' + splits[-2] + "/" + splits[-1])
 
         self.current_repo = self.labels[dataind]
 

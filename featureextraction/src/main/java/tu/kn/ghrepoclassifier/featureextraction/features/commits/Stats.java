@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.featureextraction.commits;
+package tu.kn.ghrepoclassifier.featureextraction.features.commits;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,13 @@
-package tu.kn.ghrepoclassifier.featureextraction;
+package tu.kn.ghrepoclassifier.featureextraction.features;
 
+import tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
 import java.util.*;
 
-import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
-import tu.kn.ghrepoclassifier.featureextraction.commits.CommitHistory;
+import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages.extractProgrammingLanguages;
+import tu.kn.ghrepoclassifier.featureextraction.features.commits.CommitHistory;
 
 /**
  * Created by felix on 24.11.16.

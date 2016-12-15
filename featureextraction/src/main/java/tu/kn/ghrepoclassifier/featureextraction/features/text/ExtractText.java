@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.featureextraction;
+package tu.kn.ghrepoclassifier.featureextraction.features.text;
 
 import org.jsoup.Jsoup;
 import tu.kn.ghrepoclassifier.serialization.data.CommitData;

@@ -3,6 +3,7 @@ package tu.kn.ghrepoclassifier.featureextraction;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.io.FileUtils;
 import tu.kn.ghrepoclassifier.Config;
+import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -10,7 +11,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
-import static tu.kn.ghrepoclassifier.featureextraction.FeatureExtractionUnbiased.extractFeatures;
+import static tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased.extractFeatures;
 
 /**
  * Created by felix on 04.12.16.

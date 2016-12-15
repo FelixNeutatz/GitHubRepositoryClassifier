@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.featureextraction;
+package tu.kn.ghrepoclassifier.featureextraction.features.languages;
 
 import java.util.ArrayList;
 import java.util.List;

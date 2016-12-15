@@ -27,6 +27,7 @@ public class DataCleaner {
 			return false;
 		}
 		
+		//TODO: skip all repos from attachment A and B
 		
 		return true;
 	}

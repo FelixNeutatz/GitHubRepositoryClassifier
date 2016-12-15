@@ -1,6 +1,7 @@
-package tu.kn.ghrepoclassifier.featureextraction;
+package tu.kn.ghrepoclassifier.featureextraction.features;
 
 
+import tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static tu.kn.ghrepoclassifier.featureextraction.ExtractLanguages.extractProgrammingLanguages;
+import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages.extractProgrammingLanguages;
 
 /**
  * Created by felix on 24.11.16.

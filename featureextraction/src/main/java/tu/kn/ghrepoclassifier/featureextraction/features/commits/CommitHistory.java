@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.featureextraction.commits;
+package tu.kn.ghrepoclassifier.featureextraction.features.commits;
 
 import tu.kn.ghrepoclassifier.serialization.data.CommitData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;

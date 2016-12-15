@@ -46,9 +46,19 @@ public class Config {
 				"that contains the downloaded repo information (.bin files) for all repos in attachment A");
 		}
 		if (nullOrEmpty("attachmentA.repos.file")) {
-			throw new IllegalStateException("[sample.generation.git-accounts.file] in conf.properties must point to the " +
+			throw new IllegalStateException("[attachmentA.repos.file] in conf.properties must point to the " +
 				"file " +
 				"that contains all labeled repos of attachment A");
+		}
+		if (nullOrEmpty("attachmentB.download.output.path")) {
+			throw new IllegalStateException("[attachmentB.download.output.path] in conf.properties must point to the " +
+				"folder " +
+				"that contains the downloaded repo information (.bin files) for all repos in attachment B");
+		}
+		if (nullOrEmpty("attachmentB.repos.file")) {
+			throw new IllegalStateException("[attachmentB.repos.file] in conf.properties must point to the " +
+				"file " +
+				"that contains all labeled repos of attachment B");
 		}
 	}
 

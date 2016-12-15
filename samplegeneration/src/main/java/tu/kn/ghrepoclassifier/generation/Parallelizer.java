@@ -26,7 +26,11 @@ public class Parallelizer {
 	private File outputDir;
 	
 	public Parallelizer(int maxThreads, Iterator<String> propertyFiles, int numberAccounts, File outputDir) {
-		runningThreads = new AtomicInteger(0);
+		this(new AtomicInteger(0), maxThreads, propertyFiles, numberAccounts, outputDir);
+	}
+
+	public Parallelizer(AtomicInteger runningThreads, int maxThreads, Iterator<String> propertyFiles, int numberAccounts, File outputDir) {
+		this.runningThreads = runningThreads;
 		this.maxThreads = maxThreads;
 		this.propertyFiles = propertyFiles;
 		this.numberAccounts = numberAccounts;
@@ -97,5 +101,9 @@ public class Parallelizer {
 	
 	public void unregisterThread() {
 		runningThreads.decrementAndGet();
+	}
+
+	public AtomicInteger getRunningThreads() {
+		return runningThreads;
 	}
 }

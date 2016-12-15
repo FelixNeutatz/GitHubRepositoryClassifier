@@ -74,7 +74,7 @@
                 <archive>
                     <index>true</index>
                     <manifest>
-                        <mainClass>tu.kn.ghrepoclassifier.generation.GenerateSamples</mainClass>
+                        <mainClass>tu.kn.ghrepoclassifier.generation.main.GenerateSamples</mainClass>
                     </manifest>
                 </archive>
             </configuration>

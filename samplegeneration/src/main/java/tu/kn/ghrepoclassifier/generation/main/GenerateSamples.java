@@ -1,8 +1,9 @@
-package tu.kn.ghrepoclassifier.generation;
+package tu.kn.ghrepoclassifier.generation.main;
 
 import com.google.common.collect.Iterators;
 import org.kohsuke.github.*;
 import tu.kn.ghrepoclassifier.Config;
+import tu.kn.ghrepoclassifier.generation.Parallelizer;
 
 import java.io.File;
 import java.io.IOException;

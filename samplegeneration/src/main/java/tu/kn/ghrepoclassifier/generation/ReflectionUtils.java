@@ -1,4 +1,4 @@
-package tu.kn.ghrepoclassifier.serialization;
+package tu.kn.ghrepoclassifier.generation;
 
 import org.kohsuke.github.GHRepositorySearchBuilder;
 import org.kohsuke.github.GitHub;

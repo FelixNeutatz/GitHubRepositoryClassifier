@@ -31,12 +31,17 @@
 
 
   <dependencies>
+    <dependency>
+      <groupId>tu.kn.ghrepoclassifier</groupId>
+      <artifactId>commons</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
-      <dependency>
-          <groupId>tu.kn.ghrepoclassifier</groupId>
-          <artifactId>serialization</artifactId>
-          <version>1.0-SNAPSHOT</version>
-      </dependency>
+    <dependency>
+      <groupId>tu.kn.ghrepoclassifier</groupId>
+      <artifactId>serialization</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
@@ -105,7 +110,7 @@
                 <archive>
                     <index>true</index>
                     <manifest>
-                        <mainClass>tu.kn.ghrepoclassifier.serialization.GenerateSamples</mainClass>
+                        <mainClass>tu.kn.ghrepoclassifier.generation.GenerateSamples</mainClass>
                     </manifest>
                 </archive>
             </configuration>

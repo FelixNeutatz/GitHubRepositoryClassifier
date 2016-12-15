@@ -55,4 +55,29 @@ public class SaveSearch {
 		return isFinished;
 	}
 
+	public static void extractRepoToFile(String repoFullName,
+										 File out,
+										 String category,
+										 AtomicInteger count,
+										 GitHub github){
+		try {
+			String[] entries = {"","", category};
+
+			count.incrementAndGet();
+			
+			GHRepository repo = github.getRepository(repoFullName);
+			
+			if (!Serializer.exists(repo, out)) {
+				RepoData data = new RepoData(repo, category);
+				Serializer.writeToDir(out, data);
+
+				//GHMyself me = github.getMyself();
+				//GHRateLimit limit = github.getRateLimit();
+				//System.out.println(me + ":" + " current limit: " + limit.remaining + " count: " + count.get() + ": " + data.getName() + " id: " + data.getId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

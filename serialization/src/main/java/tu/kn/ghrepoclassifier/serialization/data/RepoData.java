@@ -114,6 +114,7 @@ public class RepoData implements Serializable{
 
 		this.commits = new ArrayList<>();
 		try {
+			//TODO: do binary search again in order to get all commits
 			for (GHCommit commit : repo.listCommits().withPageSize(100)){
 				this.commits.add (new CommitData(commit));
 			}

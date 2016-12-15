@@ -1,0 +1,3 @@
+/home/felix/.github
+/home/felix/gitpropmax
+/home/felix/maxpropgit2

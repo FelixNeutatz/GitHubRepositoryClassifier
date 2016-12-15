@@ -9,7 +9,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>featureextraction</artifactId>
+  <artifactId>commons</artifactId>
 
   <repositories>
     <repository>
@@ -33,17 +33,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>tu.kn.ghrepoclassifier</groupId>
-      <artifactId>commons</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>tu.kn.ghrepoclassifier</groupId>
-      <artifactId>serialization</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
@@ -56,24 +45,11 @@
       <scope>test</scope>
     </dependency>
 
-      <!-- csv reader dependencies-->
+      <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
       <dependency>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-csv</artifactId>
-          <version>1.4</version>
-      </dependency>
-
-      <!-- https://mvnrepository.com/artifact/org.commonjava.googlecode.markdown4j/markdown4j -->
-      <dependency>
-          <groupId>org.commonjava.googlecode.markdown4j</groupId>
-          <artifactId>markdown4j</artifactId>
-          <version>2.2-cj-1.1</version>
-      </dependency>
-      <!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
-      <dependency>
-          <groupId>org.jsoup</groupId>
-          <artifactId>jsoup</artifactId>
-          <version>1.10.1</version>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+          <version>20.0</version>
       </dependency>
 
 
@@ -90,6 +66,21 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+            <configuration>
+                <archive>
+                    <index>true</index>
+                    <manifest>
+                        <mainClass>tu.kn.ghrepoclassifier.generation.GenerateSamples</mainClass>
+                    </manifest>
+                </archive>
+            </configuration>
+        </plugin>
+        
+        
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

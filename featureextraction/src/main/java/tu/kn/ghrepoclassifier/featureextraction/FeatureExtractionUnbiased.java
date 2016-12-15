@@ -17,11 +17,11 @@ public class FeatureExtractionUnbiased {
 
 	public static String extractFeatures(RepoData repo) {
 		int numberBranches = repo.getBranches().size(); 							//number of branches
-		int numberForks = repo.getForks(); 											//number of forks
+		//int numberForks = repo.getForks(); 											//number of forks
 		int numberOpenIssues = repo.getOpenIssueCount();							//number of open issues
 		int totalNumberIssues = repo.listIssues().size();							//number of total issues
 		int repoSize = repo.getSize();												//size of the repository in bytes
-		int numberStars = repo.getStargazersCount();								//number of stars
+		//int numberStars = repo.getStargazersCount();								//number of stars
 		int numberSubscribers = repo.getSubscribersCount();							//number of subscribers
 		int numberWatchers = repo.getWatchers();									//number of watchers
 		int numberReleases = repo.listReleases().size();							//number of releases

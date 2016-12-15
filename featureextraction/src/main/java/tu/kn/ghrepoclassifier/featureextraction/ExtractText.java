@@ -2,6 +2,7 @@ package tu.kn.ghrepoclassifier.featureextraction;
 
 import org.jsoup.Jsoup;
 import tu.kn.ghrepoclassifier.serialization.data.CommitData;
+import tu.kn.ghrepoclassifier.serialization.data.ContentData;
 import tu.kn.ghrepoclassifier.serialization.data.IssueData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -14,7 +15,7 @@ import java.io.IOException;
  */
 public class ExtractText {
 	
-	public static String markdownToText(String markup) {
+	public static String markupToText(String markup) {
 		String html = null;
 		try {
 			html = new Markdown4jProcessor().process(markup);
@@ -37,14 +38,24 @@ public class ExtractText {
 
 		l += repo.getName();
 		l += "\n" + repo.getDescription();
-		l += "\n" + markdownToText(repo.getReadme().getContent());
+
+		ContentData readme = repo.getReadme();
+		if (readme != null) {
+			l += "\n" + markupToText(readme.getContent());
+		}
 		
 		for (CommitData commit: repo.getCommits()) {
 			l += "\n" + commit.getMessage();
 			//System.out.println("commit: " + commit.getMessage());
 		}
 		for (IssueData issue: repo.listIssues()) {
-			l += "\n" + markdownToText(issue.getBody());
+			l += "\n" + markupToText(issue.getBody());
+		}
+
+		ContentData indexHtml = repo.getIndexHTML();
+		if (indexHtml != null) {
+			String indexHtmlContent = indexHtml.getContent();
+			l += "\n" + Jsoup.parse(indexHtmlContent, "ISO-8859-1").text();
 		}
 
 		l = l.replace("\"", "");

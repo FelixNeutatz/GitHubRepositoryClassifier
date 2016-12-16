@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages.extractProgrammingLanguages;
-import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages
-	.extractProgrammingLanguagesFraction;
+import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages.*;
 
 /**
  * Created by felix on 24.11.16.
@@ -35,13 +33,6 @@ public class FeatureExtractionUnbiased {
 		if (repo.getDescription() != null) {
 			descriptionLength = repo.getDescription().length();
 		}
-
-		/*
-		try {
-			ExtractText.extractText(repo);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 
 		Map<String, Long> programmingLanguages = repo.listLanguages();				//number of programming languages
 

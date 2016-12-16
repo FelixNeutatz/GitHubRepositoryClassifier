@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages.extractProgrammingLanguages;
+import static tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages
+	.extractProgrammingLanguagesFraction;
 
 /**
  * Created by felix on 24.11.16.
@@ -45,7 +47,8 @@ public class FeatureExtractionUnbiased {
 
 		//this introduces sparsity
 		String languages = extractProgrammingLanguages(programmingLanguages);		//top 50 language contribution
-
+		String languagesFractions = extractProgrammingLanguagesFraction(programmingLanguages);
+		
 		int numberProgrammingLanguages = programmingLanguages.size();
 
 		int hasLicense = (repo.getLicense().length() > 0) ? 0 : 1;					//repo has a license
@@ -84,7 +87,8 @@ public class FeatureExtractionUnbiased {
 				+ "," + hasLicense					//repo has a license
 				+ "," + readmeSize					//size of the readme
 				+ "," + commitHistory				//summarized commit history
-				+ 		languages					//top 50 language contribution
+				+		languages					//all language contributions
+			    +		languagesFractions			//all language contribution fractions
 			;
 	}
 
@@ -109,6 +113,7 @@ public class FeatureExtractionUnbiased {
 		features.add("readmeSize");
 		features.addAll(CommitHistory.getFeatureLabels());
 		features.addAll(ExtractLanguages.getFeatureLabels());
+		features.addAll(ExtractLanguages.getFeatureLabelsFraction());
 
 		return features;
 	}

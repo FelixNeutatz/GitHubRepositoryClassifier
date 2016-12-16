@@ -1,6 +1,7 @@
 package tu.kn.ghrepoclassifier.featureextraction.features.languages;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -77,10 +78,36 @@ public class ExtractLanguages {
 		return l;
 	}
 
+	public static String extractProgrammingLanguagesFraction(Map<String, Long> languages) {
+		String l = "";
+		
+		double sum = 0.0;
+		for (Object ltotal: languages.values()) {
+			sum += Double.parseDouble("" + ltotal);
+		}
+
+		for (String p: allProgrammingLanguages) {
+			if (languages.containsKey(p)) {
+				l += "," + (Double.parseDouble("" + languages.get(p)) / sum );
+			} else {
+				l += ",0";
+			}
+		}
+		return l;
+	}
+
 	public static List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
 		for (String p: allProgrammingLanguages) {
-			features.add("language_" + p.replace(' ','_'));
+			features.add("lang_" + p.replace(' ','_'));
+		}
+		return features;
+	}
+
+	public static List<String> getFeatureLabelsFraction() {
+		List<String> features = new ArrayList();
+		for (String p: allProgrammingLanguages) {
+			features.add("lang_fraction_" + p.replace(' ','_'));
 		}
 		return features;
 	}

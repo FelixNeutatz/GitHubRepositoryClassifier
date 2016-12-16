@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from myio import *
+import config
 from sklearn.svm import SVC
 from sklearn.svm import LinearSVC
 from sklearn.metrics import confusion_matrix
@@ -9,12 +10,11 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import GridSearchCV
 from sklearn.multiclass import OneVsRestClassifier
+from config import Config
 
 
 def run():
-    category_frames = read(
-        "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
-        2000)
+    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 

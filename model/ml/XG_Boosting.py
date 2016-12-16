@@ -7,13 +7,12 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 import seaborn as sns
 import matplotlib.pyplot as plt
+from config import Config
 
 
 def run():
     #category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
-    category_frames = read(
-        "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
-        2000)
+    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
 
     schema = get_schema("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data")
 

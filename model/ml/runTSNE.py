@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import matplotlib.lines as mlines
 import colorsys
+from config import Config
 
 
 def plot(Y, train_y, train_repo_names):
@@ -44,9 +45,7 @@ def plot(Y, train_y, train_repo_names):
 
 def run():
     #category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
-    category_frames = read(
-        "/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data",
-        1000)
+    category_frames = read(Config.get("feature.extraction.output.path"), 1000)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.01)
 

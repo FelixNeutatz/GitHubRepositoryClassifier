@@ -14,7 +14,7 @@ def run():
     #category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
     category_frames = read(Config.get("feature.extraction.output.path"), 2000)
 
-    schema = get_schema("/home/felix/GitHubRepositoryClassifier/GitHubRepositoryClassifier/featureextraction/src/main/resources/data/features/data")
+    schema = get_schema(Config.get("feature.extraction.output.path"))
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 

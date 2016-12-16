@@ -7,7 +7,6 @@ import tu.kn.ghrepoclassifier.generation.Parallelizer;
 import tu.kn.ghrepoclassifier.generation.Repo;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -42,6 +42,8 @@ public class Extractor {
 	public static void extract(String inputDir, String outputDir) throws IOException {
 		String[] categories = getSubDirectories(inputDir);
 		System.out.println(Arrays.toString(categories));
+		
+		DataCleaner cleaner = new DataCleaner();
 
 		CSVWriter writer = null;
 		
@@ -58,7 +60,7 @@ public class Extractor {
 				for (File f: binFiles) {
 					RepoData repo = Serializer.readFromFile(f);
 					
-					if (DataCleaner.isValid(repo)) {
+					if (cleaner.isValid(repo)) {
 						entries[1] = extractFeatures(repo);
 						entries[0] = repo.getHtmlUrl().toString();
 

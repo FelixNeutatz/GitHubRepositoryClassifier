@@ -3,7 +3,7 @@ package tu.kn.ghrepoclassifier.featureextraction;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.io.FileUtils;
 import tu.kn.ghrepoclassifier.Config;
-import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased;
+import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -11,7 +11,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.List;
 
-import static tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased.extractFeatures;
+import static tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText.extractFeatures;
 
 /**
  * Created by felix on 04.12.16.
@@ -61,10 +61,11 @@ public class Extractor {
 					RepoData repo = Serializer.readFromFile(f);
 					
 					if (cleaner.isValid(repo)) {
+						System.out.println(repo.getFull_name());
 						entries[1] = extractFeatures(repo);
 						entries[0] = repo.getHtmlUrl().toString();
 
-						System.out.println(entries[0] + ", " + entries[1]);
+						//System.out.println(entries[0] + ", " + entries[1]);
 						writer.writeNext(entries);
 					}
 				}
@@ -101,7 +102,7 @@ public class Extractor {
 
 		extract(inputDir, outputDir.getAbsolutePath(), isTest);
 
-		List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
+		List<String> labels = ExtractText.getFeatureLabels();
 		createSchema(outputDir, labels);
 	}
 

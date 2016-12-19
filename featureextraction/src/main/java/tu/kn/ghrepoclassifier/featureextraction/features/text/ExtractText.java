@@ -9,6 +9,8 @@ import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 import org.markdown4j.Markdown4jProcessor;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by felix on 06.12.16.
@@ -33,35 +35,42 @@ public class ExtractText {
 		return text;
 	}
 	
-	public static String extractText(RepoData repo) throws IOException {
+	public static String extractFeatures(RepoData repo) throws IOException {
 		String l = "";
 
 		l += repo.getName();
-		l += "\n" + repo.getDescription();
+		l += " " + repo.getDescription();
 
 		ContentData readme = repo.getReadme();
 		if (readme != null) {
-			l += "\n" + markupToText(readme.getContent());
+			l += " " + markupToText(readme.getContent());
 		}
 		
 		for (CommitData commit: repo.getCommits()) {
-			l += "\n" + commit.getMessage();
-			//System.out.println("commit: " + commit.getMessage());
+			l += " " + commit.getMessage();
 		}
 		for (IssueData issue: repo.listIssues()) {
-			l += "\n" + markupToText(issue.getBody());
+			l += " " + markupToText(issue.getBody());
 		}
 
 		ContentData indexHtml = repo.getIndexHTML();
 		if (indexHtml != null) {
 			String indexHtmlContent = indexHtml.getContent();
-			l += "\n" + Jsoup.parse(indexHtmlContent, "ISO-8859-1").text();
+			l += " " + Jsoup.parse(indexHtmlContent, "ISO-8859-1").text();
 		}
 
-		l = l.replace("\"", "");
+		l = l.replace("\'", "");
+		l = l.replace("\n", " ");
+		l = l.replace("\r\n", " ");
 		
-		System.out.println(l);
+		l = l.toLowerCase();
 		
-		return "\"" + l + "\"";
+		return '\'' + l + '\'';
+	}
+
+	public static List<String> getFeatureLabels() {
+		List<String> features = new ArrayList();
+		features.add("text");
+		return features;
 	}
 }

@@ -3,7 +3,8 @@
 from os import listdir
 import pandas as pd
 import numpy as np
-
+import csv
+import sys
 
 def find_csv_filenames(path_to_dir, suffix=".csv"):
     filenames = listdir(path_to_dir)
@@ -26,6 +27,17 @@ def get_schema(input_dir):
 
     return tuple(schema_list)
 
+def read_stop_words():
+    stop_word_list = []
+    file_ = open("stop_words/stop_words_search.txt", 'rb')
+    try:
+        reader = csv.reader(file_)
+        for row in reader:
+            stop_word_list.append(row)
+    finally:
+        file_.close()
+
+    return np.asarray(stop_word_list).ravel()
 
 # read data
 def read(input_dir, max_samples_per_category):
@@ -40,8 +52,38 @@ def read(input_dir, max_samples_per_category):
 
         frame = pd.DataFrame()
         for file_ in category_files:
-            df = pd.read_csv(input_dir + "/" + file_, index_col=None, header=None)
+            df = pd.read_csv(input_dir + "/" + file_, index_col=None, header=None, encoding='utf-8', quotechar="\'")
 
+            frame = frame.append(df.head(n=max_samples_per_category))
+
+        category_frames.append(frame)
+
+    return category_frames
+
+def readNative(input_dir, max_samples_per_category):
+    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
+
+    csv.field_size_limit(sys.maxsize)
+
+    all_csv_files = find_csv_filenames(input_dir)
+
+    category_frames = []
+
+    for category_file_prefix in category_list.keys():
+        category_files = [f for f in all_csv_files if f.startswith("data" + category_file_prefix)]
+
+        frame = pd.DataFrame()
+        for file_s in category_files:
+            file_data_array = []
+            file_ = open(input_dir + "/" + file_s, 'rb')
+            try:
+                reader = csv.reader(file_, delimiter = ",", quotechar="\'")
+                for row in reader:
+                    file_data_array.append(row)
+            finally:
+                file_.close()
+
+            df = pd.DataFrame(file_data_array)
             frame = frame.append(df.head(n=max_samples_per_category))
 
         category_frames.append(frame)
@@ -79,10 +121,14 @@ def concat(category_frames):
 
 def encode_label(label):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
+    # todo: what is going wrong here
+    if label == None:
+        print "warning"
+        return -1
     return category_list[label]
 
 
-def dataframe_to_numpy_matrix_single(frame, mask):
+def dataframe_to_matrix(frame, mask):
     column_selection = np.where(mask)[0].tolist()
 
     # remove url
@@ -92,7 +138,11 @@ def dataframe_to_numpy_matrix_single(frame, mask):
     numerical_frame[numerical_frame.columns[-1]] = \
         numerical_frame[numerical_frame.columns[-1]].apply(encode_label)
 
-    return np.matrix(numerical_frame)
+    return numerical_frame
+
+def dataframe_to_numpy_matrix_single(frame, mask):
+    return np.matrix(dataframe_to_matrix(frame, mask))
+
 
 def dataframe_to_numpy_matrix(train_frame, test_frame, mask):
     train_numerical_frame = dataframe_to_numpy_matrix_single(train_frame, mask)

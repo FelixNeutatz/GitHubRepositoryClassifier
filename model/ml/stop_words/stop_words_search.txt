@@ -1,0 +1,11 @@
+homework
+tutorial
+lecture
+.github.io
+apache
+google
+facebook
+baidu
+documentation
+manual
+dataset

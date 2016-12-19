@@ -67,27 +67,38 @@ def split_train_test(category_frames, test_size=0.5):
 
     return train_frame, test_frame
 
+def concat(category_frames):
+    df_list_ = []
+    for df in category_frames:
+        df_list_.append(df)
+
+    df_frame = pd.concat(df_list_)
+
+    return df_frame
+
 
 def encode_label(label):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
     return category_list[label]
 
 
-def dataframe_to_numpy_matrix(train_frame, test_frame, mask):
+def dataframe_to_numpy_matrix_single(frame, mask):
     column_selection = np.where(mask)[0].tolist()
 
     # remove url
-    train_numerical_frame = train_frame.ix[:, column_selection]
-    test_numerical_frame = test_frame.ix[:, column_selection]
+    numerical_frame = frame.ix[:, column_selection]
 
     # encode labels
-    train_numerical_frame[train_numerical_frame.columns[-1]] = \
-        train_numerical_frame[train_numerical_frame.columns[-1]].apply(encode_label)
+    numerical_frame[numerical_frame.columns[-1]] = \
+        numerical_frame[numerical_frame.columns[-1]].apply(encode_label)
 
-    test_numerical_frame[test_numerical_frame.columns[-1]] = \
-        test_numerical_frame[test_numerical_frame.columns[-1]].apply(encode_label)
+    return np.matrix(numerical_frame)
 
-    return np.matrix(train_numerical_frame), np.matrix(test_numerical_frame)
+def dataframe_to_numpy_matrix(train_frame, test_frame, mask):
+    train_numerical_frame = dataframe_to_numpy_matrix_single(train_frame, mask)
+    test_numerical_frame = dataframe_to_numpy_matrix_single(test_frame, mask)
+
+    return train_numerical_frame, test_numerical_frame
 
 
 def split_target_from_data(all_data):

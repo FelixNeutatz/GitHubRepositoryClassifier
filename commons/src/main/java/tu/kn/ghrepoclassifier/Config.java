@@ -50,6 +50,11 @@ public class Config {
 				"file " +
 				"that contains all labeled repos of attachment A");
 		}
+		if (nullOrEmpty("attachmentA.feature.extraction.output.path")) {
+			throw new IllegalStateException("[attachmentA.feature.extraction.output.path] in conf.properties must point to the " +
+				"folder " +
+				"that contains one .csv file of samples of attachment A for every class");
+		}
 		if (nullOrEmpty("attachmentB.download.output.path")) {
 			throw new IllegalStateException("[attachmentB.download.output.path] in conf.properties must point to the " +
 				"folder " +

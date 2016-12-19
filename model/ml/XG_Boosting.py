@@ -11,8 +11,7 @@ from config import Config
 
 
 def run():
-    #category_frames = read("../../samplegeneration/src/main/resources/data/generated_29_11_16")
-    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
+    category_frames = read(Config.get("feature.extraction.output.path"), 158)
 
     schema = get_schema(Config.get("feature.extraction.output.path"))
 
@@ -104,5 +103,22 @@ def run():
 
     print confusion_matrix(test_y, ypred_test)
     print f1_score(test_y, ypred_test, average='weighted')
+
+    attachment_a_frames = read(Config.get("attachmentA.feature.extraction.output.path"), 150)
+
+    attachment_a_frame = concat(attachment_a_frames)
+
+    attachment_a_matrix = dataframe_to_numpy_matrix_single(attachment_a_frame, mask)
+
+    attachment_a_x, attachment_a_y = split_target_from_data(attachment_a_matrix)
+
+    attachment_a_mat = xgb.DMatrix(attachment_a_x, feature_names=schema)
+
+    attachment_a_y_pred = final_gb.predict(attachment_a_mat)
+
+    attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
+
+    print confusion_matrix(attachment_a_y, attachment_a_ypred_test)
+    print f1_score(attachment_a_y, attachment_a_ypred_test, average='weighted')
 
 run()

@@ -39,11 +39,11 @@ public class Extractor {
 		return binFiles;
 	}
 	
-	public static void extract(String inputDir, String outputDir) throws IOException {
+	public static void extract(String inputDir, String outputDir, boolean isTest) throws IOException {
 		String[] categories = getSubDirectories(inputDir);
 		System.out.println(Arrays.toString(categories));
 		
-		DataCleaner cleaner = new DataCleaner();
+		DataCleaner cleaner = new DataCleaner(isTest);
 
 		CSVWriter writer = null;
 		
@@ -93,17 +93,29 @@ public class Extractor {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void extractFromDir(String inputDir, String outputDirS, boolean isTest) throws IOException {
+		File outputDir = new File(outputDirS);
+
+		FileUtils.cleanDirectory(outputDir);
+
+		extract(inputDir, outputDir.getAbsolutePath(), isTest);
+
+		List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
+		createSchema(outputDir, labels);
+	}
 
 	public static void main(String[] args) throws IOException {
 
 		String inputDir = Config.get("sample.generation.output.path");
-		File outputDir = new File(Config.get("feature.extraction.output.path"));
+		String outputDir = Config.get("feature.extraction.output.path");
 
-		FileUtils.cleanDirectory(outputDir);
+		extractFromDir(inputDir, outputDir, false);
+
+		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
+		String outputDirAttachmentA = Config.get("attachmentA.feature.extraction.output.path");
+
+		extractFromDir(inputDirAttachmentA, outputDirAttachmentA, true);
 		
-		extract(inputDir, outputDir.getAbsolutePath());
-		
-		List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
-		createSchema(outputDir, labels);
 	}
 }

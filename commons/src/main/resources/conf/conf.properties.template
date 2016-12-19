@@ -3,5 +3,6 @@ sample.generation.git-accounts.file=
 feature.extraction.output.path=
 attachmentA.download.output.path=
 attachmentA.repos.file=
+attachmentA.feature.extraction.output.path=
 attachmentB.download.output.path=
 attachmentB.repos.file=

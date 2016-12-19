@@ -14,12 +14,17 @@ import java.util.Set;
  */
 public class DataCleaner {
 	private Set<String> testRepos;
+	private boolean isTest;
 	
-	public DataCleaner() {
+	
+	public DataCleaner(boolean isTest) {
+		this.isTest = isTest;
 		testRepos = new HashSet<String>();
 
-		populateTestData(Config.get("attachmentA.repos.file"));
-		populateTestData(Config.get("attachmentB.repos.file"));
+		if (!isTest) {
+			populateTestData(Config.get("attachmentA.repos.file"));
+			populateTestData(Config.get("attachmentB.repos.file"));
+		}
 	}
 	
 	public void populateTestData(String testCsvFile) {
@@ -58,7 +63,7 @@ public class DataCleaner {
 		
 		//check whether it is contained within the test data
 		//if so skip it
-		if (testRepos.contains(repo.getHtmlUrl())) {
+		if (!isTest && testRepos.contains(repo.getHtmlUrl().toString())) {
 			System.err.println("Repo was found in the test data and will be skipped: " + repo.getFull_name());
 			return false;
 		}

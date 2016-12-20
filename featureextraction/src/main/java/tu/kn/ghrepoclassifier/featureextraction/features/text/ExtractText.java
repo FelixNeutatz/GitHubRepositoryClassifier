@@ -61,7 +61,7 @@ public class ExtractText {
 
 		l = l.replace("\'", "");
 		l = l.replace("\n", " ");
-		l = l.replace("\r\n", " ");
+		l = l.replace("\r", " ");
 		
 		l = l.toLowerCase();
 		

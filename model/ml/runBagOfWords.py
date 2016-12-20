@@ -19,8 +19,13 @@ from sklearn.metrics import f1_score
 # http://scikit-learn.org/stable/auto_examples/model_selection/grid_search_text_feature_extraction.html#sphx-glr-auto-examples-model-selection-grid-search-text-feature-extraction-py
 # https://www.kaggle.com/c/word2vec-nlp-tutorial/details/part-1-for-beginners-bag-of-words
 
+def visualize(y_real, y_pred):
+    print confusion_matrix(np.array(y_real).tolist(), np.array(y_pred).tolist())
+    print f1_score(np.array(y_real).tolist(), np.array(y_pred).tolist(), average='weighted')
+
+
 def run():
-    category_frames = readNative(Config.get("feature.extraction.output.path"), 169)
+    category_frames = readNative(Config.get("feature.extraction.output.path"), 177)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 
@@ -84,8 +89,7 @@ def run():
     clf = pipeline.fit(X, y)
     y_pred = clf.predict(test_x.A.ravel())
 
-    print confusion_matrix(np.array(test_y).tolist(), np.array(y_pred).tolist())
-    print f1_score(np.array(test_y).tolist(), np.array(y_pred).tolist(), average='weighted')
+    visualize(test_y, y_pred)
 
     # attachment A
     attachment_a_frames = readNative(Config.get("attachmentA.feature.extraction.output.path"), 150)
@@ -98,7 +102,6 @@ def run():
 
     attachment_a_y_pred = clf.predict(attachment_a_x.A.ravel())
 
-    print confusion_matrix(np.array(attachment_a_y).tolist(), np.array(attachment_a_y_pred).tolist())
-    print f1_score(np.array(attachment_a_y).tolist(), np.array(attachment_a_y_pred).tolist(), average='weighted')
+    visualize(attachment_a_y, attachment_a_y_pred)
 
 run()

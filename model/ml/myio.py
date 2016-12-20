@@ -6,6 +6,7 @@ import numpy as np
 import csv
 import sys
 
+
 def find_csv_filenames(path_to_dir, suffix=".csv"):
     filenames = listdir(path_to_dir)
     return [filename for filename in filenames if filename.endswith(suffix)]
@@ -27,6 +28,7 @@ def get_schema(input_dir):
 
     return tuple(schema_list)
 
+
 def read_stop_words():
     stop_word_list = []
     file_ = open("stop_words/stop_words_search.txt", 'rb')
@@ -38,6 +40,7 @@ def read_stop_words():
         file_.close()
 
     return np.asarray(stop_word_list).ravel()
+
 
 # read data
 def read(input_dir, max_samples_per_category):
@@ -60,6 +63,7 @@ def read(input_dir, max_samples_per_category):
 
     return category_frames
 
+
 def readNative(input_dir, max_samples_per_category):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
 
@@ -80,7 +84,8 @@ def readNative(input_dir, max_samples_per_category):
                 reader = csv.reader(file_, delimiter = ",", quotechar="\'")
                 for row in reader:
                     if (len(row) < 3):
-                        print row
+                        #print row
+                        print len(row)
                     else:
                         file_data_array.append(row)
             finally:
@@ -112,6 +117,7 @@ def split_train_test(category_frames, test_size=0.5):
 
     return train_frame, test_frame
 
+
 def concat(category_frames):
     df_list_ = []
     for df in category_frames:
@@ -142,6 +148,7 @@ def dataframe_to_matrix(frame, mask):
         numerical_frame[numerical_frame.columns[-1]].apply(encode_label)
 
     return numerical_frame
+
 
 def dataframe_to_numpy_matrix_single(frame, mask):
     return np.matrix(dataframe_to_matrix(frame, mask))

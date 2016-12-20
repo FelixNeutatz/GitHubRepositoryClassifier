@@ -79,7 +79,10 @@ def readNative(input_dir, max_samples_per_category):
             try:
                 reader = csv.reader(file_, delimiter = ",", quotechar="\'")
                 for row in reader:
-                    file_data_array.append(row)
+                    if (len(row) < 3):
+                        print row
+                    else:
+                        file_data_array.append(row)
             finally:
                 file_.close()
 

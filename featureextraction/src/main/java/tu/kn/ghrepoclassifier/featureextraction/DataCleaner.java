@@ -68,6 +68,11 @@ public class DataCleaner {
 			return false;
 		}
 		
+		//text extraction problems
+		if (repo.getFull_name().equals("yui/yuidoc")) {
+			return false;
+		}
+		
 		return true;
 	}
 }

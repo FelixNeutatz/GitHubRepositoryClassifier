@@ -45,13 +45,13 @@ def run():
     # uncommenting more parameters will give better exploring power but will
     # increase processing time in a combinatorial way
     parameters = {
-        'vect__max_df': (0.5, 0.75, 1.0),
+        'vect__max_df':(0.5, 0.75, 1.0),
         # 'vect__max_features': (None, 5000, 10000, 50000),
-        'vect__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+        'vect__ngram_range':((1, 1), (1, 2)),  # unigrams or bigrams
         # 'tfidf__use_idf': (True, False),
         # 'tfidf__norm': ('l1', 'l2'),
-        'clf__alpha': (0.00001, 0.000001),
-        'clf__penalty': ('l2', 'elasticnet'),
+        'clf__alpha':(0.00001, 0.000001),
+        'clf__penalty':('l2', 'elasticnet')
         # 'clf__n_iter': (10, 50, 80),
     }
 
@@ -71,21 +71,34 @@ def run():
 
     print("Best score: %0.3f" % grid_search.best_score_)
     print("Best parameters set:")
-    best_parameters = grid_search.best_estimator_.get_params()
+    best_parameters = grid_search.best_estimator_.get_params(deep=True)
     for param_name in sorted(parameters.keys()):
         print("\t%s: %r" % (param_name, best_parameters[param_name]))
 
 
-    #pipeline.fit()
-    #pipeline.named_steps['vect']
+    pipeline.set_params(**best_parameters)
 
     X = train_x.A.ravel()
     y = np.array(train_y).tolist()
 
-    clf = pipeline.fit(X, y, best_parameters)
+    clf = pipeline.fit(X, y)
     y_pred = clf.predict(test_x.A.ravel())
 
     print confusion_matrix(np.array(test_y).tolist(), np.array(y_pred).tolist())
     print f1_score(np.array(test_y).tolist(), np.array(y_pred).tolist(), average='weighted')
+
+    # attachment A
+    attachment_a_frames = readNative(Config.get("attachmentA.feature.extraction.output.path"), 150)
+
+    attachment_a_frame = concat(attachment_a_frames)
+
+    attachment_a_matrix = dataframe_to_numpy_matrix_single(attachment_a_frame, mask)
+
+    attachment_a_x, attachment_a_y = split_target_from_data(attachment_a_matrix)
+
+    attachment_a_y_pred = clf.predict(attachment_a_x.A.ravel())
+
+    print confusion_matrix(np.array(attachment_a_y).tolist(), np.array(attachment_a_y_pred).tolist())
+    print f1_score(np.array(attachment_a_y).tolist(), np.array(attachment_a_y_pred).tolist(), average='weighted')
 
 run()

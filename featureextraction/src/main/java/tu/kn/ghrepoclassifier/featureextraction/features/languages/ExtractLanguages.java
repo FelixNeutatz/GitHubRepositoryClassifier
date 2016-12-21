@@ -88,7 +88,11 @@ public class ExtractLanguages {
 
 		for (String p: allProgrammingLanguages) {
 			if (languages.containsKey(p)) {
-				l += "," + (Double.parseDouble("" + languages.get(p)) / sum );
+				if (sum != 0.0) {
+					l += "," + (Double.parseDouble("" + languages.get(p)) / sum);
+				} else {
+					l += ",0";
+				}
 			} else {
 				l += ",0";
 			}

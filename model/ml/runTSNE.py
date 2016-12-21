@@ -44,7 +44,7 @@ def plot(Y, train_y, train_repo_names):
     plt.show()
 
 def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 1000)
+    category_frames = read(Config.get("feature.extraction.output.path"), 189)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.01)
 

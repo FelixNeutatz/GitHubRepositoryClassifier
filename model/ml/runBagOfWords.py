@@ -142,7 +142,7 @@ def run():
         ind = np.arange(k)
         plt.bar(ind, feature_weights)
         plt.title('top 10 features for ' + category_list[id])
-        plt.xticks(np.arange(k), feature_names)
+        plt.xticks(np.arange(k) + 0.5, feature_names, rotation='vertical')
         plt.xlabel('features')
         plt.ylabel('weight')
         plt.tight_layout()

@@ -12,13 +12,6 @@ def find_csv_filenames(path_to_dir, suffix=".csv"):
     return [filename for filename in filenames if filename.endswith(suffix)]
 
 
-def to_tuple(a):
-    try:
-        return tuple(to_tuple(i) for i in a)
-    except TypeError:
-        return a
-
-
 def get_schema(input_dir):
     schema_df = pd.read_csv(input_dir + "/" + "schema.csv", index_col=None, header=None)
 
@@ -64,7 +57,7 @@ def read(input_dir, max_samples_per_category):
     return category_frames
 
 
-def readNative(input_dir, max_samples_per_category):
+def read_native(input_dir, max_samples_per_category):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
 
     csv.field_size_limit(sys.maxsize)

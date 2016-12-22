@@ -22,6 +22,8 @@ public class CommitHistory {
 	private long projectTotalTime;
 	private long n;
 	private long startTime;
+	private Date firstCommitDate;
+	private Date lastCommitDate;
 	
 	private RepoData repo;
 	
@@ -35,16 +37,13 @@ public class CommitHistory {
 		projectTotalTime = 0;
 		n = 0;
 		startTime = 0L;
+		firstCommitDate = null;
+		lastCommitDate = null;
 		
 		calculate();
 	}
 
 	public void calculate() {
-		Date firstCommitDate = null;
-		long startTime = 0L;
-
-		Date lastCommitDate = null;
-
 		try {
 			for (CommitData commit: repo.getCommits()) {
 				//gather statistics about the lines added by each commit

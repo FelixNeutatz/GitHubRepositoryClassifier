@@ -27,7 +27,7 @@ def visualize(y_real, y_pred):
 
 
 def run():
-    category_frames = readNative(Config.get("feature.extraction.output.path"), 184)
+    category_frames = read_native(Config.get("feature.extraction.output.path"), 184)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 
@@ -157,7 +157,7 @@ def run():
     visualize(test_y, y_pred)
 
     # attachment A
-    attachment_a_frames = readNative(Config.get("attachmentA.feature.extraction.output.path"), 150)
+    attachment_a_frames = read_native(Config.get("attachmentA.feature.extraction.output.path"), 150)
 
     attachment_a_frame = concat(attachment_a_frames)
 

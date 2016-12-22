@@ -116,7 +116,7 @@ def run():
 
     clf = pipeline.fit(X, y)
 
-    '''
+
     # feature visualization
     vec = clf.named_steps['vect']
     vocabulary = vec.vocabulary_
@@ -126,7 +126,7 @@ def run():
 
     category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
 
-    k = 10
+    k = 20
     for id in range(0, len(category_list)):
         max_ids = np.argsort(-weights[id])
         values = np.sort(-weights[id])
@@ -139,15 +139,18 @@ def run():
                     feature_names[i] = key_d
                     feature_weights[i] = -values[i]
 
+        print feature_names
+        print feature_weights
+
         ind = np.arange(k)
         plt.bar(ind, feature_weights)
-        plt.title('top 10 features for ' + category_list[id])
+        plt.title('top ' + str(k) + ' features for ' + category_list[id])
         plt.xticks(np.arange(k) + 0.5, feature_names, rotation='vertical')
         plt.xlabel('features')
         plt.ylabel('weight')
         plt.tight_layout()
         plt.show()
-    '''
+
 
     y_pred = clf.predict(test_x.A.ravel())
 

@@ -11,7 +11,7 @@ from config import Config
 
 
 def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 158)
+    category_frames = read(Config.get("feature.extraction.output.path"), 189)
 
     schema = get_schema(Config.get("feature.extraction.output.path"))
 
@@ -86,6 +86,14 @@ def run():
     '''
     xgb.plot_importance(final_gb, importance_type='gain') # try weight, gain, cover
     plt.show()
+
+    print "gain:"
+    importances = final_gb.get_score(importance_type='gain')
+    print importances
+
+    print "weight:"
+    importancesW = final_gb.get_score(importance_type='weight')
+    print importancesW
 
     xgdmat.feature_names
 

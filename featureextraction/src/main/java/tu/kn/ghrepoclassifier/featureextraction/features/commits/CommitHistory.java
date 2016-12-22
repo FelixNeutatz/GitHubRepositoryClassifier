@@ -98,7 +98,7 @@ public class CommitHistory {
 		String l = "";
 
 		l += projectTotalTime;
-		l += "," + startTime;
+		//l += "," + startTime;
 		l += "," + addedLines.toString();
 		l += "," + changedLines.toString();
 		l += "," + deletedLines.toString();
@@ -118,7 +118,7 @@ public class CommitHistory {
 	public static List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
 		features.add("projectTotalTime");
-		features.add("startTime");
+		//features.add("startTime");
 		features.addAll(new Stats("AddedLines").getFeatureLabels());
 		features.addAll(new Stats("ChangedLines").getFeatureLabels());
 		features.addAll(new Stats("DeletedLines").getFeatureLabels());

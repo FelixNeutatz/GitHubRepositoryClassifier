@@ -76,7 +76,8 @@ def read_native(input_dir, max_samples_per_category):
             try:
                 reader = csv.reader(file_, delimiter = ",", quotechar="\'")
                 for row in reader:
-                    if (len(row) < 3):
+                    # TODO why can len(row) < 3
+                    if len(row) < 3:
                         #print row
                         print len(row)
                     else:

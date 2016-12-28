@@ -1,12 +1,11 @@
 package tu.kn.ghrepoclassifier.featureextraction.features.text;
 
 import org.jsoup.Jsoup;
+import org.markdown4j.Markdown4jProcessor;
 import tu.kn.ghrepoclassifier.serialization.data.CommitData;
 import tu.kn.ghrepoclassifier.serialization.data.ContentData;
 import tu.kn.ghrepoclassifier.serialization.data.IssueData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
-
-import org.markdown4j.Markdown4jProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -4,6 +4,9 @@ import au.com.bytecode.opencsv.CSVWriter;
 import org.apache.commons.io.FileUtils;
 import tu.kn.ghrepoclassifier.Config;
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased;
+import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractor;
+import tu.kn.ghrepoclassifier.featureextraction.features.LabelExtractor;
+import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -18,27 +21,15 @@ import java.util.List;
 public class Extractor {
 	
 	public static String[] getSubDirectories(String dir) {
-		File file = new File(dir);
-		String[] directories = file.list(new FilenameFilter() {
-			@Override
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-		});
-		return directories;
+		return new File(dir).list((current, name) -> new File(current, name).isDirectory());
 	}
 	
 	public static File[] getBinFiles(String categoryDir) {
-		File[] binFiles = new File(categoryDir).listFiles(new FileFilter() {
-			@Override
-			public boolean accept(File file) {
-				return file.getName().endsWith(".bin");
-			}
-		});
-		return binFiles;
+		return new File(categoryDir).listFiles(file -> file.getName().endsWith(".bin"));
 	}
 	
-	public static void extract(String inputDir, String outputDir, boolean isTest) throws IOException {
+	public static void extract(FeatureExtractor featureExt, String inputDir, String outputDir, boolean isTest)
+			throws IOException {
 		String[] categories = getSubDirectories(inputDir);
 		System.out.println(Arrays.toString(categories));
 		
@@ -62,7 +53,8 @@ public class Extractor {
 					if (cleaner.isValid(repo)) {
 						System.out.println(repo.getFull_name());
 						// entries[1] = ExtractText.extractFeatures(repo);
-						entries[1] = FeatureExtractionUnbiased.extractFeatures(repo);
+						// entries[1] = FeatureExtractionUnbiased.extractFeatures(repo);
+						entries[1] = featureExt.extractFeatures(repo);
 						entries[0] = repo.getHtmlUrl().toString();
 
 						//System.out.println(entries[0] + ", " + entries[1]);
@@ -95,7 +87,8 @@ public class Extractor {
 		}
 	}
 	
-	public static void extractFromDir(String inputDir, String outputDirS, boolean isTest) throws IOException {
+	public static void extractFromDir(FeatureExtractor featureExt, LabelExtractor labelExt, String inputDir,
+									  String outputDirS, boolean isTest) throws IOException {
 		File outputDir = new File(outputDirS);
 
 		if (Files.exists(outputDir.toPath()))
@@ -103,15 +96,15 @@ public class Extractor {
 		else
 			Files.createDirectories(outputDir.toPath());
 
-		extract(inputDir, outputDir.getAbsolutePath(), isTest);
+		extract(featureExt, inputDir, outputDir.getAbsolutePath(), isTest);
 
 		// List<String> labels = ExtractText.getFeatureLabels();
-		List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
-		createSchema(outputDir, labels);
+		// List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
+		// createSchema(outputDir, labels);
+		createSchema(outputDir, labelExt.getFeatureLabels());
 	}
 
-	public static void main(String[] args) throws IOException {
-
+	public static void extractMetaFeatures() throws IOException {
 		String inputDir = Config.get("sample.generation.output.path");
 		String outputDir = Config.get("feature.extraction.output.path");
 
@@ -121,10 +114,34 @@ public class Extractor {
 		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
 		String outputDirAttachmentB = Config.get("attachmentB.feature.extraction.output.path");
 
-		extractFromDir(inputDir, outputDir, false);
+		FeatureExtractor featureExt = FeatureExtractionUnbiased::extractFeatures;
+		LabelExtractor labelExt = FeatureExtractionUnbiased::getFeatureLabels;
 
-		extractFromDir(inputDirAttachmentA, outputDirAttachmentA, true);
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+	}
 
-		extractFromDir(inputDirAttachmentB, outputDirAttachmentB, true);
+	public static void extractTextFeatures() throws IOException {
+		String inputDir = Config.get("sample.generation.output.path");
+		String outputDir = Config.get("feature_text.extraction.output.path");
+
+		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
+		String outputDirAttachmentA = Config.get("attachmentA.feature_text.extraction.output.path");
+
+		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
+		String outputDirAttachmentB = Config.get("attachmentB.feature_text.extraction.output.path");
+
+		FeatureExtractor featureExt = ExtractText::extractFeatures;
+		LabelExtractor labelExt = ExtractText::getFeatureLabels;
+
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+	}
+
+	public static void main(String[] args) throws IOException {
+		// extractMetaFeatures();
+		extractTextFeatures();
 	}
 }

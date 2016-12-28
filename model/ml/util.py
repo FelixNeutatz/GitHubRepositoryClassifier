@@ -24,7 +24,7 @@ def test(clf, x, y):
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=cv_def,
-                        n_jobs=1, train_sizes=np.linspace(.1, 1.0, 5)):
+                        n_jobs=4, train_sizes=np.linspace(.1, 1.0, 5)):
     plt.figure()
     plt.title(title)
     if ylim is not None:

@@ -16,6 +16,6 @@ class Config:
 
     @staticmethod
     def get(key):
-        if (len(Config.config) == 0):
+        if len(Config.config) == 0:
             Config.load()
         return Config.config[key]

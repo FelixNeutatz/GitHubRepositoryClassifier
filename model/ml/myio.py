@@ -74,12 +74,11 @@ def read_native(input_dir, max_samples_per_category):
             file_data_array = []
             file_ = open(input_dir + "/" + file_s, 'rb')
             try:
-                reader = csv.reader(file_, delimiter = ",", quotechar="\'")
+                reader = csv.reader(file_, delimiter=",", quotechar="\'")
                 for row in reader:
                     # TODO why can len(row) < 3
                     if len(row) < 3:
-                        #print row
-                        print len(row)
+                        print "Error: row", row, "has only length", len(row)
                     else:
                         file_data_array.append(row)
             finally:
@@ -125,7 +124,7 @@ def concat(category_frames):
 def encode_label(label):
     category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
     # todo: what is going wrong here
-    if label == None:
+    if label is None:
         print "warning"
         return -1
     return category_list[label]
@@ -158,5 +157,4 @@ def dataframe_to_numpy_matrix(train_frame, test_frame, mask):
 def split_target_from_data(all_data):
     x = all_data[:, 0:-1]
     y = all_data[:, -1].A1
-
     return x, y

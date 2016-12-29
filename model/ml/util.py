@@ -17,8 +17,8 @@ def fit_cv(clf, train_x, train_y, params, cv=cv_def):
     return grid
 
 
-def test(clf, x, y):
-    y_pred = clf.predict(x)
+def test(clf, X, y):
+    y_pred = clf.predict(X)
     print confusion_matrix(y, y_pred)
     print f1_score(y, y_pred, average='weighted')
 

@@ -18,4 +18,5 @@ train_x = scaler.fit_transform(train_x)
 
 vals = PCA().fit(train_x, train_y).explained_variance_
 plt.plot(range(len(vals)), sorted(vals, reverse=True))
+plt.title("PC variance based on meta features")
 plt.show()

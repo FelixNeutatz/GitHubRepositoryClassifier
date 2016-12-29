@@ -20,8 +20,9 @@ public class ExtractText {
 		String html = null;
 		try {
 			html = new Markdown4jProcessor().process(markup);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			System.err.println("Error converting markup to text");
 			return markup;
 		}
 

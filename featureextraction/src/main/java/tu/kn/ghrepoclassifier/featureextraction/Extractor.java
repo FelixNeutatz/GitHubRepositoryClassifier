@@ -64,6 +64,7 @@ public class Extractor {
 				writer.flush();
 				writer.close();
 			} catch (Exception e) {
+				System.err.println("Error extracting features for category " + category);
 				e.printStackTrace();
 			}
 		}
@@ -135,9 +136,9 @@ public class Extractor {
 		FeatureExtractor featureExt = ExtractText::extractFeatures;
 		LabelExtractor labelExt = ExtractText::getFeatureLabels;
 
-		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		//extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
 		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
-		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+		//extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
 	}
 
 	public static void main(String[] args) throws IOException {

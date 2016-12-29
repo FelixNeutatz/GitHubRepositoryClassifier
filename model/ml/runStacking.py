@@ -41,6 +41,7 @@ def load_data(meta_or_text):
         path_a = "attachmentA.feature_text.extraction.output.path"
         category_frames = read_native(Config.get(path_train), max_samples_per_category)
         a_frame = concat(read_native(Config.get(path_a), max_samples_per_category))
+    print "Shapes:", str([f.shape for f in category_frames])
     schema = get_schema(Config.get(path_train))
     frame1, frame2 = split_train_test(category_frames, test_size=0.5)
     mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
@@ -48,6 +49,7 @@ def load_data(meta_or_text):
     mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
     X1, y1 = split_target_from_data(mat1)
     X2, y2 = split_target_from_data(mat2)
+    print "X1:", X1.shape, "X2:", X2.shape
     a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
     Xa, ya = split_target_from_data(a_mat)
     return X1, y1, X2, y2, schema, Xa, ya
@@ -100,32 +102,30 @@ def train_text(X, y):
 
 def train_stacking(X, y):
     clf = OneVsRestClassifier(LogisticRegression(random_state=42))
-    clf = fit_cv(clf, X, y, { 'estimator__C': np.logspace(-3, 3, 7) })
+    clf = fit_cv(clf, X, y, {'estimator__C': np.logspace(-5, 5, 11)})
     print("Best parameters are %s with a score of %0.2f" % (clf.best_params_, clf.best_score_))
     return clf
 
 
-def build_stacking_data(clf1, X1, y1, clf2, X2, y2):
-    f1 = clf1.predict(X1)
-    f2 = clf2.predict(X2)
-    X = np.concatenate((f1, f2), axis=0)
-    assert y1 == y2
-    y = y1
+def build_stacking_data(clf_meta, X_meta, y_meta, schema_meta, clf_text, X_text, y_text):
+    assert len(y_meta) == len(y_text)
+    assert sum(y_meta - y_text) == 0
+    xgdmat = xgb.DMatrix(X_meta, feature_names=schema_meta)
+    f1 = clf_meta.predict(xgdmat)  # xgb always predicts probabilities
+    f2 = clf_text.predict_proba(X_text)
+    X = np.concatenate((f1, f2), axis=1)
+    y = y_meta
     return X, y
 
 
 X1_meta, y1_meta, X2_meta, y2_meta, schema_meta, Xa_meta, a_y_meta = get_data_meta()
 X1_text, y1_text, X2_text, y2_text, schema_text, a_X_text, a_y_text = get_data_text()
-print len(y1_text), len(y2_text)
-assert len(y1_text) == len(y2_text)
-assert sum(y1_text - y1_meta) == 0
-assert sum(y2_text - y2_meta) == 0
 # train meta classifier and text classifiers on X1 and y1
-#clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
-#clf_text = train_text(X1_text, y1_text)
+clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
+clf_text = train_text(X1_text, y1_text)
 # train stacked classifier based on classification of first level classifiers (meta and text)
-#X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, clf_text, X2_text, y2_text)
-#clf_stacked = train_stacking(X2, y2)
+X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, schema_meta, clf_text, X2_text, y2_text)
+clf_stacked = train_stacking(X2, y2)
 # test on attachement A
-#a_X, a_y = build_stacking_data(clf_meta, Xa_meta, a_y_meta, clf_text, a_X_text, a_y_text)
-#test(clf_stacked, a_X, a_y)
+a_X, a_y = build_stacking_data(clf_meta, Xa_meta, a_y_meta, schema_meta, clf_text, a_X_text, a_y_text)
+test(clf_stacked, a_X, a_y)

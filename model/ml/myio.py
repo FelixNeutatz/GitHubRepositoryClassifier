@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import csv
 import sys
+import math
 
 
 def find_csv_filenames(path_to_dir, suffix=".csv"):
@@ -93,11 +94,17 @@ def read_native(input_dir, max_samples_per_category):
 
 
 # split into train and test set
-def split_train_test(category_frames, test_size=0.5):
+def split_train_test(category_frames, test_size=0.5, random_seed=42):
     train_list_ = []
     test_list_ = []
+    np.random.seed(random_seed)
     for df in category_frames:
-        msk = np.random.rand(len(df)) < (1 - test_size)
+        train_len = math.ceil(len(df) * (1 - test_size))
+        test_len = math.floor(len(df) * test_size)
+        msk = np.ones((train_len,))
+        msk = np.concatenate((msk, np.zeros((test_len,))))
+        msk = msk == 1.
+        np.random.shuffle(msk)
 
         train = df[msk]
         test = df[~msk]

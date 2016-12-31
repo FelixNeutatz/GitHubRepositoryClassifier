@@ -14,7 +14,10 @@ def fit_cv(clf, train_x, train_y, params, cv=cv_def):
     # wrap clf with grid search
     grid = GridSearchCV(clf, param_grid=params, cv=cv, scoring='f1_weighted', verbose=10, n_jobs=4)
     grid.fit(train_x, train_y)
-    return grid
+    print("Best parameters are %s with a score of %0.2f" % (grid.best_params_, grid.best_score_))
+    clf_best = grid.best_estimator_
+    clf_best.fit(train_x, train_y)
+    return clf_best
 
 
 def test(clf, X, y):

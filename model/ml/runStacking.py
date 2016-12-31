@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import os
 import xgboost as xgb
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 from config import Config
 from util import *
@@ -30,7 +28,7 @@ def get_data_text():
 
 
 def load_data(meta_or_text):
-    max_samples_per_category = 180
+    max_samples_per_category = 210
     if meta_or_text:  # True is meta
         path_train = "feature.extraction.output.path"
         path_a = "attachmentA.feature.extraction.output.path"
@@ -41,15 +39,13 @@ def load_data(meta_or_text):
         path_a = "attachmentA.feature_text.extraction.output.path"
         category_frames = read_native(Config.get(path_train), max_samples_per_category)
         a_frame = concat(read_native(Config.get(path_a), max_samples_per_category))
-    print "Shapes:", str([f.shape for f in category_frames])
     schema = get_schema(Config.get(path_train))
-    frame1, frame2 = split_train_test(category_frames, test_size=0.5)
+    frame1, frame2 = split_train_test(category_frames, test_size=0.3)
     mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
     mask[0] = False
     mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
     X1, y1 = split_target_from_data(mat1)
     X2, y2 = split_target_from_data(mat2)
-    print "X1:", X1.shape, "X2:", X2.shape
     a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
     Xa, ya = split_target_from_data(a_mat)
     return X1, y1, X2, y2, schema, Xa, ya
@@ -101,9 +97,20 @@ def train_text(X, y):
 
 
 def train_stacking(X, y):
-    clf = OneVsRestClassifier(LogisticRegression(random_state=42))
-    clf = fit_cv(clf, X, y, {'estimator__C': np.logspace(-5, 5, 11)})
-    print("Best parameters are %s with a score of %0.2f" % (clf.best_params_, clf.best_score_))
+    clf = OneVsRestClassifier(SVC())
+    params = [
+      {
+        'estimator__kernel': ['rbf'],
+        'estimator__C': np.logspace(-3, 8, 12),
+        'estimator__gamma': np.logspace(-8, 3, 12)
+      },
+      {
+        'estimator__kernel': ['linear'],
+        'estimator__C': np.logspace(-3, 8, 12)
+      }
+    ]
+    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.1)
+    clf = fit_cv(clf, X, y, params, cv)
     return clf
 
 
@@ -114,18 +121,34 @@ def build_stacking_data(clf_meta, X_meta, y_meta, schema_meta, clf_text, X_text,
     f1 = clf_meta.predict(xgdmat)  # xgb always predicts probabilities
     f2 = clf_text.predict_proba(X_text)
     X = np.concatenate((f1, f2), axis=1)
-    y = y_meta
+    y = np.asarray(y_meta)
     return X, y
 
 
-X1_meta, y1_meta, X2_meta, y2_meta, schema_meta, Xa_meta, a_y_meta = get_data_meta()
-X1_text, y1_text, X2_text, y2_text, schema_text, a_X_text, a_y_text = get_data_text()
-# train meta classifier and text classifiers on X1 and y1
-clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
-clf_text = train_text(X1_text, y1_text)
-# train stacked classifier based on classification of first level classifiers (meta and text)
-X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, schema_meta, clf_text, X2_text, y2_text)
+file_ = "data2.npz"
+
+if not os.path.exists(file_):
+    X1_meta, y1_meta, X2_meta, y2_meta, schema_meta, Xa_meta, ya_meta = get_data_meta()
+    X1_text, y1_text, X2_text, y2_text, schema_text, Xa_text, ya_text = get_data_text()
+    print "X1_meta", X1_meta.shape, "X1_text", X1_text.shape
+    print "X2_meta", X2_meta.shape, "X2_text", X2_text.shape
+    print "Xa_meta", Xa_meta.shape, "Xa_text", Xa_text.shape
+    # train meta classifier and text classifiers on X1 and y1
+    clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
+    clf_text = train_text(X1_text, y1_text)
+    # test first level classifier on second half of the data
+    # xgdmat = xgb.DMatrix(X2_meta, y2_meta, feature_names=schema_meta)
+    # test(clf_meta, xgdmat, y2_meta)
+    # test(clf_text, X2_text, y2_text)
+    # train stacked classifier based on classification of first level classifiers (meta and text)
+    X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, schema_meta, clf_text, X2_text, y2_text)
+    Xa, ya = build_stacking_data(clf_meta, Xa_meta, ya_meta, schema_meta, clf_text, Xa_text, ya_text)
+    np.savez(file_, X2, y2, Xa, ya)
+else:
+    arrs_files = np.load(file_)
+    arr_names = sorted(arrs_files.files)
+    X2, y2, Xa, ya = [arrs_files[name] for name in arr_names]
+# train stacking model
 clf_stacked = train_stacking(X2, y2)
 # test on attachement A
-a_X, a_y = build_stacking_data(clf_meta, Xa_meta, a_y_meta, schema_meta, clf_text, a_X_text, a_y_text)
-test(clf_stacked, a_X, a_y)
+test(clf_stacked, Xa, ya)

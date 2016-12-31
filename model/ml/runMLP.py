@@ -32,18 +32,14 @@ train_x = pca.fit_transform(train_x)
 test_x = pca.transform(test_x)
 attachment_a_x = pca.transform(attachment_a_x)
 
-'''
-clf = OneVsRestClassifier(MLPClassifier(random_state=42))
+clf = OneVsRestClassifier(MLPClassifier())
 params = {
   'estimator__alpha': np.logspace(-11, -3, 5),
-  'estimator__hidden_layer_sizes': [(10,), (50,), (200,), (150, 25)]
+  'estimator__hidden_layer_sizes': [(50,), (200,), (150, 25)]
 }
-clf = util.fit_cv(clf, train_x, train_y, params)
-print("Best parameters are %s with a score of %0.2f" % (clf.best_params_, clf.best_score_))
-'''
-
-clf = OneVsRestClassifier(MLPClassifier(verbose=0, random_state=42, alpha=1e-9, hidden_layer_sizes=(150, 25)))
-clf.fit(train_x, train_y)
+clf = fit_cv(clf, train_x, train_y, params)
+# clf = OneVsRestClassifier(MLPClassifier(verbose=0, random_state=42, alpha=1e-9, hidden_layer_sizes=(150, 25)))
+# clf.fit(train_x, train_y)
 print("Confusion matrix on training data")
 test(clf, train_x, train_y)
 print("Confusion matrix on test data")

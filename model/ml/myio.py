@@ -99,8 +99,8 @@ def split_train_test(category_frames, test_size=0.5, random_seed=42):
     test_list_ = []
     np.random.seed(random_seed)
     for df in category_frames:
-        train_len = math.ceil(len(df) * (1 - test_size))
-        test_len = math.floor(len(df) * test_size)
+        train_len = int(math.ceil(len(df) * (1 - test_size)))
+        test_len = int(math.floor(len(df) * test_size))
         msk = np.ones((train_len,))
         msk = np.concatenate((msk, np.zeros((test_len,))))
         msk = msk == 1.

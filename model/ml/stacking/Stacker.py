@@ -1,18 +1,8 @@
-import numpy as np
+# -*- coding: utf-8 -*-
 
-import xgboost as xgb
-import matplotlib.pyplot as plt
-from sklearn.decomposition import PCA
-from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import SGDClassifier
 from sklearn.multiclass import OneVsRestClassifier
-from sklearn.neural_network import MLPClassifier
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
 
-from ml.config import Config
 from ml.util import *
 from ml.myio import *
 

@@ -136,13 +136,13 @@ public class Extractor {
 		FeatureExtractor featureExt = ExtractText::extractFeatures;
 		LabelExtractor labelExt = ExtractText::getFeatureLabels;
 
-		//extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
 		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
-		//extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
 	}
 
 	public static void main(String[] args) throws IOException {
-		// extractMetaFeatures();
+		extractMetaFeatures();
 		extractTextFeatures();
 	}
 }

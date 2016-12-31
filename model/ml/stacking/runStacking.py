@@ -2,17 +2,21 @@
 
 import os
 import xgboost as xgb
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 from sklearn.feature_extraction.stop_words import ENGLISH_STOP_WORDS
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 
-from config import Config
-from util import *
-from myio import *
+from ml.config import Config
+from ml.util import *
+from ml.myio import *
 
 
 def get_data_meta():
@@ -39,13 +43,15 @@ def load_data(meta_or_text):
         path_a = "attachmentA.feature_text.extraction.output.path"
         category_frames = read_native(Config.get(path_train), max_samples_per_category)
         a_frame = concat(read_native(Config.get(path_a), max_samples_per_category))
+    print "Shapes:", str([f.shape for f in category_frames])
     schema = get_schema(Config.get(path_train))
-    frame1, frame2 = split_train_test(category_frames, test_size=0.3)
+    frame1, frame2 = split_train_test(category_frames, test_size=0.5)
     mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
     mask[0] = False
     mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
     X1, y1 = split_target_from_data(mat1)
     X2, y2 = split_target_from_data(mat2)
+    print "X1:", X1.shape, "X2:", X2.shape
     a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
     Xa, ya = split_target_from_data(a_mat)
     return X1, y1, X2, y2, schema, Xa, ya
@@ -124,6 +130,17 @@ def build_stacking_data(clf_meta, X_meta, y_meta, schema_meta, clf_text, X_text,
     y = np.asarray(y_meta)
     return X, y
 
+def test_text(clf, X, y):
+    y_pred = clf.predict(X)
+    print "text classifier: "
+    print confusion_matrix(y, y_pred)
+    print f1_score(y, y_pred, average='weighted')
+
+def test_meta(clf, X, y, schema_meta):
+    y_pred = clf_meta.predict(xgb.DMatrix(Xa_meta, feature_names=schema_meta))
+    print "meta classifier: "
+    print confusion_matrix(y, y_pred.argmax(axis=1))
+    print f1_score(y, y_pred.argmax(axis=1), average='weighted')
 
 file_ = "data2.npz"
 
@@ -137,9 +154,8 @@ if not os.path.exists(file_):
     clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
     clf_text = train_text(X1_text, y1_text)
     # test first level classifier on second half of the data
-    # xgdmat = xgb.DMatrix(X2_meta, y2_meta, feature_names=schema_meta)
-    # test(clf_meta, xgdmat, y2_meta)
-    # test(clf_text, X2_text, y2_text)
+    test_text(clf_text, Xa_text, ya)
+    test_meta(clf_meta, Xa_meta, ya, schema_meta)
     # train stacked classifier based on classification of first level classifiers (meta and text)
     X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, schema_meta, clf_text, X2_text, y2_text)
     Xa, ya = build_stacking_data(clf_meta, Xa_meta, ya_meta, schema_meta, clf_text, Xa_text, ya_text)
@@ -151,4 +167,5 @@ else:
 # train stacking model
 clf_stacked = train_stacking(X2, y2)
 # test on attachement A
+Xa, ya = build_stacking_data(clf_meta, Xa_meta, ya_meta, schema_meta, clf_text, Xa_text, ya_text)
 test(clf_stacked, Xa, ya)

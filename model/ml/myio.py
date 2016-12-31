@@ -35,6 +35,18 @@ def read_stop_words():
 
     return np.asarray(stop_word_list).ravel()
 
+def read_stop_words2():
+    stop_word_list = []
+    file_ = open("../stop_words/stop_words_search.txt", 'rb')
+    try:
+        reader = csv.reader(file_)
+        for row in reader:
+            stop_word_list.append(row)
+    finally:
+        file_.close()
+
+    return np.asarray(stop_word_list).ravel()
+
 
 # read data
 def read(input_dir, max_samples_per_category):

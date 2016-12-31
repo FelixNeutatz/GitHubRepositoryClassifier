@@ -12,9 +12,9 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-from config import Config
-from util import *
-from myio import *
+from ml.config import Config
+from ml.util import *
+from ml.myio import *
 
 
 def get_data_meta():
@@ -30,7 +30,7 @@ def get_data_text():
 
 
 def load_data(meta_or_text):
-    max_samples_per_category = 180
+    max_samples_per_category = 210
     if meta_or_text:  # True is meta
         path_train = "feature.extraction.output.path"
         path_a = "attachmentA.feature.extraction.output.path"
@@ -43,7 +43,7 @@ def load_data(meta_or_text):
         a_frame = concat(read_native(Config.get(path_a), max_samples_per_category))
     print "Shapes:", str([f.shape for f in category_frames])
     schema = get_schema(Config.get(path_train))
-    frame1, frame2 = split_train_test(category_frames, test_size=0.5)
+    frame1, frame2 = split_train_test(category_frames, test_size=0.2)
     mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
     mask[0] = False
     mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
@@ -117,6 +117,15 @@ def build_stacking_data(clf_meta, X_meta, y_meta, schema_meta, clf_text, X_text,
     y = y_meta
     return X, y
 
+def test_text(clf, X, y):
+    y_pred = clf.predict(X)
+    print confusion_matrix(y, y_pred)
+    print f1_score(y, y_pred, average='weighted')
+
+def test_meta(clf, X, y, schema_meta):
+    y_pred = clf_meta.predict(xgb.DMatrix(Xa_meta, feature_names=schema_meta))
+    print confusion_matrix(y, y_pred.argmax(axis=1))
+    print f1_score(y, y_pred.argmax(axis=1), average='weighted')
 
 X1_meta, y1_meta, X2_meta, y2_meta, schema_meta, Xa_meta, a_y_meta = get_data_meta()
 X1_text, y1_text, X2_text, y2_text, schema_text, a_X_text, a_y_text = get_data_text()
@@ -129,3 +138,7 @@ clf_stacked = train_stacking(X2, y2)
 # test on attachement A
 a_X, a_y = build_stacking_data(clf_meta, Xa_meta, a_y_meta, schema_meta, clf_text, a_X_text, a_y_text)
 test(clf_stacked, a_X, a_y)
+print "text classifier: "
+test_text(clf_text, a_X_text, a_y)
+print "meta classifier: "
+test_meta(clf_meta, Xa_meta, a_y, schema_meta)

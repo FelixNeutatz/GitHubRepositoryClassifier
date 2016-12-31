@@ -4,6 +4,15 @@ import abc
 class StackingModule:
     __metaclass__ = abc.ABCMeta
 
+    def create_meta_features(self, path):
+        X,y = self.transform(path)
+        return self.predict_proba(X),y
+
+    def run(self):
+        self.load_data()
+        self.preprocess()
+        self.train()
+
     @abc.abstractmethod
     def load_data(self):
         """Method documentation"""
@@ -26,7 +35,12 @@ class StackingModule:
         return
 
     @abc.abstractmethod
-    def test(self, clf, X, y):
+    def test(self, X, y):
+        """Method documentation"""
+        return
+
+    @abc.abstractmethod
+    def test_path(self, path):
         """Method documentation"""
         return
 

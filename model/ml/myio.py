@@ -35,6 +35,7 @@ def read_stop_words():
 
     return np.asarray(stop_word_list).ravel()
 
+
 def read_stop_words2():
     stop_word_list = []
     file_ = open("../stop_words/stop_words_search.txt", 'rb')
@@ -96,7 +97,6 @@ def read_native(input_dir, max_samples_per_category):
                         file_data_array.append(row)
             finally:
                 file_.close()
-
             df = pd.DataFrame(file_data_array)
             frame = frame.append(df.head(n=max_samples_per_category))
 

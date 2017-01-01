@@ -13,18 +13,14 @@ from ml.util import *
 
 class TextDataModule(StackingModule):
 
+    def __int__(self, max_samples_per_category, dev_size, test_size):
+        super(TextDataModule, self).__init__(max_samples_per_category, dev_size, test_size)
+        self.pipeline = None
+
     def load_data(self):
         path_train = "feature_text.extraction.output.path"
         category_frames = read_native(Config.get2(path_train), self.max_samples_per_category)
-
-        print "Shapes:", str([f.shape for f in category_frames])
-        self.schema = get_schema(Config.get2(path_train))
-        frame1, frame2 = split_train_test(category_frames, test_size=self.test_size)
-        mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
-        mask[0] = False
-        mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
-        self.X1, self.y1 = split_target_from_data(mat1)
-        self.X2, self.y2 = split_target_from_data(mat2)
+        self.load_data_from_frames(path_train, category_frames)
 
     def transform(self, path_a = "attachmentA.feature_text.extraction.output.path"):
         a_frame = concat(read_native(Config.get(path_a), self.max_samples_per_category))
@@ -42,7 +38,10 @@ class TextDataModule(StackingModule):
                              ('tfidf', TfidfTransformer())])
         self.X1 = self.X1.A1
         self.X2 = self.X2.A1
+        self.X3 = self.X3.A1
         self.y1 = np.array(self.y1).tolist()
         self.y2 = np.array(self.y2).tolist()
+        self.y3 = np.array(self.y3).tolist()
         self.X1 = self.pipeline.fit_transform(self.X1, self.y1)
         self.X2 = self.pipeline.transform(self.X2)
+        self.X3 = self.pipeline.transform(self.X3)

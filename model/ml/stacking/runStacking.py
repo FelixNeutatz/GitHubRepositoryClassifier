@@ -36,22 +36,20 @@ def load_data(meta_or_text):
     if meta_or_text:  # True is meta
         path_train = "feature.extraction.output.path"
         path_a = "attachmentA.feature.extraction.output.path"
-        category_frames = read(Config.get(path_train), max_samples_per_category)
-        a_frame = concat(read(Config.get(path_a), max_samples_per_category))
+        category_frames = read(Config.get2(path_train), max_samples_per_category)
+        a_frame = concat(read(Config.get2(path_a), max_samples_per_category))
     else:
         path_train = "feature_text.extraction.output.path"
         path_a = "attachmentA.feature_text.extraction.output.path"
-        category_frames = read_native(Config.get(path_train), max_samples_per_category)
-        a_frame = concat(read_native(Config.get(path_a), max_samples_per_category))
-    print "Shapes:", str([f.shape for f in category_frames])
-    schema = get_schema(Config.get(path_train))
+        category_frames = read_native(Config.get2(path_train), max_samples_per_category)
+        a_frame = concat(read_native(Config.get2(path_a), max_samples_per_category))
+    schema = get_schema(Config.get2(path_train))
     frame1, frame2 = split_train_test(category_frames, test_size=0.5)
     mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
     mask[0] = False
     mat1, mat2 = dataframe_to_numpy_matrix(frame1, frame2, mask)
     X1, y1 = split_target_from_data(mat1)
     X2, y2 = split_target_from_data(mat2)
-    print "X1:", X1.shape, "X2:", X2.shape
     a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
     Xa, ya = split_target_from_data(a_mat)
     return X1, y1, X2, y2, schema, Xa, ya
@@ -72,7 +70,7 @@ def preprocess_meta(X1, X2, Xa):
 
 
 def preprocess_text(X1, y1, X2, y2, Xa, ya):
-    my_stop_words = read_stop_words()
+    my_stop_words = read_stop_words2()
     stop_words = ENGLISH_STOP_WORDS.union(my_stop_words)
     pipeline = Pipeline([('vect', CountVectorizer(stop_words=stop_words, max_df=0.5, ngram_range=(1, 1))),
                          ('tfidf', TfidfTransformer())])
@@ -87,6 +85,18 @@ def preprocess_text(X1, y1, X2, y2, Xa, ya):
     Xa = pipeline.transform(Xa)
     return X1, y1, X2, y2, Xa, ya
 
+
+def verify_data(X_meta, y_meta, X_text, y_text):
+    # number of samples
+    samples_meta = X_meta.shape[0]
+    samples_text = X_text.shape[0]
+    print("Samples - meta: %s, text: %s" % (samples_meta, samples_text))
+    # sample sizes must be the same for meta and text samples
+    assert samples_meta == samples_text
+    assert samples_meta == len(y_meta)
+    assert samples_text == len(y_text)
+    # labels must be the same
+    assert sum(y_meta - y_text) == 0
 
 def train_meta(X, y, schema):
     xgdmat = xgb.DMatrix(X, y, feature_names=schema)
@@ -107,28 +117,26 @@ def train_stacking(X, y):
     params = [
       {
         'estimator__kernel': ['rbf'],
-        'estimator__C': np.logspace(-3, 8, 12),
-        'estimator__gamma': np.logspace(-8, 3, 12)
+        'estimator__C': np.logspace(-3, 6, 5),
+        'estimator__gamma': np.logspace(-7, 3, 5)
       },
       {
         'estimator__kernel': ['linear'],
-        'estimator__C': np.logspace(-3, 8, 12)
+        'estimator__C': np.logspace(-3, 6, 5)
       }
     ]
-    cv = StratifiedShuffleSplit(n_splits=10, test_size=0.1)
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.1)
     clf = fit_cv(clf, X, y, params, cv)
     return clf
 
 
-def build_stacking_data(clf_meta, X_meta, y_meta, schema_meta, clf_text, X_text, y_text):
-    assert len(y_meta) == len(y_text)
-    assert sum(y_meta - y_text) == 0
+def build_stacking_data(clf_meta, X_meta, schema_meta, clf_text, X_text):
     xgdmat = xgb.DMatrix(X_meta, feature_names=schema_meta)
     f1 = clf_meta.predict(xgdmat)  # xgb always predicts probabilities
     f2 = clf_text.predict_proba(X_text)
     X = np.concatenate((f1, f2), axis=1)
-    y = np.asarray(y_meta)
-    return X, y
+    return X
+
 
 def test_text(clf, X, y):
     y_pred = clf.predict(X)
@@ -136,20 +144,26 @@ def test_text(clf, X, y):
     print confusion_matrix(y, y_pred)
     print f1_score(y, y_pred, average='weighted')
 
+
 def test_meta(clf, X, y, schema_meta):
-    y_pred = clf_meta.predict(xgb.DMatrix(Xa_meta, feature_names=schema_meta))
+    y_pred = clf.predict(xgb.DMatrix(X, feature_names=schema_meta))
     print "meta classifier: "
     print confusion_matrix(y, y_pred.argmax(axis=1))
     print f1_score(y, y_pred.argmax(axis=1), average='weighted')
 
-file_ = "data2.npz"
+
+file_ = "data.npz"
 
 if not os.path.exists(file_):
     X1_meta, y1_meta, X2_meta, y2_meta, schema_meta, Xa_meta, ya_meta = get_data_meta()
     X1_text, y1_text, X2_text, y2_text, schema_text, Xa_text, ya_text = get_data_text()
-    print "X1_meta", X1_meta.shape, "X1_text", X1_text.shape
-    print "X2_meta", X2_meta.shape, "X2_text", X2_text.shape
-    print "Xa_meta", Xa_meta.shape, "Xa_text", Xa_text.shape
+    verify_data(X1_meta, y1_meta, X1_text, y1_text)
+    verify_data(X2_meta, y2_meta, X2_text, y2_text)
+    verify_data(Xa_meta, ya_meta, Xa_text, ya_text)
+    # labels are the same across meta and feature samples
+    y1 = y1_meta
+    y2 = y2_meta
+    ya = ya_meta
     # train meta classifier and text classifiers on X1 and y1
     clf_meta = train_meta(X1_meta, y1_meta, schema_meta)
     clf_text = train_text(X1_text, y1_text)
@@ -157,8 +171,8 @@ if not os.path.exists(file_):
     test_text(clf_text, Xa_text, ya)
     test_meta(clf_meta, Xa_meta, ya, schema_meta)
     # train stacked classifier based on classification of first level classifiers (meta and text)
-    X2, y2 = build_stacking_data(clf_meta, X2_meta, y2_meta, schema_meta, clf_text, X2_text, y2_text)
-    Xa, ya = build_stacking_data(clf_meta, Xa_meta, ya_meta, schema_meta, clf_text, Xa_text, ya_text)
+    X2 = build_stacking_data(clf_meta, X2_meta, schema_meta, clf_text, X2_text)
+    Xa = build_stacking_data(clf_meta, Xa_meta, schema_meta, clf_text, Xa_text)
     np.savez(file_, X2, y2, Xa, ya)
 else:
     arrs_files = np.load(file_)
@@ -167,5 +181,4 @@ else:
 # train stacking model
 clf_stacked = train_stacking(X2, y2)
 # test on attachement A
-Xa, ya = build_stacking_data(clf_meta, Xa_meta, ya_meta, schema_meta, clf_text, Xa_text, ya_text)
 test(clf_stacked, Xa, ya)

@@ -19,37 +19,37 @@ import java.util.List;
  * Created by felix on 04.12.16.
  */
 public class Extractor {
-	
+
 	public static String[] getSubDirectories(String dir) {
 		return new File(dir).list((current, name) -> new File(current, name).isDirectory());
 	}
-	
+
 	public static File[] getBinFiles(String categoryDir) {
 		return new File(categoryDir).listFiles(file -> file.getName().endsWith(".bin"));
 	}
-	
+
 	public static void extract(FeatureExtractor featureExt, String inputDir, String outputDir, boolean isTest)
 			throws IOException {
 		String[] categories = getSubDirectories(inputDir);
 		System.out.println(Arrays.toString(categories));
-		
+
 		DataCleaner cleaner = new DataCleaner(isTest);
 
 		CSVWriter writer = null;
-		
+
 		for (String category: categories) {
 			File[] binFiles = getBinFiles(inputDir + "/" + category);
 
 			try {
 				writer = new CSVWriter(new FileWriter(
-					new File(outputDir + "/" + "data" + category + ".csv"),false), 
+					new File(outputDir + "/" + "data" + category + ".csv"),false),
 					',', CSVWriter.NO_QUOTE_CHARACTER);
 
 				String[] entries = {"","", category};
-			
+
 				for (File f: binFiles) {
 					RepoData repo = Serializer.readFromFile(f);
-					
+
 					if (cleaner.isValid(repo)) {
 						System.out.println(repo.getFull_name());
 						// entries[1] = ExtractText.extractFeatures(repo);
@@ -69,7 +69,7 @@ public class Extractor {
 			}
 		}
 	}
-	
+
 	public static void createSchema(File outputDir, List<String> labelList) {
 		CSVWriter writer = null;
 		try {
@@ -80,14 +80,14 @@ public class Extractor {
 			for(String labels: labelList) {
 				writer.writeNext(new String[]{labels});
 			}
-			
+
 			writer.flush();
 			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void extractFromDir(FeatureExtractor featureExt, LabelExtractor labelExt, String inputDir,
 									  String outputDirS, boolean isTest) throws IOException {
 		File outputDir = new File(outputDirS);

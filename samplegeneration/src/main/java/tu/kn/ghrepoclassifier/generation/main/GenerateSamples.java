@@ -123,6 +123,20 @@ public class GenerateSamples {
 	}
 
 	/*
+		DEV
+		Popular framework repositories that do not belong to the other categories.
+		This fits:
+			Repositories für die Entwicklung eines Tools, einer Softwareanwendung, einer App, einer Bibliothek,
+			einer API, oder ähnliche Softwareentwicklungsprojekte
+		search result size: 3088
+	*/
+	public static void generateDEV5(GitHub github, Parallelizer p, int maximumRecords) throws IOException {
+		GHRepositorySearchBuilder search = github.searchRepositories()
+				.q("framework NOT tutorial NOT documentation NOT lecture NOT manual NOT homework").stars(">100");
+		p.runInParallel(search, "DEV", maximumRecords);
+	}
+
+	/*
 		DOCS
 		Search for repositories which contain the word "documentation" and not the word "lecture".
 		This fits:
@@ -206,6 +220,7 @@ public class GenerateSamples {
 		generateDEV2(github, p, 850);
 		generateDEV3(github, p, 170);
 		generateDEV4(github, p, 20);
+		generateDEV5(github, p, 1000);
 
 	
 		//DOCS

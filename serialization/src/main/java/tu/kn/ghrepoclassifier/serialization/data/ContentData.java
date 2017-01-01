@@ -49,7 +49,7 @@ public class ContentData implements Serializable{
 		
 		try {
 			this.content = content.getContent();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.content = "";
 		}
 		
@@ -59,7 +59,7 @@ public class ContentData implements Serializable{
 		
 		try {
 			this.download_url = content.getDownloadUrl();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.download_url = "";
 		}
 	}

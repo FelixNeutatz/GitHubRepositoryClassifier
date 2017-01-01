@@ -79,7 +79,7 @@ public class RepoData implements Serializable{
 		try {
 			this.branches = new HashSet<>();
 			branches.addAll(repo.getBranches().keySet());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.branches = new HashSet<>();
 			e.printStackTrace();
 		}
@@ -95,7 +95,7 @@ public class RepoData implements Serializable{
 
 		try {
 			this.languages = repo.listLanguages();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.languages = new HashMap<>();
 			e.printStackTrace();
 		}
@@ -129,7 +129,7 @@ public class RepoData implements Serializable{
 			for (GHRepository.Contributor contributor : repo.listContributors().withPageSize(100)){
 				this.contributors.add(new ContributorData(contributor));
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

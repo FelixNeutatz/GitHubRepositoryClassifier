@@ -25,19 +25,19 @@ public class CommitData implements Serializable{
 	public CommitData(GHCommit commit) {
 		try {
 			this.total = commit.getLinesChanged();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.total = 0;
 		}
 
 		try {
 			this.additions = commit.getLinesAdded();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.additions = 0;
 		}
 
 		try {
 			this.deletions = commit.getLinesDeleted();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.deletions = 0;
 		}
 
@@ -47,7 +47,7 @@ public class CommitData implements Serializable{
 			this.message = info.getMessage();
 			this.authoredDate = info.getAuthoredDate();
 			this.commitDate = info.getCommitDate();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			this.comment_count = 0;
 			this.message = "";
 			this.authoredDate = new Date();

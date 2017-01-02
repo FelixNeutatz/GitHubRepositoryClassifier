@@ -52,7 +52,7 @@ public class ContentDownloader {
 		}
 	}
 
-	public static void extractFromDir(String inputDir, String outputDirS) throws IOException {
+	public static void downloadFromDir(String inputDir, String outputDirS) throws IOException {
 		File outputDir = new File(outputDirS);
 
 		if (Files.exists(outputDir.toPath()))
@@ -63,46 +63,9 @@ public class ContentDownloader {
 		download(inputDir, outputDir.getAbsolutePath());
 	}
 
-	/*
-	public static void extractMetaFeatures() throws IOException {
-		String inputDir = Config.get("sample.generation.output.path");
-		String outputDir = Config.get("feature.extraction.output.path");
-
-		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
-		String outputDirAttachmentA = Config.get("attachmentA.feature.extraction.output.path");
-
-		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
-		String outputDirAttachmentB = Config.get("attachmentB.feature.extraction.output.path");
-
-		FeatureExtractor featureExt = FeatureExtractionUnbiased::extractFeatures;
-		LabelExtractor labelExt = FeatureExtractionUnbiased::getFeatureLabels;
-
-		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
-		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
-		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
-	}
-
-	public static void extractTextFeatures() throws IOException {
-		String inputDir = Config.get("sample.generation.output.path");
-		String outputDir = Config.get("feature_text.extraction.output.path");
-
-		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
-		String outputDirAttachmentA = Config.get("attachmentA.feature_text.extraction.output.path");
-
-		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
-		String outputDirAttachmentB = Config.get("attachmentB.feature_text.extraction.output.path");
-
-		FeatureExtractor featureExt = ExtractText::extractFeatures;
-		LabelExtractor labelExt = ExtractText::getFeatureLabels;
-
-		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
-		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
-		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
-	}*/
-
 	public static void main(String[] args) throws IOException {
 		String inputDir = Config.get("sample.generation.output.path");
 		String outputDir = Config.get("sample.generation.content.output.path");
-		extractFromDir(inputDir, outputDir);
+		downloadFromDir(inputDir, outputDir);
 	}
 }

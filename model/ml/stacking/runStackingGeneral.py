@@ -4,6 +4,7 @@ from ml.stacking.MetaDataXGB import MetaDataXGB
 from ml.stacking.MetaDataPCA import MetaDataPCA
 from ml.stacking.Stacker import Stacker
 from ml.stacking.TextDataSVM import TextDataSVM
+from ml.stacking.TextDataNaiveBayes import TextDataNaiveBayes
 from ml.stacking.TextDataTruncatedSVD import TextDataTruncatedSVD
 from ml.stacking.NameDataSVM import NameDataSVM
 
@@ -15,7 +16,7 @@ test_size = 0.1
 meta_data_xgb = MetaDataXGB(max_samples_per_category, dev_size, test_size)
 meta_data_pca = MetaDataPCA(max_samples_per_category, dev_size, test_size, n_components=3)
 
-text_data_svm = TextDataSVM(max_samples_per_category, dev_size, test_size)
+text_data_svm = TextDataNaiveBayes(max_samples_per_category, dev_size, test_size)  # TextDataSVM
 text_data_tsvd = TextDataTruncatedSVD(max_samples_per_category, dev_size, test_size, n_components=3)
 
 name_data_svm = NameDataSVM(max_samples_per_category, dev_size, test_size)

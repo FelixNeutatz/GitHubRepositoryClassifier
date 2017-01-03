@@ -49,7 +49,7 @@ class Stacker:
     def build_test(self):
         y = self.module_list[0].y3
         id3 = self.module_list[0].id3
-        
+
         feature_list = []
         for module in self.module_list:
             assert len(module.y3) == len(y)

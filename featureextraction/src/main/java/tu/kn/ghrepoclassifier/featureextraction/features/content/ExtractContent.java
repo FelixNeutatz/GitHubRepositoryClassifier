@@ -40,21 +40,17 @@ public class ExtractContent {
 		return outputFolder;
 	}
 	
-	public static String extractFeatures(RepoData repo) throws IOException {
+	public static String extractFeatures(RepoData repo) throws Exception{
 		String l = "";
-	
-		try {
-			String outputFolder = unZip(repo);
+		
+		String outputFolder = unZip(repo);
 
-			Root tree = new Root(outputFolder);
-			tree.populate();
+		Root tree = new Root(outputFolder);
+		tree.populate();
 
-			l += tree.summarizeFileTree();
+		l += tree.summarizeFileTree();
 
-			FileUtils.deleteDirectory(new File(outputFolder));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		FileUtils.deleteDirectory(new File(outputFolder));
 		
 		return l;
 	}

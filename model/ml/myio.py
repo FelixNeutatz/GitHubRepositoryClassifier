@@ -162,6 +162,10 @@ def dataframe_to_matrix(frame, mask):
     return numerical_frame
 
 
+def get_id_from_frame(frame):
+    return frame[frame.columns[0]]
+
+
 def dataframe_to_numpy_matrix_single(frame, mask):
     return np.matrix(dataframe_to_matrix(frame, mask))
 

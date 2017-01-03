@@ -9,6 +9,6 @@ import java.io.IOException;
  */
 public interface FeatureExtractor {
 
-	String extractFeatures(RepoData repo) throws IOException;
+	String extractFeatures(RepoData repo) throws Exception;
 
 }

@@ -35,9 +35,11 @@ class Stacker:
 
     def build_train(self):
         y = self.module_list[0].y2
+        id2 = self.module_list[0].id2
         feature_list = []
         for module in self.module_list:
             assert len(module.y2) == len(y)
+            assert np.all(module.id2 == id2)
             assert sum(module.y2 - y) == 0
             f = module.predict_proba(module.X2)
             feature_list.append(f)
@@ -46,9 +48,12 @@ class Stacker:
 
     def build_test(self):
         y = self.module_list[0].y3
+        id3 = self.module_list[0].id3
+        
         feature_list = []
         for module in self.module_list:
             assert len(module.y3) == len(y)
+            assert np.all(module.id3 == id3)
             assert sum(module.y3 - y) == 0
             f = module.predict_proba(module.X3)
             feature_list.append(f)

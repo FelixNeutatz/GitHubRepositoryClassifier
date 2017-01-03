@@ -62,8 +62,15 @@ public class ContentDownloader {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String inputDir = Config.get("sample.generation.output.path");
 		String outputDir = Config.get("sample.generation.content.output.path");
+		
+		String inputDir = Config.get("sample.generation.output.path");
 		downloadFromDir(inputDir, outputDir);
+
+		String inputDirA = Config.get("attachmentA.download.output.path");
+		downloadFromDir(inputDirA, outputDir);
+
+		String inputDirB = Config.get("attachmentB.download.output.path");
+		downloadFromDir(inputDirB, outputDir);
 	}
 }

@@ -7,6 +7,7 @@ import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbias
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractor;
 import tu.kn.ghrepoclassifier.featureextraction.features.LabelExtractor;
 import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText;
+import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractNames;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
@@ -54,11 +55,15 @@ public class Extractor {
 						System.out.println(repo.getFull_name());
 						// entries[1] = ExtractText.extractFeatures(repo);
 						// entries[1] = FeatureExtractionUnbiased.extractFeatures(repo);
-						entries[1] = featureExt.extractFeatures(repo);
-						entries[0] = repo.getHtmlUrl().toString();
+						try {
+							entries[1] = featureExt.extractFeatures(repo);
+							entries[0] = repo.getHtmlUrl().toString();
 
-						//System.out.println(entries[0] + ", " + entries[1]);
-						writer.writeNext(entries);
+							//System.out.println(entries[0] + ", " + entries[1]);
+							writer.writeNext(entries);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 				writer.flush();
@@ -97,11 +102,9 @@ public class Extractor {
 		else
 			Files.createDirectories(outputDir.toPath());
 
+		
 		extract(featureExt, inputDir, outputDir.getAbsolutePath(), isTest);
 
-		// List<String> labels = ExtractText.getFeatureLabels();
-		// List<String> labels = FeatureExtractionUnbiased.getFeatureLabels();
-		// createSchema(outputDir, labels);
 		createSchema(outputDir, labelExt.getFeatureLabels());
 	}
 
@@ -141,8 +144,27 @@ public class Extractor {
 		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
 	}
 
+	public static void extractNamesFeatures() throws IOException {
+		String inputDir = Config.get("sample.generation.output.path");
+		String outputDir = Config.get("feature_text_names.extraction.output.path");
+
+		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
+		String outputDirAttachmentA = Config.get("attachmentA.feature_text_names.extraction.output.path");
+
+		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
+		String outputDirAttachmentB = Config.get("attachmentB.feature_text_names.extraction.output.path");
+
+		FeatureExtractor featureExt = ExtractNames::extractFeatures;
+		LabelExtractor labelExt = ExtractNames::getFeatureLabels;
+
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+	}
+
 	public static void main(String[] args) throws IOException {
 		extractMetaFeatures();
 		extractTextFeatures();
+		extractNamesFeatures();
 	}
 }

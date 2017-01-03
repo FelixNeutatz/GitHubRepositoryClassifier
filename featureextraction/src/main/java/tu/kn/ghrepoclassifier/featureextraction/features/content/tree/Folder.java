@@ -47,8 +47,8 @@ public class Folder extends Node{
 					  Stats fileSizeStats,
 					  Stats fileLevelStats,
 					  Stats filesPerDirStats,
-					  Stats subfolderPerDirStats, 
-					  String namesString) {
+					  Stats subfolderPerDirStats,
+					  StringBuilder namesString) {
 		File folder = new File(dir);
 		File[] listOfFiles = folder.listFiles();
 
@@ -62,12 +62,13 @@ public class Folder extends Node{
 				fileLevelStats.add(level);
 				RepoFile f = new RepoFile(listOfFiles[i].getName(), fileSize, level);
 				add(f);
-				namesString += f.getNameWithoutExtension() + " ";
+				namesString.append(f.getNameWithoutExtension() + " ");
 			} else if (listOfFiles[i].isDirectory()) {
 				folderNumPerDir++;
 				Folder f = new Folder(listOfFiles[i].getName(), level + 1);
 				f.populate(dir, fileSizeStats, fileLevelStats, filesPerDirStats, subfolderPerDirStats, namesString);
 				add(f);
+				namesString.append(name + " ");
 			}
 		}
 		filesPerDirStats.add(fileNumPerDir);
@@ -79,7 +80,7 @@ public class Folder extends Node{
 						 Stats fileLevelStats, 
 						 Stats filesPerDirStats,
 						 Stats subfolderPerDirStats,
-						 String namesString) {
+						 StringBuilder namesString) {
 		String dir = path + "/" + name;
 		build(dir, fileSizeStats, fileLevelStats, filesPerDirStats, subfolderPerDirStats, namesString);
 	}

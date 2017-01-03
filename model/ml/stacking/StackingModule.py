@@ -15,10 +15,13 @@ class StackingModule:
       self.test_size = test_size
       self.X1 = None
       self.y1 = None
+      self.id1 = None
       self.X2 = None
       self.y2 = None
+      self.id2 = None
       self.X3 = None
       self.y3 = None
+      self.id3 = None
       self.schema = None
       self.clf = None
 
@@ -36,6 +39,11 @@ class StackingModule:
       self.schema = get_schema(Config.get2(path_train))
       frame12, frame3 = split_train_test(category_frames, test_size=self.test_size)
       frame1, frame2 = split_train_test([frame12], test_size=self.dev_size)
+
+      self.id1 = get_id_from_frame(frame1)
+      self.id2 = get_id_from_frame(frame2)
+      self.id3 = get_id_from_frame(frame3)
+
       # delete repo url from features
       mask = np.asarray(np.ones((1, frame1.shape[1]), dtype=bool))[0]
       mask[0] = False

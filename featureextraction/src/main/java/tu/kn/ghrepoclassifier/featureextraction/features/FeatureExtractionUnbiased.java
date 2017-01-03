@@ -18,7 +18,7 @@ import static tu.kn.ghrepoclassifier.featureextraction.features.languages.Extrac
  */
 public class FeatureExtractionUnbiased {
 
-	public static String extractFeatures(RepoData repo) {
+	public static String extractFeatures(RepoData repo) throws Exception{
 		int numberBranches = repo.getBranches().size(); 							//number of branches
 		//int numberForks = repo.getForks(); 											//number of forks
 		int numberOpenIssues = repo.getOpenIssueCount();							//number of open issues
@@ -49,12 +49,7 @@ public class FeatureExtractionUnbiased {
 		CommitHistory h = new CommitHistory(repo);
 		String commitHistory = h.summarizeCommitHistory();							//summarized commit history
 
-		String fileTreeSummary = "";
-		try {
-			fileTreeSummary = ExtractContent.extractFeatures(repo);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String fileTreeSummary = ExtractContent.extractFeatures(repo);
 
 		Stats contributorStats = new Stats("contributor", true, true);
 		for(ContributorData c: repo.listContributors()) {
@@ -70,19 +65,19 @@ public class FeatureExtractionUnbiased {
 				+ "," + numberOpenIssues			//number of open issues
 				+ "," + totalNumberIssues			//number of total issues
 				+ "," + repoSize					//size of the repository in bytes
-				//+ "," + numberStars					//number of stars
+				//+ "," + numberStars				//number of stars
 				+ "," + numberSubscribers			//number of subscribers
 				+ "," + numberWatchers				//number of watchers
 				+ "," + numberReleases				//number of releases
 				+ "," + indexHTMLfileLength			//index.html length
 				+ "," + contributorStats.toString()	//contributor stats
 				+ "," + hasDownloads				//was the repo downloaded
-				+ "," + descriptionLength				//decription length
+				+ "," + descriptionLength			//decription length
 				+ "," + numberProgrammingLanguages	//number of programming languages
 				+ "," + hasLicense					//repo has a license
 				+ "," + readmeSize					//size of the readme
 				+ "," + commitHistory				//summarized commit history
-				+ "," + fileTreeSummary			
+				+ "," + fileTreeSummary				//summarized file tree
 				+		languages					//all language contributions
 			    +		languagesFractions			//all language contribution fractions
 			;

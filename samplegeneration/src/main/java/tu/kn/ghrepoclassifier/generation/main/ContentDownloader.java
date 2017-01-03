@@ -32,22 +32,22 @@ public class ContentDownloader {
 		for (String category: categories) {
 			File[] binFiles = getBinFiles(inputDir + "/" + category);
 
-			try {
-				for (File f: binFiles) {
-					RepoData repo = Serializer.readFromFile(f);
+			for (File f: binFiles) {
+				RepoData repo = Serializer.readFromFile(f);
 
-					String url = repo.getHtmlUrl() + "/archive/" + repo.getDefault_branch() + ".zip";
-					System.out.println(url);
-					
-					File contentFile = new File(outputDir +"/" + "content" + repo.getId() + ".zip");
+				String url = repo.getHtmlUrl() + "/archive/" + repo.getDefault_branch() + ".zip";
+				System.out.println(url);
+				
+				File contentFile = new File(outputDir +"/" + "content" + repo.getId() + ".zip");
 
-					if (!contentFile.exists()) {
+				if (!contentFile.exists()) {
+					try {
 						FileUtils.copyURLToFile(new URL(url), contentFile);
+					} catch (Exception e) {
+						System.err.println("Error downloading repos for category " + category);
+						e.printStackTrace();
 					}
 				}
-			} catch (Exception e) {
-				System.err.println("Error downloading repos for category " + category);
-				e.printStackTrace();
 			}
 		}
 	}
@@ -55,9 +55,7 @@ public class ContentDownloader {
 	public static void downloadFromDir(String inputDir, String outputDirS) throws IOException {
 		File outputDir = new File(outputDirS);
 
-		if (Files.exists(outputDir.toPath()))
-			FileUtils.cleanDirectory(outputDir);
-		else
+		if (!Files.exists(outputDir.toPath()))
 			Files.createDirectories(outputDir.toPath());
 
 		download(inputDir, outputDir.getAbsolutePath());

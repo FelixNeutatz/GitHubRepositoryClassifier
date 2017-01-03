@@ -63,6 +63,14 @@
           <version>1.4</version>
       </dependency>
 
+      <!-- https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j -->
+      <dependency>
+          <groupId>net.lingala.zip4j</groupId>
+          <artifactId>zip4j</artifactId>
+          <version>1.3.2</version>
+      </dependency>
+
+
       <!-- https://mvnrepository.com/artifact/org.commonjava.googlecode.markdown4j/markdown4j -->
       <dependency>
           <groupId>org.commonjava.googlecode.markdown4j</groupId>

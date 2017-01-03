@@ -29,10 +29,10 @@ public class CommitHistory {
 	
 	public CommitHistory(RepoData repo) {
 		this.repo = repo;
-		timeBetweenCommits = new Stats("TimeBetweenCommits");
-		changedLines = new Stats("ChangedLines");
-		addedLines = new Stats("AddedLines");
-		deletedLines = new Stats("DeletedLines");
+		timeBetweenCommits = new Stats("TimeBetweenCommits", true, false);
+		changedLines = new Stats("ChangedLines", true, false);
+		addedLines = new Stats("AddedLines", true, false);
+		deletedLines = new Stats("DeletedLines", true, false);
 		weekDayCount = new long [7];
 		projectTotalTime = 0;
 		n = 0;

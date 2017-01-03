@@ -1,5 +1,6 @@
 package tu.kn.ghrepoclassifier.featureextraction.features;
 
+import tu.kn.ghrepoclassifier.featureextraction.features.content.ExtractContent;
 import tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages;
 import tu.kn.ghrepoclassifier.featureextraction.features.commits.CommitHistory;
 import tu.kn.ghrepoclassifier.serialization.data.ContributorData;
@@ -47,6 +48,13 @@ public class FeatureExtractionUnbiased {
 		CommitHistory h = new CommitHistory(repo);
 		String commitHistory = h.summarizeCommitHistory();							//summarized commit history
 
+		String fileTreeSummary = "";
+		try {
+			fileTreeSummary = ExtractContent.extractFeatures(repo);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 
 		int numberContributors = 0;													//number of contributors
 		int numberCommits = 0;														//number of commits
@@ -78,6 +86,7 @@ public class FeatureExtractionUnbiased {
 				+ "," + hasLicense					//repo has a license
 				+ "," + readmeSize					//size of the readme
 				+ "," + commitHistory				//summarized commit history
+				+ "," + fileTreeSummary			
 				+		languages					//all language contributions
 			    +		languagesFractions			//all language contribution fractions
 			;
@@ -103,6 +112,7 @@ public class FeatureExtractionUnbiased {
 		features.add("hasLicense");
 		features.add("readmeSize");
 		features.addAll(CommitHistory.getFeatureLabels());
+		features.addAll(ExtractContent.getFeatureLabels());
 		features.addAll(ExtractLanguages.getFeatureLabels());
 		features.addAll(ExtractLanguages.getFeatureLabelsFraction());
 

@@ -14,8 +14,20 @@ public class Stats {
 	private long n = 0;
 	private String name;
 	
+	private boolean showSum;
+	private boolean showN;
+	
+	
 	public Stats(String name) {
 		this.name = name;
+		this.showSum = false;
+		this.showN = false;
+	}
+
+	public Stats(String name, boolean showSum, boolean showN) {
+		this.name = name;
+		this.showSum = showSum;
+		this.showN = showN;
 	}
 	
 	public void add(long value) {
@@ -54,11 +66,26 @@ public class Stats {
 	
 	@Override
 	public String toString(){
-		return getAverage() + "," + getStdDev() + "," + min + "," + max;
+		String l = "";
+		
+		if (showSum) {
+			l += sum + ",";
+		}
+		if (showN) {
+			l += n + ",";
+		}
+		
+		return l + getAverage() + "," + getStdDev() + "," + min + "," + max;
 	}
 
 	public List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
+		if (showSum) {
+			features.add(name + "Sum");
+		}
+		if (showN) {
+			features.add(name + "N");
+		}
 		features.add(name + "Average");
 		features.add(name + "StdDev");
 		features.add(name + "Min");

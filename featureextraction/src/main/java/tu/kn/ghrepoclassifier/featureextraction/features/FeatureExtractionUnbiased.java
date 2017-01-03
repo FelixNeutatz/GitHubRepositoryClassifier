@@ -1,5 +1,6 @@
 package tu.kn.ghrepoclassifier.featureextraction.features;
 
+import tu.kn.ghrepoclassifier.featureextraction.features.commits.Stats;
 import tu.kn.ghrepoclassifier.featureextraction.features.content.ExtractContent;
 import tu.kn.ghrepoclassifier.featureextraction.features.languages.ExtractLanguages;
 import tu.kn.ghrepoclassifier.featureextraction.features.commits.CommitHistory;
@@ -55,13 +56,9 @@ public class FeatureExtractionUnbiased {
 			e.printStackTrace();
 		}
 
-
-		int numberContributors = 0;													//number of contributors
-		int numberCommits = 0;														//number of commits
-
+		Stats contributorStats = new Stats("contributor", true, true);
 		for(ContributorData c: repo.listContributors()) {
-			numberCommits += c.getContributions();
-			numberContributors++;
+			contributorStats.add(c.getContributions());
 		}
 
 		long readmeSize = repo.getReadme().getSize();								//size of the readme
@@ -78,8 +75,7 @@ public class FeatureExtractionUnbiased {
 				+ "," + numberWatchers				//number of watchers
 				+ "," + numberReleases				//number of releases
 				+ "," + indexHTMLfileLength			//index.html length
-				+ "," + numberCommits				//number of commits
-				+ "," + numberContributors			//number of contributors 
+				+ "," + contributorStats.toString()	//contributor stats
 				+ "," + hasDownloads				//was the repo downloaded
 				+ "," + descriptionLength				//decription length
 				+ "," + numberProgrammingLanguages	//number of programming languages
@@ -104,8 +100,7 @@ public class FeatureExtractionUnbiased {
 		features.add("numberWatchers");
 		features.add("numberReleases");
 		features.add("indexHTMLfileLength");
-		features.add("numberCommits");
-		features.add("numberContributors");
+		features.addAll(new Stats("contributor", true, true).getFeatureLabels());
 		features.add("hasDownloads");
 		features.add("descriptionLength");
 		features.add("numberProgrammingLanguages");

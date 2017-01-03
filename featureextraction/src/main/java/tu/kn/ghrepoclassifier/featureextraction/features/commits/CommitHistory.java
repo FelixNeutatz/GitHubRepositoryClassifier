@@ -119,10 +119,10 @@ public class CommitHistory {
 		List<String> features = new ArrayList();
 		features.add("projectTotalTime");
 		//features.add("startTime");
-		features.addAll(new Stats("AddedLines").getFeatureLabels());
-		features.addAll(new Stats("ChangedLines").getFeatureLabels());
-		features.addAll(new Stats("DeletedLines").getFeatureLabels());
-		features.addAll(new Stats("TimeBetweenCommits").getFeatureLabels());
+		features.addAll(new Stats("AddedLines", true, false).getFeatureLabels());
+		features.addAll(new Stats("ChangedLines", true, false).getFeatureLabels());
+		features.addAll(new Stats("DeletedLines", true, false).getFeatureLabels());
+		features.addAll(new Stats("TimeBetweenCommits", true, false).getFeatureLabels());
 
 		for (int d = 0; d < 7; d++) {
 			features.add("weekDayCount" + d);

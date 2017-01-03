@@ -19,7 +19,7 @@ public class Root extends Folder {
 	public Root(String path) {
 		super(path,0);
 		fileSizeStats = new Stats("fileSize", true, true);
-		fileLevelStats = new Stats("fileLevelStats", false, false);
+		fileLevelStats = new Stats("fileLevel", false, false);
 		filesPerDirStats = new Stats("filesPerDir", false, true);
 		subfolderPerDirStats = new Stats("subfolderPerDir", false, false);
 		namesString = "";
@@ -51,10 +51,10 @@ public class Root extends Folder {
 
 	public static List<String> getFeatureLabels() {
 		List<String> features = new ArrayList();
-		features.addAll(new Stats("fileSizeStats").getFeatureLabels());
-		features.addAll(new Stats("fileLevelStats").getFeatureLabels());
-		features.addAll(new Stats("filesPerDirStats").getFeatureLabels());
-		features.addAll(new Stats("subfolderPerDirStats").getFeatureLabels());
+		features.addAll(new Stats("fileSize", true, true).getFeatureLabels());
+		features.addAll(new Stats("fileLevel", false, false).getFeatureLabels());
+		features.addAll(new Stats("filesPerDir", false, true).getFeatureLabels());
+		features.addAll(new Stats("subfolderPerDir", false, false).getFeatureLabels());
 
 		return features;
 	}

@@ -3,15 +3,15 @@
 from myio import *
 import xgboost as xgb
 from sklearn.grid_search import GridSearchCV
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
 import seaborn as sns
 import matplotlib.pyplot as plt
 from config import Config
+from visualize import dict_to_bar_chart
+from visualize import validate
 
 
 def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 189)
+    category_frames = read(Config.get("feature.extraction.output.path"), 230)
 
     schema = get_schema(Config.get("feature.extraction.output.path"))
 
@@ -91,9 +91,13 @@ def run():
     importances = final_gb.get_score(importance_type='gain')
     print importances
 
+    dict_to_bar_chart(importances, "feature gain")
+
     print "weight:"
     importancesW = final_gb.get_score(importance_type='weight')
     print importancesW
+
+    dict_to_bar_chart(importancesW, "feature weight")
 
     xgdmat.feature_names
 
@@ -109,8 +113,7 @@ def run():
 
     ypred_test = np.argmax(y_pred, axis=1) #choose class with highest probability per sample
 
-    print confusion_matrix(test_y, ypred_test)
-    print f1_score(test_y, ypred_test, average='weighted')
+    validate(test_y, ypred_test)
 
     attachment_a_frames = read(Config.get("attachmentA.feature.extraction.output.path"), 150)
 
@@ -126,7 +129,6 @@ def run():
 
     attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
 
-    print confusion_matrix(attachment_a_y, attachment_a_ypred_test)
-    print f1_score(attachment_a_y, attachment_a_ypred_test, average='weighted')
+    validate(attachment_a_y, attachment_a_ypred_test)
 
 run()

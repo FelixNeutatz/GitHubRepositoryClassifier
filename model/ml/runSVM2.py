@@ -10,8 +10,8 @@ from config import Config
 from util import *
 from myio import *
 
-category_frames = read(Config.get("feature.extraction.output.path"), 250)
-train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
+category_frames = read(Config.get("feature.extraction.output.path"), 230)
+train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
 mask[0] = False
 train_matrix, test_matrix = dataframe_to_numpy_matrix(train_frame, test_frame, mask)

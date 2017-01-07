@@ -28,7 +28,7 @@ def visualize(y_real, y_pred):
 def run():
     category_frames = read_native(Config.get("feature_text.extraction.output.path"), 230)
 
-    train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
+    train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
     mask[0] = False
@@ -107,8 +107,8 @@ def run():
 
     pipeline.set_params(**best_parameters)
 
-    X_numpy = np.concatenate((train_x, test_x), axis=0)
-    y_numpy = np.concatenate((train_y, test_y), axis=0)
+    X_numpy = train_x
+    y_numpy = train_y
 
     X = X_numpy.A.ravel()
     y = np.array(y_numpy).tolist()

@@ -27,7 +27,7 @@ def dict_to_bar_chart(dictionary, y_label, width=8, height=4, n=20):
 
     i = 1
     for key, value in sorted_dict:
-        chart += str(key).replace ("_", "")
+        chart += str(key).replace ("_", "").replace("Average", "Avg")
         if i < n:
             chart += ","
         else:

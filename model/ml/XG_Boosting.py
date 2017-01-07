@@ -99,7 +99,11 @@ def run():
 
     dict_to_bar_chart(importancesW, "feature weight")
 
-    xgdmat.feature_names
+    print "coverage:"
+    importancesC = final_gb.get_score(importance_type='cover')
+    print importancesC
+
+    dict_to_bar_chart(importancesC, "feature coverage")
 
     #importances = final_gb.get_fscore()
     #print importances

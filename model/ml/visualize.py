@@ -60,6 +60,18 @@ def dict_to_bar_chart(dictionary, y_label, width=8, height=4, n=20):
     print chart
     print "######"
 
+def array_to_itemlist(a, n=10):
+    itemlist = "\\begin{enumerate}\n"
+    for i in range(0,n):
+        itemlist += "\t\\item " + a[i] + "\n"
+    itemlist += "\\end{enumerate}\n"
+
+    print "######"
+    print itemlist
+    print "######"
+
+
+
 def confusion_matrix_to_latex(confusion_matrix, class_names):
 
     n = len(class_names)

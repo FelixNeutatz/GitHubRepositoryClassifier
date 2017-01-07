@@ -11,10 +11,10 @@ from time import time
 from sklearn.model_selection import GridSearchCV
 from config import Config
 from sklearn.feature_extraction import text
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
 from sklearn.calibration import CalibratedClassifierCV
 import matplotlib.pyplot as plt
+from visualize import validate
+from visualize import array_to_itemlist
 
 
 # http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
@@ -22,12 +22,11 @@ import matplotlib.pyplot as plt
 # https://www.kaggle.com/c/word2vec-nlp-tutorial/details/part-1-for-beginners-bag-of-words
 
 def visualize(y_real, y_pred):
-    print confusion_matrix(np.array(y_real).tolist(), np.array(y_pred).tolist())
-    print f1_score(np.array(y_real).tolist(), np.array(y_pred).tolist(), average='weighted')
+    validate(np.array(y_real).tolist(), np.array(y_pred).tolist())
 
 
 def run():
-    category_frames = read_native(Config.get("feature_text.extraction.output.path"), 184)
+    category_frames = read_native(Config.get("feature_text.extraction.output.path"), 230)
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.1)
 
@@ -140,6 +139,7 @@ def run():
                     feature_weights[i] = -values[i]
 
         print feature_names
+        array_to_itemlist(feature_names)
         print feature_weights
 
         ind = np.arange(k)

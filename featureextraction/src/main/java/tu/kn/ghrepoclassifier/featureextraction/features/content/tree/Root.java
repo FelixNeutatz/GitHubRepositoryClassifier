@@ -26,7 +26,7 @@ public class Root extends Folder {
 	}
 	
 	public void populate() {
-		build(name, fileSizeStats, fileLevelStats, filesPerDirStats, subfolderPerDirStats, namesString);
+		build(name, fileSizeStats, fileLevelStats, filesPerDirStats, subfolderPerDirStats, namesString, true);
 	}
 
 	@Override

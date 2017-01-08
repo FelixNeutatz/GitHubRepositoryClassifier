@@ -14,6 +14,7 @@ import tu.kn.ghrepoclassifier.serialization.data.IssueData;
 import tu.kn.ghrepoclassifier.serialization.data.RepoData;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,14 @@ public class ExtractNames {
 
 		String outputFolder = ExtractContent.unZip(repo);
 
-		Root tree = new Root(outputFolder);
+		String[] directories = new File(outputFolder).list(new FilenameFilter() {
+			@Override
+			public boolean accept(File current, String name) {
+				return new File(current, name).isDirectory();
+			}
+		});
+
+		Root tree = new Root(outputFolder + "/" + directories[0]);
 		tree.populate();
 
 		l += tree.getDirAndFileNames();

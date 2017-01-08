@@ -6,6 +6,8 @@ from sklearn.multiclass import OneVsRestClassifier
 from ml.util import *
 from ml.myio import *
 from ml.visualize import validate
+from sklearn import manifold
+from ml.visualize import plot
 
 
 class Stacker:
@@ -14,6 +16,7 @@ class Stacker:
         self.module_list = []
         self.X = None
         self.y = None
+        self.id = None
         self.X_test = None
         self.y_test = None
         self.clf = None
@@ -46,6 +49,7 @@ class Stacker:
             feature_list.append(f)
         self.X = np.concatenate(feature_list, axis=1)
         self.y = y
+        self.id = id2
 
     def build_test(self):
         y = self.module_list[0].y3
@@ -72,6 +76,15 @@ class Stacker:
 
     def test(self):
         self._test(self.X_test, self.y_test)
+
+
+    def visualize_by_tsne(self):
+        tsne = manifold.TSNE(n_components=2, init='random',  # method='barnes_hut',
+                             random_state=0, learning_rate=1000, n_iter=1000,
+                             verbose=2)
+        Y = tsne.fit_transform(self.X)
+
+        plot(Y, self.y, self.id)
 
     def test_path(self, path_list):
         a_X, a_y = self.transform(path_list)

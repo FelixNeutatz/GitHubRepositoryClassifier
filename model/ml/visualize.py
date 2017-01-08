@@ -5,6 +5,45 @@ import operator
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+import colorsys
+import numpy as np
+from ml.PointBrowser import PointBrowser
+
+def plot(Y, train_y, train_repo_names):
+    category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
+
+    fig, (ax) = plt.subplots(1, 1)
+
+    plts = []
+    labels = []
+
+    color_list = np.zeros((Y[:, 0].size, 3))
+    for i in range(0,len(category_list)):
+        mask = np.where(train_y == i)
+        color_float = float(i) / 6.0
+        rgb = colorsys.hsv_to_rgb(color_float, 1.0, 1.0)
+        color_list[mask] = rgb
+
+        plts.append(mlines.Line2D([], [], color=rgb, markersize=15, label=category_list[i]))
+        labels.append(category_list[i])
+
+    ax.scatter(Y[:, 0], Y[:, 1], c=color_list, picker=5)
+
+    ax.legend(plts,labels,
+               scatterpoints=1,
+               loc='lower left',
+               ncol=3,
+               fontsize=8)
+
+    browser = PointBrowser(fig, ax, Y[:, 0], Y[:, 1], train_repo_names.tolist())
+
+    fig.canvas.mpl_connect('pick_event', browser.onpick)
+    fig.canvas.mpl_connect('key_press_event', browser.onpress)
+
+    plt.show()
+
 
 def validate(y, y_pred):
     category_list = ["DATA", "EDU", "HW", "DOCS", "DEV", "WEB"]

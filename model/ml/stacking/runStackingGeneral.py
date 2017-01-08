@@ -34,6 +34,8 @@ stacker.test()
 print "Stacker Test Attachment A"
 stacker.test_path(path_list)
 
+stacker.visualize_by_tsne()
+
 #print "Modules Test"
 #stacker.test_all_modules_alone()  # path_list)
 

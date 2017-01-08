@@ -5,6 +5,7 @@ from sklearn.multiclass import OneVsRestClassifier
 
 from ml.util import *
 from ml.myio import *
+from ml.visualize import validate
 
 
 class Stacker:
@@ -66,8 +67,8 @@ class Stacker:
 
     def _test(self, X, y):
         y_pred = self.clf.predict(X)
-        print confusion_matrix(y, y_pred)
-        print f1_score(y, y_pred, average='weighted')
+        validate(y, y_pred)
+
 
     def test(self):
         self._test(self.X_test, self.y_test)

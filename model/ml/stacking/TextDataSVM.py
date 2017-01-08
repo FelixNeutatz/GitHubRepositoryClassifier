@@ -3,6 +3,7 @@
 from sklearn.linear_model import SGDClassifier
 from ml.stacking.TextDataModule import TextDataModule
 from ml.util import *
+from ml.visualize import validate
 
 
 class TextDataSVM(TextDataModule):
@@ -19,8 +20,7 @@ class TextDataSVM(TextDataModule):
 
     def _test(self, X, y):
         y_pred = self.clf.predict(X)
-        print confusion_matrix(y, y_pred)
-        print f1_score(y, y_pred, average='weighted')
+        validate(y, y_pred)
 
     def test(self):
         self._test(self.X3, self.y3)

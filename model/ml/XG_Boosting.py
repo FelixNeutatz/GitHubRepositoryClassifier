@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from config import Config
 from visualize import dict_to_bar_chart
 from visualize import validate
+from xgboost import plot_tree
 
 
 def run():
@@ -73,6 +74,8 @@ def run():
                   'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
 
     final_gb = xgb.train(our_params, xgdmat, num_boost_round=3000)
+
+    plot_tree(final_gb)
 
     sns.set(font_scale=1.5)
 

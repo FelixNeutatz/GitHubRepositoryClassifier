@@ -42,6 +42,10 @@ public class DataCleaner {
 	
 	public boolean isValid(RepoData repo) {
 		
+		if (isTest) {
+			return true;
+		}
+		
 		if ((repo.getCommits().size() == 0)
 			&& !repo.getOurClassification().equals("OTHER")) {
 			System.err.println("Repo is probably not valid: " + repo.getFull_name() + "\n" + "cause: number commits = 0");

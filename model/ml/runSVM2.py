@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import StandardScaler

@@ -1,10 +1,9 @@
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.model_selection import learning_curve
 import numpy as np
+from ml.visualize import validate
 
 
 cv_def = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
@@ -22,8 +21,7 @@ def fit_cv(clf, train_x, train_y, params, cv=cv_def):
 
 def test(clf, X, y):
     y_pred = clf.predict(X)
-    print confusion_matrix(y, y_pred)
-    print f1_score(y, y_pred, average='weighted')
+    validate(y, y_pred)
 
 
 def plot_learning_curve(estimator, title, X, y, ylim=None, cv=cv_def,

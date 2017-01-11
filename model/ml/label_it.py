@@ -31,7 +31,7 @@ class Screenshot(QWebView):
         # render image
         image = QImage(self.page().viewportSize(), QImage.Format_ARGB32)
 
-        image = image.copy(0,99, image.size().width(), image.size().height() - 99)
+        image = image.copy(0, 99, image.size().width(), image.size().height() - 99)
 
         painter = QPainter(image)
         frame.render(painter)
@@ -80,8 +80,8 @@ df = pd.read_csv(input, encoding='utf-8')
 
 urls = df[df.columns[column_index]].as_matrix()
 
-N = options.n
-if N == None:
+N = int(options.n)
+if N is None:
     N = len(urls)
 
 
@@ -89,10 +89,10 @@ ids = range(0,N)
 random.shuffle(ids)
 
 
-with open(output, 'wb') as csvfile:
+with open(output, 'wb', buffering=1) as csvfile:
     label_writer = csv.writer(csvfile, delimiter=",")
 
-    root = Tk() #main window
+    root = Tk()  # main window
     root.wm_title("Label it")
 
     top = Frame(root)
@@ -107,7 +107,7 @@ with open(output, 'wb') as csvfile:
         print str(urls[ids[img_counter]]) + " " + str(label) + " " + str(img_counter)
         label_writer.writerow([urls[ids[img_counter]], label])
 
-        #update image
+        # update image
         if imagesQ.empty():
             root.destroy()
             print "end!"
@@ -137,7 +137,7 @@ with open(output, 'wb') as csvfile:
 
 
     img = ImageTk.PhotoImage(get_screenshot(0, urls, ids))
-    for i in range(1, 5):
+    for i in range(1, min(5, N)):
         imagesQ.put(get_screenshot(i, urls, ids))
 
 

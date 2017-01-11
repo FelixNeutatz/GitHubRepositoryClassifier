@@ -36,8 +36,30 @@ stacker.test_path(path_list)
 
 stacker.visualize_by_tsne()
 
+# print "Modules Test"
+# stacker.test_all_modules_alone()  # path_list)
+
+print "Modules Test (also on Attachment A)"
+stacker.test_all_modules_alone(path_list)
+
+'''
+print "Retraining stacker modules on all data"
+meta_data_xgb.retrain()
+text_data_svm.retrain()
+name_data_svm.retrain()
+stacker.build_test()
+print "Stacker Test"
+stacker.test()
+print "Stacker Test Attachment A"
+stacker.test_path(path_list)
+stacker.visualize_by_tsne()
 #print "Modules Test"
 #stacker.test_all_modules_alone()  # path_list)
-
-print "Modules Test on Attachment A"
+print "Modules Test (also on Attachment A)"
 stacker.test_all_modules_alone(path_list)
+'''
+
+'''
+print "Test other"
+stacker.test_path(path_list, True)
+'''

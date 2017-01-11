@@ -45,8 +45,10 @@ def plot(Y, train_y, train_repo_names):
     plt.show()
 
 
-def validate(y, y_pred):
+def validate(y, y_pred, with_other=False):
     category_list = ["DATA", "EDU", "HW", "DOCS", "DEV", "WEB"]
+    if with_other:
+        category_list.append("OTHER")
 
     c_matrix = confusion_matrix(y, y_pred)
     confusion_matrix_to_latex(c_matrix, category_list)

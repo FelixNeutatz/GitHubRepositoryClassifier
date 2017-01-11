@@ -1,8 +1,16 @@
 sample.generation.output.path=
+sample.generation.content.output.path=
 sample.generation.git-accounts.file=
 feature.extraction.output.path=
+feature_text.extraction.output.path=
+feature_text_names.extraction.output.path=
 attachmentA.download.output.path=
 attachmentA.repos.file=
 attachmentA.feature.extraction.output.path=
+attachmentA.feature_text.extraction.output.path=
+attachmentA.feature_text_names.extraction.output.path=
 attachmentB.download.output.path=
+attachmentB.feature.extraction.output.path=
+attachmentB.feature_text.extraction.output.path=
+attachmentB.feature_text_names.extraction.output.path=
 attachmentB.repos.file=

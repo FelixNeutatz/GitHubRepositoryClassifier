@@ -12,6 +12,8 @@ from ml.visualize import validate
 
 class MetaDataXGB(MetaDataModule):
     name = "MetaDataXG-Boost"
+    our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
+                  'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
 
     def __init__(self, max_samples_per_category=210, dev_size=0.5, test_size=0.1):
         super(MetaDataXGB, self).__init__(max_samples_per_category, dev_size, test_size)
@@ -20,9 +22,13 @@ class MetaDataXGB(MetaDataModule):
 
     def train(self):
         xgdmat = xgb.DMatrix(self.X1, self.y1, feature_names=self.schema)
-        our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
-                  'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
-        self.clf = xgb.train(our_params, xgdmat, num_boost_round=3000, verbose_eval=False)
+        self.clf = xgb.train(self.our_params, xgdmat, num_boost_round=3000, verbose_eval=False)
+
+    def retrain(self):
+        X = np.concatenate((self.X1, self.X2))
+        y = np.concatenate((self.y1, self.y2))
+        xgdmat = xgb.DMatrix(X, y, feature_names=self.schema)
+        self.clf = xgb.train(self.our_params, xgdmat, num_boost_round=3000, verbose_eval=False)
 
     def _test(self, X, y):
         y_pred = self.clf.predict(xgb.DMatrix(X, feature_names=self.schema))

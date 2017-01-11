@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from sklearn.linear_model import SGDClassifier
+import scipy.sparse
 from ml.stacking.NameDataModule import NameDataModule
 from ml.util import *
 from ml.visualize import validate
+
 
 class NameDataSVM(NameDataModule):
     name = "NameDataSVM"
@@ -16,6 +18,11 @@ class NameDataSVM(NameDataModule):
         self.clf = SGDClassifier(loss='log', penalty='elasticnet')  # alpha=0.0001
         # self.clf = self.clf.fit(self.X1, self.y1)
         self.clf = fit_cv(self.clf, self.X1, self.y1, {'alpha': np.logspace(-6, -2, 5)})
+
+    def retrain(self):
+        X = scipy.sparse.vstack((self.X1, self.X2))
+        y = np.concatenate((self.y1, self.y2))
+        self.clf = fit_cv(self.clf, X, y, {'alpha': np.logspace(-6, -2, 5)})
 
     def _test(self, X, y):
         y_pred = self.clf.predict(X)

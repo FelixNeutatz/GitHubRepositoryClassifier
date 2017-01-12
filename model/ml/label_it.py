@@ -12,6 +12,7 @@ import os.path
 import csv
 import random
 import Queue
+import numpy as np
 from optparse import OptionParser
 
 
@@ -65,6 +66,8 @@ parser.add_option("-n", "--numberRepos", dest="n",
                   help="number of repositories to label")
 parser.add_option("-c", "--columnURLindex", dest="column_index",
                   help="index of the column which contains the repository urls (0 .. n-1)\ndefault:last column")
+parser.add_option("-l", "--labeledDataFile", dest="labels", help="path to previous output file, will skip already"
+                                                                 "labeled urls")
 
 (options, args) = parser.parse_args()
 
@@ -77,8 +80,14 @@ if column_index == None:
     column_index = -1
 
 df = pd.read_csv(input, encoding='utf-8')
+urls = df[df.columns[column_index]].tolist()
 
-urls = df[df.columns[column_index]].as_matrix()
+# remove already labeled files from list of urls
+labels_file = options.labels
+if labels_file is not None:
+    with open(labels_file) as f:
+        labeled_urls = np.asarray([unicode(l.strip().split(",")[0]) for l in f.readlines()])
+    urls = [u for u in urls if u not in labeled_urls]
 
 N = int(options.n)
 if N is None:

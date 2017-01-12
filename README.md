@@ -23,6 +23,24 @@ mvn clean install -DskipTests
 
 In order to be able to run all Python programs, please make sure you have installed [all required packages](https://github.com/FelixNeutatz/GitHubRepositoryClassifier/blob/master/model/requirements.txt).
 
+## Automatic classification
+You can automatically classify GitHub repositories given in a csv file. But you have to finish the setup before!
+
+```
+cd GitHubRepositoryClassifier/model/ml
+python classify.py --help
+Usage: classify.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -i FILE, --input=FILE
+                        input csv file
+  -o FILE, --output=FILE
+                        output csv file default: 'output.csv'
+  -c COLUMN_INDEX, --columnURLindex=COLUMN_INDEX
+                        index of the column which contains the repository urls
+                        (0 .. n-1) default:first(0) column
+```
 
 ## Label it - Extension
 This little program allows you to label a given list of repository list (in a csv folder) and outputs your manual classification in another csv file.

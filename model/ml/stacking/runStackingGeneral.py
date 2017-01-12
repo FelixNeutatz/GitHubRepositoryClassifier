@@ -28,25 +28,30 @@ stacker.train()
 fileObject = open("../persist/model.p", "wb")
 pickle.dump(stacker, fileObject)
 
-
-dir_list = [
-             Config.get("attachmentA.feature.extraction.output.path")
-             ,Config.get("attachmentA.feature_text.extraction.output.path")
-             ,Config.get("attachmentA.feature_text_names.extraction.output.path")
-             ]
+path_list_a = ["attachmentA.feature.extraction.output.path",
+               "attachmentA.feature_text.extraction.output.path",
+               "attachmentA.feature_text_names.extraction.output.path"]
+path_list_b = ["attachmentB.feature.extraction.output.path",
+               "attachmentB.feature_text.extraction.output.path",
+               "attachmentB.feature_text_names.extraction.output.path"]
+dir_list_a = [Config.get(p) for p in path_list_a]
+dir_list_b = [Config.get(p) for p in path_list_b]
 
 print "Stacker Test"
 stacker.test()
 print "Stacker Test Attachment A"
-stacker.test_dirs(dir_list)
+stacker.test_dirs(dir_list_a)
+print "Stacker Test Attachment B"
+stacker.test_dirs(dir_list_b)
 
 stacker.visualize_by_tsne()
 
-# print "Modules Test"
-# stacker.test_all_modules_alone()  # dir_list)
-
-print "Modules Test (also on Attachment A)"
-stacker.test_all_modules_alone(dir_list)
+print "Stacker Modules Test"
+stacker.test_modules()
+print "Stacker Modules Test Attachment A"
+stacker.test_modules_dirs(dir_list_a)
+print "Stacker Modules Test Attachment B"
+stacker.test_modules_dirs(dir_list_b)
 
 '''
 print "Retraining stacker modules on all data"

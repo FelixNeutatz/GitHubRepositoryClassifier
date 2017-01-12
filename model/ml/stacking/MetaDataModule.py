@@ -17,18 +17,19 @@ class MetaDataModule(StackingModule):
         self.scaler = None
 
     def load_data(self):
-         path_train = "feature.extraction.output.path"
-         category_frames = read(Config.get2(path_train), self.max_samples_per_category)
-         self.load_data_from_frames(path_train, category_frames)
+        path_train = "feature.extraction.output.path"
+        dir_train = Config.get2(path_train)
+        category_frames = read(dir_train, self.max_samples_per_category)
+        self.load_data_from_frames(path_train, category_frames)
 
-    def transform(self, dir):
-        a_frame = concat(read(dir, self.max_samples_per_category))
-        mask = np.asarray(np.ones((1, a_frame.shape[1]), dtype=bool))[0]
+    def transform(self, dir_):
+        frame = concat(read(dir_, self.max_samples_per_category))
+        mask = np.asarray(np.ones((1, frame.shape[1]), dtype=bool))[0]
         mask[0] = False
-        a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
-        X_test, y_test = split_target_from_data(a_mat)
-        X_test_transformed = self.scaler.transform(X_test)
-        return X_test_transformed, np.array(y_test).tolist()
+        mat = dataframe_to_numpy_matrix_single(frame, mask)
+        X, y = split_target_from_data(mat)
+        X_transformed = self.scaler.transform(X)
+        return X_transformed, np.array(y).tolist()
 
     def preprocess(self):
         # normalize

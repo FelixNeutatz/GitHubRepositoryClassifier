@@ -18,10 +18,10 @@ class TextDataSVM(TextDataModule):
 
     def train(self):
         # self.clf = SGDClassifier(loss='log', penalty='elasticnet')  # alpha=0.0001
-        self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
-        # self.clf = self.clf.fit(self.X1, self.y1)
         # params = {'alpha': np.logspace(-6, -2, 5)}
+        self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
         params = {'estimator__C': np.logspace(-4, 4, 9)}
+        # self.clf = self.clf.fit(self.X1, self.y1)
         self.clf = fit_cv(self.clf, self.X1, self.y1, params)
 
     def retrain(self):
@@ -37,8 +37,8 @@ class TextDataSVM(TextDataModule):
     def test(self):
         self._test(self.X3, self.y3)
 
-    def test_path(self, dir):
-        X, y = self.transform(dir)
+    def test_dir(self, dir_):
+        X, y = self.transform(dir_)
         self._test(X, y)
 
     def predict_proba(self, X):

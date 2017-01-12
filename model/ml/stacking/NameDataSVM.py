@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-
+from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 import scipy.sparse
+from sklearn.multiclass import OneVsRestClassifier
+
 from ml.stacking.NameDataModule import NameDataModule
 from ml.util import *
 from ml.visualize import validate
@@ -15,9 +17,12 @@ class NameDataSVM(NameDataModule):
         self.run()
 
     def train(self):
-        self.clf = SGDClassifier(loss='log', penalty='elasticnet')  # alpha=0.0001
+        # self.clf = SGDClassifier(loss='log', penalty='elasticnet', class_weight="balanced")  # alpha=0.0001
+        # params = {'alpha': np.logspace(-6, -2, 5)}
+        self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
+        params = {'estimator__C': np.logspace(-4, 4, 9)}
         # self.clf = self.clf.fit(self.X1, self.y1)
-        self.clf = fit_cv(self.clf, self.X1, self.y1, {'alpha': np.logspace(-6, -2, 5)})
+        self.clf = fit_cv(self.clf, self.X1, self.y1, params)
 
     def retrain(self):
         X = scipy.sparse.vstack((self.X1, self.X2))
@@ -31,8 +36,8 @@ class NameDataSVM(NameDataModule):
     def test(self):
         self._test(self.X3, self.y3)
 
-    def test_path(self, dir):
-        X, y = self.transform(dir)
+    def test_dir(self, dir_):
+        X, y = self.transform(dir_)
         self._test(X, y)
 
     def predict_proba(self, X):

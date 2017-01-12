@@ -15,22 +15,22 @@ class TextModule(StackingModule):
 
     def __init__(self, max_samples_per_category, dev_size, test_size, path_train):
         super(TextModule, self).__init__(max_samples_per_category, dev_size, test_size)
-        self.pipeline = None
         self.path_train = path_train
+        self.pipeline = None
 
     def load_data(self):
-        #self.path_train = "feature_text.extraction.output.path"
-        category_frames = read_native(Config.get2(self.path_train), self.max_samples_per_category)
+        dir_train = Config.get2(self.path_train)
+        category_frames = read_native(dir_train, self.max_samples_per_category)
         self.load_data_from_frames(self.path_train, category_frames)
 
-    def transform(self, dir): # = "attachmentA.feature_text.extraction.output.path"
-        a_frame = concat(read_native(dir, self.max_samples_per_category))
-        mask = np.asarray(np.ones((1, a_frame.shape[1]), dtype=bool))[0]
+    def transform(self, dir_):
+        frame = concat(read_native(dir_, self.max_samples_per_category))
+        mask = np.asarray(np.ones((1, frame.shape[1]), dtype=bool))[0]
         mask[0] = False
-        a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)
-        X_test, y_test = split_target_from_data(a_mat)
-        X_test_transformed = self.pipeline.transform(X_test.A1)
-        return X_test_transformed, np.array(y_test).tolist()
+        mat = dataframe_to_numpy_matrix_single(frame, mask)
+        X, y = split_target_from_data(mat)
+        X_transformed = self.pipeline.transform(X.A1)
+        return X_transformed, np.array(y).tolist()
 
     def preprocess(self):
         my_stop_words = read_stop_words2()

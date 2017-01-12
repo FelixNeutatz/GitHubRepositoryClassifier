@@ -37,8 +37,8 @@ class MetaDataXGB(MetaDataModule):
     def test(self):
         self._test(self.X3, self.y3)
 
-    def test_path(self, path_a="attachmentA.feature.extraction.output.path"):
-        X, y = self.transform(path_a)
+    def test_dir(self, dir_):
+        X, y = self.transform(dir_)
         self._test(X, y)
 
     def predict_proba(self, X):

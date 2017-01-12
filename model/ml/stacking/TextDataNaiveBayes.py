@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import f1_score
 
 from ml.stacking.TextDataModule import TextDataModule
 from sklearn.naive_bayes import MultinomialNB
@@ -14,7 +16,7 @@ class TextDataNaiveBayes(TextDataModule):
 
     def train(self):
         self.clf = MultinomialNB().fit(self.X1, self.y1)
-        #self.clf = fit_cv(self.clf, self.X1, self.y1, {'alpha': np.logspace(-6, -2, 5)})
+        # self.clf = fit_cv(self.clf, self.X1, self.y1, {'alpha': np.logspace(-6, -2, 5)})
 
     def _test(self, X, y):
         y_pred = self.clf.predict(X)

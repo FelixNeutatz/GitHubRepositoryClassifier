@@ -2,6 +2,7 @@
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.preprocessing import StandardScaler
 
 from ml.util import *
 from ml.myio import *
@@ -21,6 +22,7 @@ class Stacker:
         self.y_test = None
         self.clf = None
         self.min_proba = None
+        self.scaler = StandardScaler()
 
     def add(self, stacking_module):
         self.module_list.append(stacking_module)
@@ -49,6 +51,7 @@ class Stacker:
             f = module.predict_proba(module.X2)
             feature_list.append(f)
         self.X = np.concatenate(feature_list, axis=1)
+        self.scaler.fit_transform(self.X)
         self.y = y
         self.id = id2
 
@@ -63,6 +66,7 @@ class Stacker:
             f = module.predict_proba(module.X3)
             feature_list.append(f)
         self.X_test = np.concatenate(feature_list, axis=1)
+        self.scaler.transform(self.X_test)
         self.y_test = y
 
     def train(self):
@@ -81,6 +85,11 @@ class Stacker:
     def test(self, with_other=False):
         self._test(self.X_test, self.y_test, with_other)
 
+    def test_modules(self):
+        for mod in self.module_list:
+            print mod.name
+            mod.test()
+
     def visualize_by_tsne(self):
         tsne = manifold.TSNE(n_components=2, init='random',  # method='barnes_hut',
                              random_state=0, learning_rate=1000, n_iter=1000,
@@ -90,17 +99,14 @@ class Stacker:
 
     def test_dirs(self, dir_list, with_other=False):
         X_a, y_a = self.transform(dir_list)
+        self.scaler.transform(X_a)
         self._test(X_a, y_a, with_other)
 
-    def test_all_modules_alone(self, dir_list=None):
+    def test_modules_dirs(self, dir_list):
         for i in range(0, len(self.module_list)):
-            print self.module_list[i].name
             mod = self.module_list[i]
-            print mod.name, "Test"
-            mod.test()
-            if dir_list is not None:
-              print mod.name, "Test Attachement A"
-              mod.test_dirs(dir_list[i])
+            print mod.name
+            mod.test_dir(dir_list[i])
 
     def predict_other(self, X, other_value=6):
         # predict probabilities on data set X

@@ -6,6 +6,7 @@ import csv
 from optparse import OptionParser
 import subprocess
 import os.path
+import pickle
 
 parser = OptionParser()
 parser.add_option("-i", "--input", dest="input",
@@ -23,7 +24,7 @@ input = options.input
 output = options.output
 
 column_index = options.column_index
-if column_index == None:
+if column_index is None:
     column_index = 0
 
 df = pd.read_csv(input, encoding='utf-8', header=None)
@@ -31,6 +32,9 @@ df = pd.read_csv(input, encoding='utf-8', header=None)
 urls = df[df.columns[column_index]].as_matrix()
 
 print urls
+
+# load classification model
+stacker = pickle.load(open("persist/model.p", "rb"))
 
 
 if not os.path.exists("../../samplegeneration/target/samplegeneration-1.0-SNAPSHOT.jar"):
@@ -55,3 +59,5 @@ if not os.path.exists("../../featureextraction/target/featureextraction-1.0-SNAP
 subprocess.call(['java -cp ../../featureextraction/target/featureextraction-1.0-SNAPSHOT.jar ' +
                  'tu.kn.ghrepoclassifier.featureextraction.ExtractTest'
                  ], shell=True)
+
+

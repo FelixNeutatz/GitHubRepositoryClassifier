@@ -4,6 +4,7 @@ from ml.stacking.MetaDataXGB import MetaDataXGB
 from ml.stacking.Stacker import Stacker
 from ml.stacking.TextDataSVM import TextDataSVM
 from ml.stacking.NameDataSVM import NameDataSVM
+import pickle
 
 
 max_samples_per_category = 230
@@ -22,6 +23,10 @@ stacker.add(name_data_svm)
 
 stacker.build()
 stacker.train()
+
+fileObject = open( "../persist/model.p", "wb" )
+pickle.dump(stacker, fileObject)
+
 
 path_list = [
              "attachmentA.feature.extraction.output.path"

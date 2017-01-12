@@ -3,6 +3,7 @@ package tu.kn.ghrepoclassifier.generation.main;
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.collect.Iterators;
 import org.apache.commons.cli.*;
+import org.apache.commons.io.FileUtils;
 import tu.kn.ghrepoclassifier.Config;
 import tu.kn.ghrepoclassifier.generation.Parallelizer;
 import tu.kn.ghrepoclassifier.generation.Repo;
@@ -24,13 +25,13 @@ import static java.nio.file.Files.readAllLines;
  */
 public class DownloadRepos {
 	
-	public static void downloadReposFromCsv(String file, Parallelizer p) throws IOException {
+	public static void downloadReposFromCsv(String file, Parallelizer p, int columnID) throws IOException {
 		List<Repo> repoList = new ArrayList<>();
 
 		CSVReader reader = new CSVReader(new FileReader(file), ' ');
 		String [] nextLine;
 		while ((nextLine = reader.readNext()) != null) {
-			Repo r = new Repo(nextLine[0],nextLine[1]);
+			Repo r = new Repo(nextLine[columnID], "null");
 			repoList.add(r);
 		}
 
@@ -41,14 +42,43 @@ public class DownloadRepos {
 
 		Options options = new Options();
 		Option input = OptionBuilder.withArgName( "input" )
-			.hasArg()
+			.hasArg(true)
 			.withDescription(  "input csv file" )
 			.create( "input");
-		
-		
+		options.addOption(input);
+
+		Option columnIdArg = OptionBuilder.withArgName( "index" )
+			.hasArg(true)
+			.withDescription(  "index of the column which contains the repository urls (0 .. n-1)\\ndefault:first(0) " +
+				"column" )
+			.create( "columnURLindex");
+		options.addOption(columnIdArg);
 
 		CommandLineParser parser = new DefaultParser();
-		CommandLine cmd = parser.parse( options, args);
+		CommandLine cmd = null;
+
+		String inputCsv = "";
+		int columnID = 0;
+		
+		try {
+			cmd = parser.parse(options, args);
+			
+			if (cmd.hasOption("input")) {
+				inputCsv = cmd.getOptionValue("input");
+				System.out.println("here: " + inputCsv);
+			}
+			if (cmd.hasOption("column_index")) {
+				columnID = Integer.parseInt(cmd.getOptionValue("column_index", "0"));
+				System.out.println("here: " + columnID);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp( "DownloadRepos", options );
+			return;
+		}
 		
 		System.out.println (Arrays.toString(args));
 		
@@ -60,19 +90,16 @@ public class DownloadRepos {
 		Iterator<String> propertyFiles = Iterators.cycle(accountFileList);
 
 		
-		//Download repos of attachment A
-		String attachmentAFile = Config.get("attachmentA.repos.file");
-		File outputDirA = new File(Config.get("attachmentA.download.output.path"));
+		//Download repos
+		File outputDirA = new File("/tmp/GitHubClassifier/APIdownlaods");
+		//clean
+		try {
+			FileUtils.deleteDirectory(outputDirA);
+		} catch (Exception e) {}
+		//create
+		outputDirA.mkdirs();
 
 		Parallelizer pA = new Parallelizer(numberAccounts, propertyFiles, numberAccounts, outputDirA);
-		//downloadReposFromCsv(attachmentAFile, pA);
-		
-
-		//Download repos of attachment B
-		String attachmentBFile = Config.get("attachmentB.repos.file");
-		File outputDirB = new File(Config.get("attachmentB.download.output.path"));
-
-		Parallelizer pB = new Parallelizer(pA.getRunningThreads(), numberAccounts, propertyFiles, numberAccounts, outputDirB);
-		//downloadReposFromCsv(attachmentBFile, pB);
+		downloadReposFromCsv(inputCsv, pA, columnID);
 	}
 }

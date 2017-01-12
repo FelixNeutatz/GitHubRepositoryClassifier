@@ -71,3 +71,10 @@ y_pred = stacker.predict_other(X)
 
 print y_pred
 
+category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB", 6: "OTHER"}
+
+with open(output, 'wb') as csvfile:
+    label_writer = csv.writer(csvfile, delimiter=" ")
+
+    for i in range(0, len(urls)):
+        label_writer.writerow([urls[i], category_list[y_pred[i]]])

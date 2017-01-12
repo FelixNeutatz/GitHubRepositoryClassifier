@@ -31,6 +31,7 @@ public class ExtractContent {
 			} catch (ZipException e) {
 				System.err.println("Exception for repo:"+ repo.getId());
 				e.printStackTrace();
+				return null;
 			}
 			
 		} else {
@@ -45,12 +46,17 @@ public class ExtractContent {
 		
 		String outputFolder = unZip(repo);
 
-		Root tree = new Root(outputFolder);
-		tree.populate();
-
+		Root tree = null;
+		if (outputFolder != null) {
+			tree = new Root(outputFolder);
+			tree.populate();
+	
+			FileUtils.deleteDirectory(new File(outputFolder));
+		} else {
+			tree = new Root("");
+		}
 		l += tree.summarizeFileTree();
-
-		FileUtils.deleteDirectory(new File(outputFolder));
+		
 		
 		return l;
 	}

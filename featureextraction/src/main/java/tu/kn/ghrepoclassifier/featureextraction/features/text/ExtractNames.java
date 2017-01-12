@@ -29,19 +29,23 @@ public class ExtractNames {
 
 		String outputFolder = ExtractContent.unZip(repo);
 
-		String[] directories = new File(outputFolder).list(new FilenameFilter() {
-			@Override
-			public boolean accept(File current, String name) {
-				return new File(current, name).isDirectory();
-			}
-		});
+		Root tree = null;
+		if (outputFolder != null) {
+			String[] directories = new File(outputFolder).list(new FilenameFilter() {
+				@Override
+				public boolean accept(File current, String name) {
+					return new File(current, name).isDirectory();
+				}
+			});
 
-		Root tree = new Root(outputFolder + "/" + directories[0]);
-		tree.populate();
+			tree = new Root(outputFolder + "/" + directories[0]);
+			tree.populate();
 
+			FileUtils.deleteDirectory(new File(outputFolder));
+		} else {
+			tree = new Root("");
+		}
 		l += tree.getDirAndFileNames();
-		
-		FileUtils.deleteDirectory(new File(outputFolder));
 
 		l = l.replace("\'", "");
 		l = l.replace("\n", " ");

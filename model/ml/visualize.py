@@ -51,7 +51,8 @@ def validate(y, y_pred, with_other=False):
         category_list.append("OTHER")
 
     c_matrix = confusion_matrix(y, y_pred)
-    confusion_matrix_to_latex(c_matrix, category_list)
+    #confusion_matrix_to_latex(c_matrix, category_list)
+    fancy_confusion_matrix_to_latex(c_matrix, category_list)
 
     print confusion_matrix(y, y_pred)
     print f1_score(y, y_pred, average='weighted')
@@ -153,3 +154,61 @@ def confusion_matrix_to_latex(confusion_matrix, class_names):
     print "######"
     print plot
     print "######"
+
+def fancy_confusion_matrix_to_latex(confusion_matrix, class_names,
+                                    first_title="Predicted", second_title="Actual",
+                                    caption="Confusion matrix",
+                                    label="confusion_matrix"):
+
+    n = len(class_names)
+
+    plot = "\\begin{table}[h]\n"
+
+    plot += "\\begin{tabularx}{.7\\textwidth}{c c | "
+
+    for i in range(0, n):
+        plot += "c "
+
+    plot += "| }\n"
+
+    plot += " & \multicolumn{" + str(n + 1) + "}{c}{\centering{" + first_title + "}} \\\\ \n"
+
+    plot += " &"
+
+    for i in range(0, n-1):
+        plot += " & " + class_names[i].replace ("_", "")
+
+    plot +=" & \\multicolumn{1}{c}{"+ class_names[n-1] +"} \\\\ \n" + \
+    "\\hhline{~-"
+
+    bars = ""
+    for i in range(0, n):
+        bars += "-"
+
+    plot += bars + "}\n" + \
+    "\\parbox[t]{2mm}{\\multirow{" + str(n) + "}{*}{\\rotatebox[origin=c]{90}{" + second_title + "}}}"
+
+    for y in range(0, n):
+        plot += " & " + class_names[y] + " & "
+        for x in range(0, n):
+            plot += str(confusion_matrix[y,x]) + " "
+
+            if y == x:
+                plot += "\\cellcolor[gray]{.8}"
+
+            if (x < n-1):
+                plot += "& "
+        plot += "\\\\ \n"
+
+    plot += "\\hhline{~-" + bars + \
+    "}\n" + \
+    "\\end{tabularx}\n" + \
+    "\\caption{" + caption + "}\n" + \
+    "\\label{tbl:" + label + "}\n" + \
+    "\end{table}"
+
+
+    print "######"
+    print plot
+    print "######"
+

@@ -12,14 +12,17 @@ from ml.util import *
 class MetaDataModule(StackingModule):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, max_samples_per_category, dev_size, test_size):
+    def __init__(self, max_samples_per_category, dev_size, test_size, labeled_data_filter=None):
         super(MetaDataModule, self).__init__(max_samples_per_category, dev_size, test_size)
+        self.labeled_data_filter = labeled_data_filter
         self.scaler = None
 
     def load_data(self):
         path_train = "feature.extraction.output.path"
         dir_train = Config.get2(path_train)
         category_frames = read(dir_train, self.max_samples_per_category)
+        if self.labeled_data_filter is not None:
+            category_frames = self.filter_frames(category_frames, self.labeled_data_filter)
         self.load_data_from_frames(path_train, category_frames)
 
     def transform(self, dir_):

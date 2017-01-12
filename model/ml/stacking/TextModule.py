@@ -13,14 +13,17 @@ from ml.util import *
 
 class TextModule(StackingModule):
 
-    def __init__(self, max_samples_per_category, dev_size, test_size, path_train):
+    def __init__(self, max_samples_per_category, dev_size, test_size, path_train, labeled_data_filter=None):
         super(TextModule, self).__init__(max_samples_per_category, dev_size, test_size)
         self.path_train = path_train
+        self.labeled_data_filter = labeled_data_filter
         self.pipeline = None
 
     def load_data(self):
         dir_train = Config.get2(self.path_train)
         category_frames = read_native(dir_train, self.max_samples_per_category)
+        if self.labeled_data_filter is not None:
+            category_frames = self.filter_frames(category_frames, self.labeled_data_filter)
         self.load_data_from_frames(self.path_train, category_frames)
 
     def transform(self, dir_):

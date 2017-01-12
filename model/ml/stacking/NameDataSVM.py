@@ -12,8 +12,8 @@ from ml.visualize import validate
 class NameDataSVM(NameDataModule):
     name = "NameDataSVM"
 
-    def __init__(self, max_samples_per_category = 210, dev_size=0.5, test_size=0.1):
-        super(NameDataSVM, self).__init__(max_samples_per_category, dev_size, test_size)
+    def __init__(self, max_samples_per_category = 210, dev_size=0.5, test_size=0.1, labeled_data_filter=None):
+        super(NameDataSVM, self).__init__(max_samples_per_category, dev_size, test_size, labeled_data_filter)
         self.run()
 
     def train(self):

@@ -15,8 +15,8 @@ class MetaDataXGB(MetaDataModule):
     our_params = {'eta': 0.1, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
                   'objective': 'multi:softprob', 'num_class': 6, 'max_depth': 3, 'min_child_weight': 1}
 
-    def __init__(self, max_samples_per_category=210, dev_size=0.5, test_size=0.1):
-        super(MetaDataXGB, self).__init__(max_samples_per_category, dev_size, test_size)
+    def __init__(self, max_samples_per_category=210, dev_size=0.5, test_size=0.1, labeled_data_filter=None):
+        super(MetaDataXGB, self).__init__(max_samples_per_category, dev_size, test_size, labeled_data_filter)
         self.clf = None
         self.run()
 

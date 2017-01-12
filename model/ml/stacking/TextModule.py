@@ -23,8 +23,8 @@ class TextModule(StackingModule):
         category_frames = read_native(Config.get2(self.path_train), self.max_samples_per_category)
         self.load_data_from_frames(self.path_train, category_frames)
 
-    def transform(self, path_a): # = "attachmentA.feature_text.extraction.output.path"
-        a_frame = concat(read_native(Config.get(path_a), self.max_samples_per_category))
+    def transform(self, dir): # = "attachmentA.feature_text.extraction.output.path"
+        a_frame = concat(read_native(dir, self.max_samples_per_category))
         mask = np.asarray(np.ones((1, a_frame.shape[1]), dtype=bool))[0]
         mask[0] = False
         a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)

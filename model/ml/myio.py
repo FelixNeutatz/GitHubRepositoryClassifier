@@ -51,7 +51,7 @@ def read_stop_words2():
 
 # read data
 def read(input_dir, max_samples_per_category):
-    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
+    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5, "null": 6}
 
     all_csv_files = find_csv_filenames(input_dir)
 
@@ -72,7 +72,7 @@ def read(input_dir, max_samples_per_category):
 
 
 def read_native(input_dir, max_samples_per_category):
-    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
+    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5, "null": 6}
 
     csv.field_size_limit(sys.maxsize)
 
@@ -141,7 +141,7 @@ def concat(category_frames):
 
 
 def encode_label(label):
-    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5}
+    category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5, "null": 6}
     # todo: what is going wrong here
     if label is None:
         print "warning"

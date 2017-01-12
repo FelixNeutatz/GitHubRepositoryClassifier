@@ -31,8 +31,8 @@ class NameDataSVM(NameDataModule):
     def test(self):
         self._test(self.X3, self.y3)
 
-    def test_path(self, path_a="attachmentA.feature_text_names.extraction.output.path"):
-        X, y = self.transform(path_a)
+    def test_path(self, dir):
+        X, y = self.transform(dir)
         self._test(X, y)
 
     def predict_proba(self, X):

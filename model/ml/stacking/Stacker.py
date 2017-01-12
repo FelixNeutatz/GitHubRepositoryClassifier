@@ -25,11 +25,11 @@ class Stacker:
     def add(self, stacking_module):
         self.module_list.append(stacking_module)
 
-    def transform(self, path_list):
+    def transform(self, dir_list):
         y_test = None
         feature_list = []
         for i in range(0, len(self.module_list)):
-            f, y_test = self.module_list[i].create_meta_features(path_list[i])
+            f, y_test = self.module_list[i].create_meta_features(dir_list[i])
             feature_list.append(f)
         X_test = np.concatenate(feature_list, axis=1)
         return X_test, y_test
@@ -88,19 +88,19 @@ class Stacker:
         Y = tsne.fit_transform(self.X)
         plot(Y, self.y, self.id)
 
-    def test_path(self, path_list, with_other=False):
-        X_a, y_a = self.transform(path_list)
+    def test_dirs(self, dir_list, with_other=False):
+        X_a, y_a = self.transform(dir_list)
         self._test(X_a, y_a, with_other)
 
-    def test_all_modules_alone(self, path_list=None):
+    def test_all_modules_alone(self, dir_list=None):
         for i in range(0, len(self.module_list)):
             print self.module_list[i].name
             mod = self.module_list[i]
             print mod.name, "Test"
             mod.test()
-            if path_list is not None:
+            if dir_list is not None:
               print mod.name, "Test Attachement A"
-              mod.test_path(path_list[i])
+              mod.test_dirs(dir_list[i])
 
     def predict_other(self, X, other_value=6):
         # predict probabilities on data set X

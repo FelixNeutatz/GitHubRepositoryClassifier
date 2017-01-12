@@ -21,8 +21,8 @@ class MetaDataModule(StackingModule):
          category_frames = read(Config.get2(path_train), self.max_samples_per_category)
          self.load_data_from_frames(path_train, category_frames)
 
-    def transform(self, path_a = "attachmentA.feature.extraction.output.path"):
-        a_frame = concat(read(Config.get(path_a), self.max_samples_per_category))
+    def transform(self, dir):
+        a_frame = concat(read(dir, self.max_samples_per_category))
         mask = np.asarray(np.ones((1, a_frame.shape[1]), dtype=bool))[0]
         mask[0] = False
         a_mat = dataframe_to_numpy_matrix_single(a_frame, mask)

@@ -60,4 +60,14 @@ subprocess.call(['java -cp ../../featureextraction/target/featureextraction-1.0-
                  'tu.kn.ghrepoclassifier.featureextraction.ExtractTest'
                  ], shell=True)
 
+dir_list = [
+"/tmp/GitHubClassifier/metadataFeatures",
+"/tmp/GitHubClassifier/textFeatures",
+"/tmp/GitHubClassifier/nameFeatures"
+]
+
+X, y = stacker.transform(dir_list)
+y_pred = stacker.predict_other(X)
+
+print y_pred
 

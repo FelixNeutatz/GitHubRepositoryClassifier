@@ -87,6 +87,7 @@ labels_file = options.labels
 if labels_file is not None:
     with open(labels_file) as f:
         labeled_urls = np.asarray([unicode(l.strip().split(",")[0]) for l in f.readlines()])
+    print "Dismissing {0} samples".format(len([u for u in urls if u in labeled_urls]))
     urls = [u for u in urls if u not in labeled_urls]
 
 N = int(options.n)

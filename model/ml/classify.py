@@ -66,6 +66,7 @@ dir_list = [
 "/tmp/GitHubClassifier/nameFeatures"
 ]
 
+# classify
 X, y = stacker.transform(dir_list)
 y_pred = stacker.predict_other(X)
 

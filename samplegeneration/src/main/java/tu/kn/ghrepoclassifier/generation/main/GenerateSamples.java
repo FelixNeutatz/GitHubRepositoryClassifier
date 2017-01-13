@@ -181,24 +181,24 @@ public class GenerateSamples {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		List<String> accountFileList = readAllLines(new File(
-				Config.get("sample.generation.git-accounts.file")).toPath(),
-				StandardCharsets.UTF_8);
 
-		int numberAccounts = accountFileList.size();
-		Iterator<String> propertyFiles = Iterators.cycle(accountFileList);
-
+		Iterator<String> propertyFiles = null;
+		int numberAccounts = 0;
 		GitHub github = null;
-		synchronized (propertyFiles) {
+		try {
+			List<String> accountFileList = readAllLines(new File(
+							Config.get("sample.generation.git-accounts.file")).toPath(),
+					StandardCharsets.UTF_8);
+
+			numberAccounts = accountFileList.size();
+			propertyFiles = Iterators.cycle(accountFileList);
+
 			github = GitHubBuilder.fromPropertyFile(propertyFiles.next()).build();
+		} catch (Exception e) {
+			numberAccounts = 1;
+			github = GitHub.connectAnonymously();
 		}
-		System.out.println(github.getMyself());
- 
-		GHRateLimit limit = github.getRateLimit();
-		System.out.println("remaining requests: " + limit.remaining);
-		System.out.println("limit: " + limit.limit);
-		System.out.println("reset date: " + limit.reset);
-		
+
 		File outputDir = new File(Config.get("sample.generation.output.path"));
 		
 		Parallelizer p = new Parallelizer(numberAccounts, propertyFiles, numberAccounts, outputDir);

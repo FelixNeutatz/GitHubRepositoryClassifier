@@ -32,24 +32,20 @@ public class GenerateFromSearch extends AbstractThread {
 	
 	public void run() {
 		this.p.registerThread();
-		try {
-			GitHub github = GitHubBuilder.fromPropertyFile(propertyFile).build();
-			
-			PagedIterable<GHRepository> search = queue.poll();
+		
+		PagedIterable<GHRepository> search = queue.poll();
 
-			File file = new File(outputDir.getPath() + "/"  + category);
-			file.mkdir();
-			
-			while(search != null) {
-				if (extractIterableToFile(search, file, category, count, maximumRecords, github)){
-					break;
-				}
-				
-				search = queue.poll();
+		File file = new File(outputDir.getPath() + "/"  + category);
+		file.mkdir();
+		
+		while(search != null) {
+			if (extractIterableToFile(search, file, category, count, maximumRecords, github)){
+				break;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			
+			search = queue.poll();
 		}
+		
 		p.unregisterThread();
 	}
 

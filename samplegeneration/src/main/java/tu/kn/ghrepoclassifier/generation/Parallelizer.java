@@ -78,8 +78,10 @@ public class Parallelizer {
 		}
 
 		String propertyFile = null;
-		synchronized (propertyFiles) {
-			propertyFile = propertyFiles.next();
+		if (propertyFiles != null) {
+			synchronized (propertyFiles) {
+				propertyFile = propertyFiles.next();
+			}
 		}
 		return propertyFile;
 	}

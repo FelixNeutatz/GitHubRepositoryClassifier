@@ -81,15 +81,20 @@ public class DownloadRepos {
 		}
 		
 		System.out.println (Arrays.toString(args));
-		
-		List<String> accountFileList = readAllLines(new File(
-			Config.get("sample.generation.git-accounts.file")).toPath(),
-			StandardCharsets.UTF_8);
 
-		int numberAccounts = accountFileList.size();
-		Iterator<String> propertyFiles = Iterators.cycle(accountFileList);
+		Iterator<String> propertyFiles = null;
+		int numberAccounts = 0;
+		try {
+			List<String> accountFileList = readAllLines(new File(
+					Config.get("sample.generation.git-accounts.file")).toPath(),
+				StandardCharsets.UTF_8);
 
-		
+			numberAccounts = accountFileList.size();
+			propertyFiles = Iterators.cycle(accountFileList);
+		} catch (Exception e) {
+			numberAccounts = 1;
+		}
+
 		//Download repos
 		File outputDirA = new File("/tmp/GitHubClassifier/APIdownlaods");
 		//clean

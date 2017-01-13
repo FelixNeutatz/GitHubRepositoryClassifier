@@ -20,15 +20,21 @@ public class SerializerTest {
 
 	@Test
 	public void storeAndLoad() throws Exception {
-		List<String> accountFileList = readAllLines(new File(
-			Config.get("sample.generation.git-accounts.file")).toPath(),
-			StandardCharsets.UTF_8);
-		String gitAuthenticationFile = accountFileList.get(0);
+		GitHub github = null;
+		try {
+			List<String> accountFileList = readAllLines(new File(
+					Config.get("sample.generation.git-accounts.file")).toPath(),
+				StandardCharsets.UTF_8);
+			String gitAuthenticationFile = accountFileList.get(0);
+			github = GitHubBuilder.fromPropertyFile(gitAuthenticationFile).build();
+		} catch (Exception e) {
+			github = GitHub.connectAnonymously();
+		}
 		
-		GitHub github = GitHubBuilder.fromPropertyFile(gitAuthenticationFile).build();
-		GHRepository repo = github.getRepository("peelframework/peel");
+		GHRepository repo = github.getRepository("jonico/other");
 
-		File outputDir = new File(Config.get("sample.generation.output.path"));
+		File outputDir = new File("/tmp/test");
+		outputDir.mkdirs();
 		
 		RepoData data = new RepoData(repo, "DEV");
 		Serializer.writeToDir(outputDir, data);

@@ -21,7 +21,7 @@ public class RepoContentDownloader {
 	public static void main(String[] args) throws IOException {
 		String inputDir = "/tmp/GitHubClassifier/APIdownlaods";
 		String outputDir = Config.get("sample.generation.content.output.path");
-
+		
 		File outputFolder = new File(outputDir);
 		//clean
 		try {

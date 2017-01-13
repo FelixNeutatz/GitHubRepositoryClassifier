@@ -27,10 +27,10 @@ public class ExtractNames {
 	public static String extractFeatures(RepoData repo) throws Exception {
 		String l = "";
 
-		String outputFolder = ExtractContent.unZip(repo);
-
 		Root tree = null;
-		if (outputFolder != null) {
+		try {
+			String outputFolder = ExtractContent.unZip(repo);
+
 			String[] directories = new File(outputFolder).list(new FilenameFilter() {
 				@Override
 				public boolean accept(File current, String name) {
@@ -42,7 +42,7 @@ public class ExtractNames {
 			tree.populate();
 
 			FileUtils.deleteDirectory(new File(outputFolder));
-		} else {
+		} catch (Exception e){
 			tree = new Root("");
 		}
 		l += tree.getDirAndFileNames();

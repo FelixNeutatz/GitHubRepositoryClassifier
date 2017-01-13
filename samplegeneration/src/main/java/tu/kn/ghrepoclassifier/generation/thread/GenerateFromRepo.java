@@ -29,17 +29,12 @@ public class GenerateFromRepo extends AbstractThread {
 	
 	public void run() {
 		p.registerThread();
-		try {
-			GitHub github = GitHubBuilder.fromPropertyFile(propertyFile).build();
-			
-			File file = new File(outputDir.getPath() + "/"  + repo.getLabel());
-			file.mkdir();
-			
-			extractRepoToFile(repo.getFullName(), file, repo.getLabel(), count, github);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
+		File file = new File(outputDir.getPath() + "/"  + repo.getLabel());
+		file.mkdir();
+		
+		extractRepoToFile(repo.getFullName(), file, repo.getLabel(), count, github);
+		
 		p.unregisterThread();
 	}
 

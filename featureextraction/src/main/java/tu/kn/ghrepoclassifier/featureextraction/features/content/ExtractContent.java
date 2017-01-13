@@ -25,14 +25,8 @@ public class ExtractContent {
 		
 		File f = new File(zipFile);
 		if (f.exists()) {
-			try {
-				ZipFile zip = new ZipFile(zipFile);
-				zip.extractAll(outputFolder);
-			} catch (ZipException e) {
-				System.err.println("Exception for repo:"+ repo.getId());
-				e.printStackTrace();
-				return null;
-			}
+			ZipFile zip = new ZipFile(zipFile);
+			zip.extractAll(outputFolder);
 			
 		} else {
 			throw new Exception("Repo was not downloaded:" + repo.getFull_name());
@@ -43,16 +37,15 @@ public class ExtractContent {
 	
 	public static String extractFeatures(RepoData repo) throws Exception{
 		String l = "";
-		
-		String outputFolder = unZip(repo);
 
 		Root tree = null;
-		if (outputFolder != null) {
+		try {
+			String outputFolder = unZip(repo);
 			tree = new Root(outputFolder);
 			tree.populate();
-	
+
 			FileUtils.deleteDirectory(new File(outputFolder));
-		} else {
+		} catch (Exception e) {
 			tree = new Root("");
 		}
 		l += tree.summarizeFileTree();

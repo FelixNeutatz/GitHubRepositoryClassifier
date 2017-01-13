@@ -14,11 +14,16 @@ public class Config {
 			if (props == null) {
 				props = new Properties();
 				props.load(Config.class.getResourceAsStream("/conf/conf.properties"));
-				validateConfig();
+				//validateConfig();
 			}
 			return props.getProperty(key);
 		} catch (Exception e) {
-			throw new IllegalStateException("Unable to load config file!", e);
+			props = null;
+			if (key.equals("sample.generation.content.output.path")) {
+				return "/tmp/GitHubClassifier/content";
+			}
+			e.printStackTrace();
+			return null;
 		}
 	}
 

@@ -76,7 +76,7 @@ input = options.input
 output = options.output
 
 column_index = options.column_index
-if column_index == None:
+if column_index is None:
     column_index = -1
 
 df = pd.read_csv(input, encoding='utf-8')
@@ -90,10 +90,11 @@ if labels_file is not None:
     print "Dismissing {0} samples".format(len([u for u in urls if u in labeled_urls]))
     urls = [u for u in urls if u not in labeled_urls]
 
-N = int(options.n)
-if N is None:
+N = 0
+if options.n is None:
     N = len(urls)
-
+else:
+    N = int(options.n)
 
 ids = range(0,N)
 random.shuffle(ids)

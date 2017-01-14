@@ -14,6 +14,7 @@ import random
 import Queue
 import numpy as np
 from optparse import OptionParser
+import webbrowser
 
 
 class Screenshot(QWebView):
@@ -111,6 +112,9 @@ with open(output, 'wb', buffering=1) as csvfile:
 
     img_counter = 0
 
+    def callback(event):
+        webbrowser.open(urls[ids[img_counter]], new=0, autoraise=True)
+
     def save_click_and_continue(label=None, number_records=1):
         global img_counter
         global img
@@ -154,6 +158,7 @@ with open(output, 'wb', buffering=1) as csvfile:
 
     panel = Label(root, image = img)
     panel.pack(side = "bottom", fill = "both", expand = "yes")
+    panel.bind("<Button-1>", callback)
 
     button_values = {'DATA': 'DATA', 'EDU':'EDU', 'WEB':'WEB', 'HW':'HW', 'DOCS':'DOCS', 'DEV':'DEV', 'OTHER':'OTHER',
                      'not sure': '?'}

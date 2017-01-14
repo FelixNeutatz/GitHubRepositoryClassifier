@@ -125,8 +125,13 @@ Options:
                         number of repositories to label
   -c COLUMN_INDEX, --columnURLindex=COLUMN_INDEX
                         index of the column which contains the repository urls
-                        (0 .. n-1) default:last column
+                        (0 .. n-1) default:last column
+  -l LABELS, --labeledDataFile=LABELS
+                        path to previous output file, will skip alreadylabeled
+                        urls
 ```
 
 It will look like this:
 ![screenshot_label_it_tool](https://cloud.githubusercontent.com/assets/5217389/21830339/46eef208-d79c-11e6-872b-4db396bd7bb4.png)
+
+If you cannot categorize the repository by looking only on the screenshot you can click on the screenshot and the program will open the repository in your browser. So you can investigate further.

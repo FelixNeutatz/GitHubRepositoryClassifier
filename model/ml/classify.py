@@ -67,8 +67,7 @@ dir_list = [
 ]
 
 # classify
-X, y = stacker.transform(dir_list)
-y_pred = stacker.predict_other(X)
+y_pred = stacker.predict_other_dirs(dir_list)
 
 print y_pred
 

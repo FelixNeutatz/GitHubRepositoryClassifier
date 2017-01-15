@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from ml import myio
 from ml.stacking.MetaDataXGB import MetaDataXGB
 from ml.stacking.Stacker import Stacker
 from ml.stacking.TextDataSVM import TextDataSVM
@@ -7,7 +7,6 @@ from ml.stacking.NameDataSVM import NameDataSVM
 import pickle
 from ml.config import Config
 from ml.myio import get_labeled_data_filter
-
 
 max_samples_per_category = 2000
 dev_size = 0.5
@@ -44,17 +43,26 @@ print "Stacker Test"
 stacker.test()
 print "Stacker Test Attachment A"
 stacker.test_dirs(dir_list_a)
-print "Stacker Test Attachment B"
-stacker.test_dirs(dir_list_b)
+# print probabilities on attachment A
+print myio.category_list
+frames = myio.concat(myio.read(Config.get2(path_list_a[0]), 5))
+ids = frames[frames.columns[0]].as_matrix()
+labels = frames[frames.columns[-1]].as_matrix()
+probas = stacker.predict_dirs(dir_list_a)
+for id, probs, label in zip(ids, probas, labels):
+    print "%s - %s - %s (%d)" % (id, probs, label, myio.category_list[str(label)])
+# print "Stacker Test Attachment B"
+# stacker.test_dirs(dir_list_b)
 
 # stacker.visualize_by_tsne()
 
-# print "Stacker Modules Test"
-# stacker.test_modules()
+print "Stacker Modules Test"
+stacker.test_modules()
 # print "Stacker Modules Test Attachment A"
 # stacker.test_modules_dirs(dir_list_a)
 # print "Stacker Modules Test Attachment B"
 # stacker.test_modules_dirs(dir_list_b)
+
 
 '''
 print "Retraining stacker modules on all data"

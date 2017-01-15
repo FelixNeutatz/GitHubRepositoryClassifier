@@ -3,6 +3,7 @@
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
 
 from ml.util import *
 from ml.myio import *
@@ -22,19 +23,20 @@ class Stacker:
         self.y_test = None
         self.clf = None
         self.min_proba = None
-        self.scaler = StandardScaler()
+        self.scaler_stacker = StandardScaler()
 
     def add(self, stacking_module):
         self.module_list.append(stacking_module)
 
     def transform(self, dir_list):
-        y_test = None
+        y = None
         feature_list = []
         for i in range(0, len(self.module_list)):
-            f, y_test = self.module_list[i].create_meta_features(dir_list[i])
+            f, y = self.module_list[i].create_meta_features(dir_list[i])
             feature_list.append(f)
-        X_test = np.concatenate(feature_list, axis=1)
-        return X_test, y_test
+        X = np.concatenate(feature_list, axis=1)
+        self.scaler_stacker.transform(X)
+        return X, y
 
     def build(self):
         self.build_train()
@@ -51,7 +53,7 @@ class Stacker:
             f = module.predict_proba(module.X2)
             feature_list.append(f)
         self.X = np.concatenate(feature_list, axis=1)
-        self.scaler.fit_transform(self.X)
+        self.scaler_stacker.fit_transform(self.X)
         self.y = y
         self.id = id2
 
@@ -66,15 +68,18 @@ class Stacker:
             f = module.predict_proba(module.X3)
             feature_list.append(f)
         self.X_test = np.concatenate(feature_list, axis=1)
-        self.scaler.transform(self.X_test)
+        self.scaler_stacker.transform(self.X_test)
         self.y_test = y
 
     def train(self):
-        self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
-        self.clf = fit_cv(self.clf, self.X, self.y, {'estimator__C': np.logspace(-4, 4, 9)})
+        # self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
+        # self.clf = fit_cv(self.clf, self.X, self.y, {'estimator__C': np.logspace(-4, 4, 9)})
+        self.clf = OneVsRestClassifier(SVC(class_weight='balanced', probability=True))
+        params = {'estimator__kernel': ['linear'], 'estimator__C': np.logspace(-4, 4, 9)}
+        self.clf = fit_cv(self.clf, self.X, self.y, params)
         # calculate min max probability for other categorization
         probas = self.clf.predict_proba(self.X)
-        assert np.sum(np.argmax(probas, axis=1) - self.clf.predict(self.X)) == 0
+        # assert np.sum(np.argmax(probas, axis=1) - self.clf.predict(self.X)) == 0
         max_proba_per_sample = np.max(probas, axis=1)
         self.min_proba = np.min(max_proba_per_sample)
 
@@ -99,7 +104,7 @@ class Stacker:
 
     def test_dirs(self, dir_list, with_other=False):
         X_a, y_a = self.transform(dir_list)
-        self.scaler.transform(X_a)
+        self.scaler_stacker.transform(X_a)
         self._test(X_a, y_a, with_other)
 
     def test_modules_dirs(self, dir_list):
@@ -107,6 +112,10 @@ class Stacker:
             mod = self.module_list[i]
             print mod.name
             mod.test_dir(dir_list[i])
+
+    def predict_dirs(self, dirs):
+        X, y = self.transform(dirs)
+        return self.clf.predict_proba(X)
 
     def predict_other(self, X, other_value=6):
         # predict probabilities on data set X
@@ -120,3 +129,7 @@ class Stacker:
         # predict these as "other"
         y_pred[other_args] = other_value
         return y_pred
+
+    def predict_other_dirs(self, dirs):
+        X = self.transform(dirs)
+        return self.predict_other(X)

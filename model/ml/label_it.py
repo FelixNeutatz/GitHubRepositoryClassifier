@@ -160,7 +160,7 @@ with open(output, 'wb', buffering=1) as csvfile:
     panel.pack(side = "bottom", fill = "both", expand = "yes")
     panel.bind("<Button-1>", callback)
 
-    button_values = {'DATA': 'DATA', 'EDU':'EDU', 'WEB':'WEB', 'HW':'HW', 'DOCS':'DOCS', 'DEV':'DEV', 'OTHER':'OTHER',
+    button_values = {'DATA': 'DATA', 'EDU':'EDU', 'WEB':'WEB', 'HW':'HW', 'DOCS':'DOCS', 'DEV':'DEV', 'OTHER': 'OTHER',
                      'not sure': '?'}
 
     for key, value in button_values.iteritems():

@@ -6,21 +6,14 @@ from ml.stacking.TextDataSVM import TextDataSVM
 from ml.stacking.NameDataSVM import NameDataSVM
 import pickle
 from ml.config import Config
+from ml.myio import get_labeled_data_filter
 
 
 max_samples_per_category = 2000
 dev_size = 0.5
 test_size = 0.2
 
-path_labeled_data = "../../../mturk/our_labels/labels.csv"
-with open(path_labeled_data) as f:
-    labeled_data = [l.strip().split(",") for l in f.readlines()]
-    labeled_data_filter = {}
-    for repo, label in labeled_data:
-        if label not in labeled_data_filter:
-            labeled_data_filter[label] = []
-        labeled_data_filter[label].append(repo)
-
+labeled_data_filter = get_labeled_data_filter("../../../mturk/our_labels/labels.csv")
 # labeled_data_filter = None
 meta_data_xgb = MetaDataXGB(max_samples_per_category, dev_size, test_size, labeled_data_filter)
 text_data_svm = TextDataSVM(max_samples_per_category, dev_size, test_size, labeled_data_filter)
@@ -49,15 +42,15 @@ dir_list_b = [Config.get(p) for p in path_list_b]
 
 print "Stacker Test"
 stacker.test()
-# print "Stacker Test Attachment A"
-# stacker.test_dirs(dir_list_a)
-# print "Stacker Test Attachment B"
-# stacker.test_dirs(dir_list_b)
+print "Stacker Test Attachment A"
+stacker.test_dirs(dir_list_a)
+print "Stacker Test Attachment B"
+stacker.test_dirs(dir_list_b)
 
 # stacker.visualize_by_tsne()
 
-print "Stacker Modules Test"
-stacker.test_modules()
+# print "Stacker Modules Test"
+# stacker.test_modules()
 # print "Stacker Modules Test Attachment A"
 # stacker.test_modules_dirs(dir_list_a)
 # print "Stacker Modules Test Attachment B"
@@ -71,15 +64,9 @@ name_data_svm.retrain()
 stacker.build_test()
 print "Stacker Test"
 stacker.test()
-print "Stacker Test Attachment A"
-stacker.test_dirs(dir_list)
-stacker.visualize_by_tsne()
-#print "Modules Test"
-#stacker.test_all_modules_alone()  # dir_list)
-print "Modules Test (also on Attachment A)"
-stacker.test_all_modules_alone(dir_list)
+print "Stacker Modules Test"
+stacker.test_modules()
 '''
-
 '''
 print "Test other"
 stacker.test_dirs(dir_list, True)

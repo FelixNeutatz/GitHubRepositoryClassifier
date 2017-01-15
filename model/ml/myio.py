@@ -178,3 +178,31 @@ def split_target_from_data(all_data):
     x = all_data[:, 0:-1]
     y = all_data[:, -1].A1
     return x, y
+
+
+def get_labeled_data_filter(path):
+    with open(path) as f:
+        lines = f.readlines()
+        labeled_data = [l.strip().split(",") for l in lines if "," in l != -1]
+        labeled_data += [l.strip().split(" ") for l in lines if " " in l != -1]
+        labeled_data_filter = {}
+        for repo, label in labeled_data:
+            if label not in labeled_data_filter:
+                labeled_data_filter[label] = []
+            labeled_data_filter[label].append(repo)
+        return labeled_data_filter
+
+
+def filter_frames(category_frames, labeled_data_filter):
+    print([f.shape for f in category_frames])
+    # only keep correctly labeled data in category frames
+    for i in range(len(category_frames)):
+        category = category_list.keys()[i]
+        if category != "null":
+            frames = category_frames[i]
+            repos = labeled_data_filter[category]
+            category_frames[i] = frames[frames[0].isin(repos)]
+            # remove repos from filter that are kept in category frames
+            # labeled_data_filter[category] = [r for r in repos if r not in category_frames[i][0].tolist()]
+    print([f.shape for f in category_frames])
+    return category_frames

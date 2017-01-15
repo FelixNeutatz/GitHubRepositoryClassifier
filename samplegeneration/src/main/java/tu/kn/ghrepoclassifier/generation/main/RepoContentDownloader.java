@@ -23,10 +23,6 @@ public class RepoContentDownloader {
 		String outputDir = Config.get("sample.generation.content.output.path");
 		
 		File outputFolder = new File(outputDir);
-		//clean
-		try {
-			FileUtils.deleteDirectory(outputFolder);
-		} catch (Exception e) {}
 		//create
 		outputFolder.mkdirs();
 		

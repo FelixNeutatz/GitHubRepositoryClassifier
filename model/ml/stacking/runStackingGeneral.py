@@ -49,8 +49,15 @@ frames = myio.concat(myio.read(Config.get2(path_list_a[0]), 5))
 ids = frames[frames.columns[0]].as_matrix()
 labels = frames[frames.columns[-1]].as_matrix()
 probas = stacker.predict_dirs(dir_list_a)
+
+category_list_inv = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
+
 for id, probs, label in zip(ids, probas, labels):
-    print "%s - %s - %s (%d)" % (id, probs, label, myio.category_list[str(label)])
+    out = str(id) + " - "
+    for i in range(0, len(probs)):
+        out += category_list_inv[i] + ": " + str(probs[i]) + " "
+    out += "label: " + str(label) + " - " + str(myio.category_list[str(label)])
+    print out
 # print "Stacker Test Attachment B"
 # stacker.test_dirs(dir_list_b)
 

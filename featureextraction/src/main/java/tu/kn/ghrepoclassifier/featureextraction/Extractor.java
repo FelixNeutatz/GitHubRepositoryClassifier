@@ -6,6 +6,7 @@ import tu.kn.ghrepoclassifier.Config;
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased;
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractor;
 import tu.kn.ghrepoclassifier.featureextraction.features.LabelExtractor;
+import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractFileExtensions;
 import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText;
 import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractNames;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
@@ -102,7 +103,7 @@ public class Extractor {
 		else
 			Files.createDirectories(outputDir.toPath());
 
-		
+
 		extract(featureExt, inputDir, outputDir.getAbsolutePath(), isTest);
 
 		createSchema(outputDir, labelExt.getFeatureLabels());
@@ -162,9 +163,28 @@ public class Extractor {
 		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
 	}
 
+	public static void extractFileExtensionsFeatures() throws IOException {
+		String inputDir = Config.get("sample.generation.output.path");
+		String outputDir = Config.get("feature_file_extensions.extraction.output.path");
+
+		String inputDirAttachmentA = Config.get("attachmentA.download.output.path");
+		String outputDirAttachmentA = Config.get("attachmentA.feature_file_extensions.extraction.output.path");
+
+		String inputDirAttachmentB = Config.get("attachmentB.download.output.path");
+		String outputDirAttachmentB = Config.get("attachmentB.feature_file_extensions.extraction.output.path");
+
+		FeatureExtractor featureExt = ExtractFileExtensions::extractFeatures;
+		LabelExtractor labelExt = ExtractFileExtensions::getFeatureLabels;
+
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, false);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentA, outputDirAttachmentA, true);
+		extractFromDir(featureExt, labelExt, inputDirAttachmentB, outputDirAttachmentB, true);
+	}
+
 	public static void main(String[] args) throws IOException {
 		extractMetaFeatures();
-		// extractTextFeatures();
-		// extractNamesFeatures();
+		extractTextFeatures();
+		extractNamesFeatures();
+		extractFileExtensionsFeatures();
 	}
 }

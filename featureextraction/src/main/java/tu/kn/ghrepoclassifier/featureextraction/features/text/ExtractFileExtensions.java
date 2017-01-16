@@ -36,7 +36,7 @@ public class ExtractFileExtensions {
 		} catch (Exception e){
 			tree = new Root("");
 		}
-		l += tree.getDirAndFileNames();
+		l += tree.getFileExtensions();
 
 		l = l.replace("\'", "");
 		l = l.replace("\n", " ");

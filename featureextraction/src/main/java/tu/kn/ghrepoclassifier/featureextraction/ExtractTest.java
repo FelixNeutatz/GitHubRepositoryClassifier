@@ -6,6 +6,7 @@ import tu.kn.ghrepoclassifier.Config;
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractionUnbiased;
 import tu.kn.ghrepoclassifier.featureextraction.features.FeatureExtractor;
 import tu.kn.ghrepoclassifier.featureextraction.features.LabelExtractor;
+import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractFileExtensions;
 import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractNames;
 import tu.kn.ghrepoclassifier.featureextraction.features.text.ExtractText;
 import tu.kn.ghrepoclassifier.serialization.Serializer;
@@ -65,10 +66,22 @@ public class ExtractTest {
 		extractFromDir(featureExt, labelExt, inputDir, outputDir, true);
 	}
 
+	public static void extractFileExtensionsFeatures(String inputDir) throws IOException {
+		String outputDir = "/tmp/GitHubClassifier/fileExtensionFeatures";
+		cleanDir(outputDir);
+
+		FeatureExtractor featureExt = ExtractFileExtensions::extractFeatures;
+		LabelExtractor labelExt = ExtractFileExtensions::getFeatureLabels;
+
+		extractFromDir(featureExt, labelExt, inputDir, outputDir, true);
+	}
+
+
 	public static void main(String[] args) throws IOException {
 		String inputDir = "/tmp/GitHubClassifier/APIdownlaods";
 		extractMetaFeatures(inputDir);
 		extractTextFeatures(inputDir);
 		extractNamesFeatures(inputDir);
+		extractFileExtensionsFeatures(inputDir);
 	}
 }

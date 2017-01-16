@@ -15,6 +15,7 @@ public class Root extends Folder {
 	private Stats subfolderPerDirStats;
 	private Stats fileLevelStats;
 	private StringBuilder namesString;
+	private StringBuilder fileExtensionsString;
 
 	public Root(String path) {
 		super(path,0);
@@ -23,10 +24,18 @@ public class Root extends Folder {
 		filesPerDirStats = new Stats("filesPerDir", false, true);
 		subfolderPerDirStats = new Stats("subfolderPerDir", false, false);
 		namesString = new StringBuilder();
+		fileExtensionsString = new StringBuilder();
 	}
 	
 	public void populate() {
-		build(name, fileSizeStats, fileLevelStats, filesPerDirStats, subfolderPerDirStats, namesString, true);
+		build(name,
+				fileSizeStats,
+				fileLevelStats,
+				filesPerDirStats,
+				subfolderPerDirStats,
+				namesString,
+				fileExtensionsString,
+				true);
 	}
 
 	@Override
@@ -36,6 +45,10 @@ public class Root extends Folder {
 
 	public String getDirAndFileNames() {
 		return namesString.toString();
+	}
+
+	public String getFileExtensions() {
+		return fileExtensionsString.toString();
 	}
 
 	public String summarizeFileTree() {

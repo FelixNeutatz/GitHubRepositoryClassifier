@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import SVC
 
 from myio import *
 from sklearn.pipeline import Pipeline
@@ -27,6 +30,7 @@ def visualize(y_real, y_pred):
 
 def run():
     category_frames = read_native(Config.get("feature_text_names.extraction.output.path"), 230)
+    category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 
@@ -41,16 +45,13 @@ def run():
     my_stop_words = read_stop_words()
     print my_stop_words
 
-
     stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
-
 
     pipeline = Pipeline([('vect', CountVectorizer(stop_words=stop_words)),
                          ('tfidf', TfidfTransformer()),
-                         ('clf', SGDClassifier(loss='log')),
+                         #('clf', SGDClassifier(loss='log')),
+                         ('clf', OneVsRestClassifier(SVC(class_weight='balanced', probability=True))),
                          ])
-
-
     # uncommenting more parameters will give better exploring power but will
     # increase processing time in a combinatorial way
     parameters = {
@@ -63,11 +64,15 @@ def run():
         'clf__penalty':('l2', 'elasticnet')
         # 'clf__n_iter': (10, 50, 80),
     }
-
-
     # find the best parameters for both the feature extraction and the
     # classifier
     grid_search = GridSearchCV(pipeline, parameters, n_jobs=4, verbose=10)
+
+    parameters = {'clf__estimator__kernel': ['linear'], 'clf__estimator__C': np.logspace(-4, 4, 9)}
+    cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2)
+    grid_search = GridSearchCV(pipeline, param_grid=parameters, cv=cv, scoring='f1_weighted', verbose=10, n_jobs=4)
+
+
 
     print("Performing grid search...")
     print("pipeline:", [name for name, _ in pipeline.steps])
@@ -124,7 +129,7 @@ def run():
     vocabulary = vec.vocabulary_
 
     classifier = clf.named_steps['clf']
-    weights = classifier.coef_
+    weights = classifier.coef_.toarray()
 
     category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
 
@@ -141,9 +146,9 @@ def run():
                     feature_names[i] = key_d
                     feature_weights[i] = -values[i]
 
-        print feature_names
-        array_to_itemlist(feature_names)
-        print feature_weights
+        # print feature_names
+        # array_to_itemlist(feature_names)
+        # print feature_weights
 
         ind = np.arange(k)
         plt.bar(ind, feature_weights)
@@ -152,16 +157,17 @@ def run():
         plt.xlabel('features')
         plt.ylabel('weight')
         plt.tight_layout()
-        plt.show()
+        # plt.show()
 
 
     y_pred = clf.predict(test_x.A.ravel())
 
     y_pred_proba = clf.predict_proba(test_x.A.ravel())
-    print y_pred_proba
-
+    # print y_pred_proba
+    print "Test Set"
     visualize(test_y, y_pred)
 
+    print "Atachment A"
     # attachment A
     attachment_a_frames = read_native(Config.get("attachmentA.feature_text_names.extraction.output.path"), 150)
 
@@ -173,11 +179,11 @@ def run():
 
     attachment_a_y_pred = clf.predict_proba(attachment_a_x.A.ravel())
 
-    print attachment_a_y_pred
+    # print attachment_a_y_pred
 
     attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
 
-    print attachment_a_ypred_test
+    # print attachment_a_ypred_test
 
     visualize(attachment_a_y, attachment_a_ypred_test)
 

@@ -3,6 +3,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import SGDClassifier
 import scipy.sparse
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import SVC
 
 from ml.stacking.NameDataModule import NameDataModule
 from ml.util import *
@@ -19,15 +20,18 @@ class NameDataSVM(NameDataModule):
     def train(self):
         # self.clf = SGDClassifier(loss='log', penalty='elasticnet', class_weight="balanced")  # alpha=0.0001
         # params = {'alpha': np.logspace(-6, -2, 5)}
-        self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
-        params = {'estimator__C': np.logspace(-4, 4, 9)}
-        # self.clf = self.clf.fit(self.X1, self.y1)
+        # self.clf = OneVsRestClassifier(LogisticRegression(class_weight='balanced'))
+        # self.clf = fit_cv(self.clf, self.X, self.y, {'estimator__C': np.logspace(-4, 4, 9)})
+        self.clf = OneVsRestClassifier(SVC(class_weight='balanced', probability=True))
+        params = {'estimator__kernel': ['linear'], 'estimator__C': np.logspace(-4, 4, 9)}
         self.clf = fit_cv(self.clf, self.X1, self.y1, params)
+        # self.clf = self.clf.fit(self.X1, self.y1)
 
     def retrain(self):
         X = scipy.sparse.vstack((self.X1, self.X2))
         y = np.concatenate((self.y1, self.y2))
-        self.clf = fit_cv(self.clf, X, y, {'alpha': np.logspace(-6, -2, 5)})
+        params = {'estimator__kernel': ['linear'], 'estimator__C': np.logspace(-4, 4, 9)}
+        self.clf = fit_cv(self.clf, X, y, params)
 
     def _test(self, X, y):
         y_pred = self.clf.predict(X)

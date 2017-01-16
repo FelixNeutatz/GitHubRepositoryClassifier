@@ -53,20 +53,6 @@ class StackingModule:
         self.X2, self.y2 = split_target_from_data(mat2)
         self.X3, self.y3 = split_target_from_data(mat3)
 
-    def filter_frames(self, category_frames, labeled_data_filter):
-        print([f.shape for f in category_frames])
-        # only keep correctly labeled data in category frames
-        for i in range(len(category_frames)):
-            category = category_list.keys()[i]
-            if category != "null":
-                frames = category_frames[i]
-                repos = labeled_data_filter[category]
-                category_frames[i] = frames[frames[0].isin(repos)]
-                # remove repos from filter that are kept in category frames
-                # labeled_data_filter[category] = [r for r in repos if r not in category_frames[i][0].tolist()]
-        print([f.shape for f in category_frames])
-        return category_frames
-
     @abc.abstractproperty
     def name(self):
         return

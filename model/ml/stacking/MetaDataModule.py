@@ -22,7 +22,7 @@ class MetaDataModule(StackingModule):
         dir_train = Config.get2(path_train)
         category_frames = read(dir_train, self.max_samples_per_category)
         if self.labeled_data_filter is not None:
-            category_frames = self.filter_frames(category_frames, self.labeled_data_filter)
+            category_frames = filter_frames(category_frames, self.labeled_data_filter)
         self.load_data_from_frames(path_train, category_frames)
 
     def transform(self, dir_):

@@ -2,8 +2,8 @@
 
 from myio import *
 import xgboost as xgb
-from sklearn.grid_search import GridSearchCV
-import seaborn as sns
+from sklearn.model_selection import GridSearchCV
+# import seaborn as sns
 import matplotlib.pyplot as plt
 from config import Config
 from visualize import dict_to_bar_chart
@@ -12,20 +12,15 @@ from xgboost import plot_tree
 
 
 def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 230)
-
+    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
+    category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
     schema = get_schema(Config.get("feature.extraction.output.path"))
-
     train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
-
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
     mask[0] = False
-
     train_matrix, test_matrix = dataframe_to_numpy_matrix(train_frame, test_frame, mask)
-
     train_x, train_y = split_target_from_data(train_matrix)
     test_x, test_y = split_target_from_data(test_matrix)
-
 
     # cv_params = {'max_depth': [3, 5, 7], 'min_child_weight': [1, 3, 5]}
     # ind_params = {'learning_rate': 0.1, 'n_estimators': 1000, 'seed': 0, 'subsample': 0.8, 'colsample_bytree': 0.8,
@@ -52,7 +47,6 @@ def run():
     print optimized_GBM.grid_scores_
     '''
 
-
     # see https://jessesw.com/XG-Boost/
     xgdmat = xgb.DMatrix(train_x, train_y, feature_names=schema)
 
@@ -77,7 +71,7 @@ def run():
 
     plot_tree(final_gb)
 
-    sns.set(font_scale=1.5)
+    # sns.set(font_scale=1.5)
 
     '''
      importance_type : str, default "weight"

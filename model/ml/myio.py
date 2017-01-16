@@ -193,8 +193,8 @@ def get_labeled_data_filter(path):
         return labeled_data_filter
 
 
-def filter_frames(category_frames, labeled_data_filter):
-    print([f.shape for f in category_frames])
+def filter_frames(category_frames, labeled_data_filter, balanced=True):
+    # print([f.shape for f in category_frames])
     # only keep correctly labeled data in category frames
     for i in range(len(category_frames)):
         category = category_list.keys()[i]
@@ -204,5 +204,10 @@ def filter_frames(category_frames, labeled_data_filter):
             category_frames[i] = frames[frames[0].isin(repos)]
             # remove repos from filter that are kept in category frames
             # labeled_data_filter[category] = [r for r in repos if r not in category_frames[i][0].tolist()]
-    print([f.shape for f in category_frames])
+    if balanced:
+        min_samples = min([f.shape[0] for f in category_frames if f.shape[0] != 0])
+        for i in range(len(category_frames)):
+            category_frames[i] = category_frames[i].head(min_samples)
+    # print([f.shape for f in category_frames])
+    # print [f[f.columns[f.shape[1]-1]].head(1) for f in category_frames if f.shape[0] != 0]
     return category_frames

@@ -44,6 +44,7 @@ stacker.test()
 print "Stacker Test Attachment A"
 stacker.test_dirs(dir_list_a)
 # print probabilities on attachment A
+"""
 print myio.category_list
 frames = myio.concat(myio.read(Config.get2(path_list_a[0]), 5))
 ids = frames[frames.columns[0]].as_matrix()
@@ -58,17 +59,18 @@ for id, probs, label in zip(ids, probas, labels):
         out += category_list_inv[i] + ": " + str(probs[i]) + " "
     out += "label: " + str(label) + " - " + str(myio.category_list[str(label)])
     print out
-# print "Stacker Test Attachment B"
-# stacker.test_dirs(dir_list_b)
+"""
+print "Stacker Test Attachment B"
+stacker.test_dirs(dir_list_b)
 
-# stacker.visualize_by_tsne()
+stacker.visualize_by_tsne()
 
 print "Stacker Modules Test"
 stacker.test_modules()
-# print "Stacker Modules Test Attachment A"
-# stacker.test_modules_dirs(dir_list_a)
-# print "Stacker Modules Test Attachment B"
-# stacker.test_modules_dirs(dir_list_b)
+print "Stacker Modules Test Attachment A"
+stacker.test_modules_dirs(dir_list_a)
+print "Stacker Modules Test Attachment B"
+stacker.test_modules_dirs(dir_list_b)
 
 
 '''

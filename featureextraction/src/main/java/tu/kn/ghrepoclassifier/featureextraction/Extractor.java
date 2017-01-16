@@ -164,7 +164,7 @@ public class Extractor {
 
 	public static void main(String[] args) throws IOException {
 		extractMetaFeatures();
-		extractTextFeatures();
-		extractNamesFeatures();
+		// extractTextFeatures();
+		// extractNamesFeatures();
 	}
 }

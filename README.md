@@ -104,6 +104,7 @@ Options:
                         index of the column which contains the repository urls
                         (0 .. n-1) default:first(0) column
 ```
+Depending on the number of GitHub tokens you registered and the size of the repositories, classification can take up to multiple hours.
 
 ## Label it - Extension
 This little program allows you to label a given list of repository list (in a csv folder) and outputs your manual classification in another csv file.

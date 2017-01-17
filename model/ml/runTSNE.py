@@ -44,7 +44,8 @@ def plot(Y, train_y, train_repo_names):
     plt.show()
 
 def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 230)
+    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
+    category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0)
 

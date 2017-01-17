@@ -52,6 +52,9 @@ public class ExtractText {
 		for (IssueData issue: repo.listIssues()) {
 			l += " " + markupToText(issue.getBody());
 		}
+		for (String branch: repo.getBranches()) {
+			l += " " + branch;
+		}
 
 		ContentData indexHtml = repo.getIndexHTML();
 		if (indexHtml != null) {

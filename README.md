@@ -152,3 +152,26 @@ It will look like this:
 ![screenshot_label_it_tool](https://cloud.githubusercontent.com/assets/5217389/21830339/46eef208-d79c-11e6-872b-4db396bd7bb4.png)
 
 If you cannot categorize the repository by looking only on the screenshot you can click on the screenshot and the program will open the repository in your browser. So you can investigate further.
+
+## Feature visualization: t-SNE Browser - Extension
+For instance, we use [t-SNE](https://lvdmaaten.github.io/tsne/) to reduce the 908 metadata features into the two-dimensional space to visualize it. The color of the points specify the corresponding category and if you click on the point the t-SNE Browser shows you which repository is represented by this point. If you push the enter key the browser opens the repository you last selected in your web browser.
+
+```
+cd ../GitHubRepositoryClassifier/model/ml/
+python runTSNE.py --help
+Usage: runTSNE.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -i FOLDER, --input=FOLDER
+                        input folder
+```
+
+By the default the metadata features are visualized:
+![tsne-browser](https://cloud.githubusercontent.com/assets/5217389/22085152/20679a44-ddd3-11e6-9de1-7b24d0b746b6.png)
+
+You just run:
+```
+cd ../GitHubRepositoryClassifier/model/ml/
+python runTSNE.py
+```

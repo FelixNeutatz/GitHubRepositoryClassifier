@@ -29,7 +29,7 @@ def visualize(y_real, y_pred):
 
 
 def run():
-    category_frames = read_native(Config.get("feature_text_names.extraction.output.path"), 230)
+    category_frames = read_native(Config.get("feature_text_names.extraction.output.path"), 2000)
     category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0.3)

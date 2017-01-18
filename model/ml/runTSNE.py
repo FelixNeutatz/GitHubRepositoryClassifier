@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 import matplotlib.lines as mlines
 import colorsys
-from config import Config
+from optparse import OptionParser
 
 
 def plot(Y, train_y, train_repo_names):
@@ -40,11 +40,12 @@ def plot(Y, train_y, train_repo_names):
 
     fig.canvas.mpl_connect('pick_event', browser.onpick)
     fig.canvas.mpl_connect('key_press_event', browser.onpress)
+    fig.canvas.set_window_title('t-SNE Browser')
 
     plt.show()
 
-def run():
-    category_frames = read(Config.get("feature.extraction.output.path"), 2000)
+def run(dir_features):
+    category_frames = read(dir_features, 2000)
     category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
 
     train_frame, test_frame = split_train_test(category_frames, test_size=0)
@@ -71,4 +72,12 @@ def run():
     plot(Y, train_y, train_repo_names)
 
 
-run()
+parser = OptionParser()
+parser.add_option("-i", "--input", dest="input",
+                  help="input folder", metavar="FOLDER",
+                  default="../../featureextraction/src/main/resources/data/features/dataMeta")
+
+(options, args) = parser.parse_args()
+
+input = options.input
+run(input)

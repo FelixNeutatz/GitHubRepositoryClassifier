@@ -64,6 +64,8 @@ public class SaveSearch {
 			String[] entries = {"","", category};
 
 			count.incrementAndGet();
+
+			System.out.println("Downloading via API: " + repoFullName);
 			
 			GHRepository repo = github.getRepository(repoFullName);
 			

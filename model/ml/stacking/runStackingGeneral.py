@@ -39,6 +39,8 @@ path_list_b = ["attachmentB.feature.extraction.output.path",
 dir_list_a = [Config.get(p) for p in path_list_a]
 dir_list_b = [Config.get(p) for p in path_list_b]
 
+print "Stacker Test Train"
+stacker.test_train()
 print "Stacker Test"
 stacker.test()
 print "Stacker Test Attachment A"
@@ -63,14 +65,14 @@ for id, probs, label in zip(ids, probas, labels):
 print "Stacker Test Attachment B"
 stacker.test_dirs(dir_list_b)
 
-stacker.visualize_by_tsne()
+# stacker.visualize_by_tsne()
 
-print "Stacker Modules Test"
-stacker.test_modules()
-print "Stacker Modules Test Attachment A"
-stacker.test_modules_dirs(dir_list_a)
-print "Stacker Modules Test Attachment B"
-stacker.test_modules_dirs(dir_list_b)
+# print "Stacker Modules Test"
+# stacker.test_modules()
+# print "Stacker Modules Test Attachment A"
+# stacker.test_modules_dirs(dir_list_a)
+# print "Stacker Modules Test Attachment B"
+# stacker.test_modules_dirs(dir_list_b)
 
 
 '''

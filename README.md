@@ -93,6 +93,7 @@ In order to be able to use any Python program you need to setup the Python proje
 cd GitHubRepositoryClassifier/model
 /usr/bin/python2.7 setup.py install
 ```
+You might need to run this with sudo.
 
 ## Automatic classification
 You can automatically classify GitHub repositories given in a csv file. But you have to finish the setup before!

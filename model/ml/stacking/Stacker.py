@@ -35,7 +35,7 @@ class Stacker:
             f, y = self.module_list[i].create_meta_features(dir_list[i])
             feature_list.append(f)
         X = np.concatenate(feature_list, axis=1)
-        self.scaler_stacker.transform(X)
+        X = self.scaler_stacker.transform(X)
         return X, y
 
     def build(self):
@@ -68,7 +68,7 @@ class Stacker:
             f = module.predict_proba(module.X3)
             feature_list.append(f)
         self.X_test = np.concatenate(feature_list, axis=1)
-        self.scaler_stacker.transform(self.X_test)
+        self.X_test = self.scaler_stacker.transform(self.X_test)
         self.y_test = y
 
     def train(self):
@@ -87,6 +87,9 @@ class Stacker:
         y_pred = self.clf.predict(X) if not with_other else self.predict_other(X)
         validate(y, y_pred, with_other)
 
+    def test_train(self):
+        self._test(self.X, self.y, False )
+
     def test(self, with_other=False):
         self._test(self.X_test, self.y_test, with_other)
 
@@ -104,7 +107,7 @@ class Stacker:
 
     def test_dirs(self, dir_list, with_other=False):
         X_a, y_a = self.transform(dir_list)
-        self.scaler_stacker.transform(X_a)
+        X_a = self.scaler_stacker.transform(X_a)
         self._test(X_a, y_a, with_other)
 
     def test_modules_dirs(self, dir_list):

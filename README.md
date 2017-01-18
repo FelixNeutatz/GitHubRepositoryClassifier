@@ -78,13 +78,21 @@ cd GitHubRepositoryClassifier
 mvn clean install
 ```
 
-If you don't want to specify the paths you can just run:
+If you don't want to run the tests:
 
 ```
 mvn clean install -DskipTests
 ```
 
 In order to be able to run all Python programs, please make sure you have installed [all required packages](https://github.com/FelixNeutatz/GitHubRepositoryClassifier/blob/master/model/requirements.txt).
+
+### Python build
+In order to be able to use any Python program you need to setup the Python project:
+
+```
+cd GitHubRepositoryClassifier/model
+/usr/bin/python2.7 setup.py install
+```
 
 ## Automatic classification
 You can automatically classify GitHub repositories given in a csv file. But you have to finish the setup before!
@@ -105,6 +113,13 @@ Options:
                         (0 .. n-1) default:first(0) column
 ```
 Due to the GitHub rate limit, depending on the number of GitHub tokens you registered and the size of the repositories, classification can take up to multiple hours.
+
+For instance you can label attachment B using these commands:
+
+```
+cd GitHubRepositoryClassifier/model/ml
+/usr/bin/python2.7 classify.py --input ../../featureextraction/src/main/resources/data/AnhangB.csv
+```
 
 ## Label it - Extension
 This little program allows you to label a given list of repository list (in a csv folder) and outputs your manual classification in another csv file.

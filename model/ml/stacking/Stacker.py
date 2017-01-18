@@ -134,5 +134,5 @@ class Stacker:
         return y_pred
 
     def predict_other_dirs(self, dirs):
-        X = self.transform(dirs)
+        X, y = self.transform(dirs)
         return self.predict_other(X)

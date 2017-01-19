@@ -17,7 +17,7 @@ def run():
     category_frames = read(Config.get("feature.extraction.output.path"), 2000)
     category_frames = filter_frames(category_frames, get_labeled_data_filter("../../mturk/our_labels/labels.csv"))
 
-    train_frame, test_frame = split_train_test(category_frames, test_size=0.2)
+    train_frame, test_frame = split_train_test(category_frames, test_size=0.3)
 
     mask = np.asarray(np.ones((1, train_frame.shape[1]), dtype=bool))[0]
     mask[0] = False

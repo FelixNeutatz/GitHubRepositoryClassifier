@@ -113,7 +113,7 @@ Options:
                         index of the column which contains the repository urls
                         (0 .. n-1) default:first(0) column
 ```
-Due to the GitHub rate limit, depending on the number of GitHub tokens you registered and the size of the repositories, classification can take up to multiple hours.
+Due to the [GitHub rate limit](https://developer.github.com/v3/rate_limit/), depending on the number of GitHub tokens you registered and the size of the repositories, classification can take up to multiple hours.
 
 For instance you can label attachment B using these commands:
 
@@ -121,7 +121,7 @@ For instance you can label attachment B using these commands:
 cd GitHubRepositoryClassifier/model/ml
 /usr/bin/python2.7 classify.py --input ../../featureextraction/src/main/resources/data/AnhangB.csv
 ```
-Given three authentication tokens this classification takes still more than 12 hours mostly because of the API requests for the Linux repository which has around 650k commits.
+Given three authentication tokens this classification takes still more than 12 hours mostly because of the API requests for the [Linux repository](https://github.com/torvalds/linux) which has around 650k commits.
 
 ## Label it - Extension
 This little program allows you to label a given list of repository list (in a csv folder) and outputs your manual classification in another csv file.

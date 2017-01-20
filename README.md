@@ -121,6 +121,7 @@ For instance you can label attachment B using these commands:
 cd GitHubRepositoryClassifier/model/ml
 /usr/bin/python2.7 classify.py --input ../../featureextraction/src/main/resources/data/AnhangB.csv
 ```
+Given three authentication tokens this classification takes still more than 12 hours mostly because of the API requests for the Linux repository which has around 650k commits.
 
 ## Label it - Extension
 This little program allows you to label a given list of repository list (in a csv folder) and outputs your manual classification in another csv file.

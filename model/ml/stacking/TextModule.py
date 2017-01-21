@@ -48,4 +48,5 @@ class TextModule(StackingModule):
         self.y3 = np.array(self.y3).tolist()
         self.X1 = self.pipeline.fit_transform(self.X1, self.y1)
         self.X2 = self.pipeline.transform(self.X2)
-        self.X3 = self.pipeline.transform(self.X3)
+        if self.X3.shape[0] > 0:
+            self.X3 = self.pipeline.transform(self.X3)

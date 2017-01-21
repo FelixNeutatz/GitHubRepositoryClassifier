@@ -38,17 +38,20 @@ class Stacker:
         X = self.scaler_stacker.transform(X)
         return X, y
 
-    def build(self):
+    def build(self, with_test=True):
         self.build_train()
-        self.build_test()
+        if with_test:
+            self.build_test()
 
     def build_train(self):
         y = self.module_list[0].y2
         id2 = self.module_list[0].id2
         feature_list = []
         for module in self.module_list:
-            assert len(module.y2) == len(y)
+            assert module.id2.shape == id2.shape
+            print module.id2.shape, id2.shape
             assert np.all(module.id2 == id2)
+            assert len(module.y2) == len(y)
             assert sum(module.y2 - y) == 0
             f = module.predict_proba(module.X2)
             feature_list.append(f)
@@ -62,8 +65,9 @@ class Stacker:
         id3 = self.module_list[0].id3
         feature_list = []
         for module in self.module_list:
-            assert len(module.y3) == len(y)
+            assert module.id3.shape == id3.shape
             assert np.all(module.id3 == id3)
+            assert len(module.y3) == len(y)
             assert sum(module.y3 - y) == 0
             f = module.predict_proba(module.X3)
             feature_list.append(f)
@@ -85,13 +89,13 @@ class Stacker:
 
     def _test(self, X, y, with_other):
         y_pred = self.clf.predict(X) if not with_other else self.predict_other(X)
-        validate(y, y_pred, with_other)
+        return validate(y, y_pred, with_other)
 
     def test_train(self):
-        self._test(self.X, self.y, False )
+        return self._test(self.X, self.y, False)
 
     def test(self, with_other=False):
-        self._test(self.X_test, self.y_test, with_other)
+        return self._test(self.X_test, self.y_test, with_other)
 
     def test_modules(self):
         for mod in self.module_list:

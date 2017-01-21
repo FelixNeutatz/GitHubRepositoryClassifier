@@ -7,6 +7,9 @@ import csv
 import sys
 import math
 
+
+random_seed = 42
+max_samples = None
 category_list = {"DATA": 0, "EDU": 1, "HW": 2, "DOCS": 3, "DEV": 4, "WEB": 5, "null": 6}
 
 
@@ -104,7 +107,7 @@ def read_native(input_dir, max_samples_per_category):
 
 
 # split into train and test set
-def split_train_test(category_frames, test_size=0.5, random_seed=42):
+def split_train_test(category_frames, test_size=0.5):
     train_list_ = []
     test_list_ = []
     np.random.seed(random_seed)
@@ -170,7 +173,6 @@ def dataframe_to_numpy_matrix_single(frame, mask):
 def dataframe_to_numpy_matrix(train_frame, test_frame, mask):
     train_numerical_frame = dataframe_to_numpy_matrix_single(train_frame, mask)
     test_numerical_frame = dataframe_to_numpy_matrix_single(test_frame, mask)
-
     return train_numerical_frame, test_numerical_frame
 
 
@@ -205,9 +207,11 @@ def filter_frames(category_frames, labeled_data_filter, balanced=True):
             # remove repos from filter that are kept in category frames
             # labeled_data_filter[category] = [r for r in repos if r not in category_frames[i][0].tolist()]
     if balanced:
-        min_samples = min([f.shape[0] for f in category_frames if f.shape[0] != 0])
+        nb_samples = min([f.shape[0] for f in category_frames if f.shape[0] != 0])
+        if max_samples is not None:
+            nb_samples = min(nb_samples, max_samples)
         for i in range(len(category_frames)):
-            category_frames[i] = category_frames[i].head(min_samples)
+            category_frames[i] = category_frames[i].head(nb_samples)
     # print([f.shape for f in category_frames])
     # print [f[f.columns[f.shape[1]-1]].head(1) for f in category_frames if f.shape[0] != 0]
     return category_frames

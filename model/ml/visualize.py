@@ -58,9 +58,20 @@ def validate(y, y_pred, with_other=False):
     fancy_confusion_matrix_to_latex(c_matrix, category_list)
 
     print confusion_matrix(y, y_pred)
-    print "f1_weighted", f1_score(y, y_pred, average='weighted')
-    print "precision_weighted", precision_score(y, y_pred, average="weighted")
-    print "recall_weighted", recall_score(y, y_pred, average="weighted")
+    precision = precision_score(y, y_pred, average="weighted")
+    precision_per_cat = precision_score(y, y_pred, average=None)
+    recall = recall_score(y, y_pred, average="weighted")
+    recall_per_cat = recall_score(y, y_pred, average=None)
+    f1 = f1_score(y, y_pred, average='weighted')
+    f1_per_cat = f1_score(y, y_pred, average=None)
+    print "precision weighted", precision
+    print "precision per category", precision_per_cat
+    print "recall weighted", recall
+    print "recall per category", recall_per_cat
+    print "f1 weighted", f1
+    print "f1 per category", f1_per_cat
+    return precision, precision_per_cat, recall, recall_per_cat, f1, f1_per_cat
+
 
 def dict_to_bar_chart(dictionary, y_label, width=8, height=4, n=20):
 

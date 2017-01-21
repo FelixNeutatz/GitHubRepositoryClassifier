@@ -39,4 +39,5 @@ class MetaDataModule(StackingModule):
         self.scaler = StandardScaler()
         self.X1 = self.scaler.fit_transform(self.X1)
         self.X2 = self.scaler.transform(self.X2)
-        self.X3 = self.scaler.transform(self.X3)
+        if self.X3.shape[0] > 0:
+            self.X3 = self.scaler.transform(self.X3)

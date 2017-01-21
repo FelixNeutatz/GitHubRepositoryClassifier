@@ -3,6 +3,7 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
 
+from ml.util import fit_cv, test
 from myio import *
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -50,7 +51,7 @@ def run():
     pipeline = Pipeline([('vect', CountVectorizer(stop_words=stop_words)),
                          ('tfidf', TfidfTransformer()),
                          #('clf', SGDClassifier(loss='log')),
-                         ('clf', OneVsRestClassifier(SVC(class_weight='balanced', probability=True))),
+                         ('clf', OneVsRestClassifier(SVC(kernel="linear", class_weight='balanced', probability=True))),
                          ])
     # uncommenting more parameters will give better exploring power but will
     # increase processing time in a combinatorial way
@@ -68,7 +69,7 @@ def run():
     # classifier
     grid_search = GridSearchCV(pipeline, parameters, n_jobs=4, verbose=10)
 
-    parameters = {'clf__estimator__kernel': ['linear'], 'clf__estimator__C': np.logspace(-4, 4, 9)}
+    """
     cv = StratifiedShuffleSplit(n_splits=5, test_size=0.2)
     grid_search = GridSearchCV(pipeline, param_grid=parameters, cv=cv, scoring='f1_weighted', verbose=10, n_jobs=4)
 
@@ -88,6 +89,7 @@ def run():
     best_parameters = grid_search.best_estimator_.get_params(deep=True)
     for param_name in sorted(parameters.keys()):
         print("\t%s: %r" % (param_name, best_parameters[param_name]))
+    """
 
     '''
      best_parameters = {
@@ -113,7 +115,7 @@ def run():
     }
     '''
 
-    pipeline.set_params(**best_parameters)
+    # pipeline.set_params(**best_parameters)
 
     X_numpy = train_x
     y_numpy = train_y
@@ -121,7 +123,9 @@ def run():
     X = X_numpy.A.ravel()
     y = np.array(y_numpy).tolist()
 
-    clf = pipeline.fit(X, y)
+    parameters = {'clf__estimator__C': np.logspace(-4, 4, 9)}
+    clf = fit_cv(pipeline, X, y, parameters)
+    # clf = pipeline.fit(X, y)
 
 
     # feature visualization
@@ -146,9 +150,9 @@ def run():
                     feature_names[i] = key_d
                     feature_weights[i] = -values[i]
 
-        # print feature_names
-        # array_to_itemlist(feature_names)
-        # print feature_weights
+        print feature_names
+        array_to_itemlist(feature_names)
+        print feature_weights
 
         ind = np.arange(k)
         plt.bar(ind, feature_weights)
@@ -160,31 +164,25 @@ def run():
         # plt.show()
 
 
-    y_pred = clf.predict(test_x.A.ravel())
+    # y_pred = clf.predict(test_x.A.ravel())
 
-    y_pred_proba = clf.predict_proba(test_x.A.ravel())
+    # y_pred_proba = clf.predict_proba(test_x.A.ravel())
     # print y_pred_proba
-    print "Test Set"
-    visualize(test_y, y_pred)
+    # print "Test Set"
+    # visualize(test_y, y_pred)
+    test(clf, test_x.A.ravel(), np.array(test_y, dtype=np.float))
 
     print "Atachment A"
     # attachment A
     attachment_a_frames = read_native(Config.get("attachmentA.feature_text_names.extraction.output.path"), 150)
-
     attachment_a_frame = concat(attachment_a_frames)
-
     attachment_a_matrix = dataframe_to_numpy_matrix_single(attachment_a_frame, mask)
-
     attachment_a_x, attachment_a_y = split_target_from_data(attachment_a_matrix)
-
     attachment_a_y_pred = clf.predict_proba(attachment_a_x.A.ravel())
-
     # print attachment_a_y_pred
-
-    attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
-
+    # attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
     # print attachment_a_ypred_test
-
-    visualize(attachment_a_y, attachment_a_ypred_test)
+    # visualize(attachment_a_y, attachment_a_ypred_test)
+    test(clf, attachment_a_x.A.ravel(), np.array(attachment_a_y, dtype=np.float))
 
 run()

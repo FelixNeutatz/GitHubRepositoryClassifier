@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import SVC
 
+from ml.util import test, fit_cv
 from myio import *
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -44,9 +47,10 @@ def run():
 
     stop_words = text.ENGLISH_STOP_WORDS.union(my_stop_words)
 
-    pipeline = Pipeline([('vect', CountVectorizer(stop_words=stop_words)),
+    pipeline = Pipeline([('vect', CountVectorizer(stop_words=stop_words, max_df=0.5)),
                          ('tfidf', TfidfTransformer()),
-                         ('clf', SGDClassifier(loss='log')),
+                         # SGDClassifier(loss='log')
+                         ('clf', OneVsRestClassifier(SVC(kernel="linear", C=1, class_weight='balanced', probability=True))),
                          ])
 
     '''
@@ -93,7 +97,6 @@ def run():
         'clf__penalty': ('elasticnet')
         # 'clf__n_iter': (10, 50, 80),
     }
-    '''
 
     best_parameters = {
         'vect__max_df': (0.5),
@@ -107,6 +110,7 @@ def run():
     }
 
     pipeline.set_params(**best_parameters)
+    '''
 
     X_numpy = train_x
     y_numpy = train_y
@@ -114,6 +118,8 @@ def run():
     X = X_numpy.A.ravel()
     y = np.array(y_numpy).tolist()
 
+    # params = {"clf__estimator__C": np.logspace(-4, 4, 9)}
+    # clf = fit_cv(pipeline, X, y, params)
     clf = pipeline.fit(X, y)
 
 
@@ -122,7 +128,7 @@ def run():
     vocabulary = vec.vocabulary_
 
     classifier = clf.named_steps['clf']
-    weights = classifier.coef_
+    weights = classifier.coef_.toarray()
 
     category_list = {0: "DATA", 1: "EDU", 2: "HW", 3: "DOCS", 4: "DEV", 5: "WEB"}
 
@@ -150,33 +156,27 @@ def run():
         plt.xlabel('features')
         plt.ylabel('weight')
         plt.tight_layout()
-        plt.show()
+        # plt.show()
 
 
-    y_pred = clf.predict(test_x.A.ravel())
+    #y_pred_proba = clf.predict_proba(test_x.A.ravel())
+    #print y_pred_proba
 
-    y_pred_proba = clf.predict_proba(test_x.A.ravel())
-    print y_pred_proba
+    # y_pred = clf.predict(test_x.A.ravel())
+    # visualize(test_y, y_pred)
+    test(clf, test_x.A.ravel(), np.array(test_y, dtype=np.float))
 
-    visualize(test_y, y_pred)
 
     # attachment A
     attachment_a_frames = read_native(Config.get("attachmentA.feature_text.extraction.output.path"), 150)
-
     attachment_a_frame = concat(attachment_a_frames)
-
     attachment_a_matrix = dataframe_to_numpy_matrix_single(attachment_a_frame, mask)
-
     attachment_a_x, attachment_a_y = split_target_from_data(attachment_a_matrix)
-
-    attachment_a_y_pred = clf.predict_proba(attachment_a_x.A.ravel())
-
-    print attachment_a_y_pred
-
-    attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
-
-    print attachment_a_ypred_test
-
-    visualize(attachment_a_y, attachment_a_ypred_test)
+    #attachment_a_y_pred = clf.predict_proba(attachment_a_x.A.ravel())
+    # print attachment_a_y_pred
+    #attachment_a_ypred_test = np.argmax(attachment_a_y_pred, axis=1)  # choose class with highest probability per sample
+    #print attachment_a_ypred_test
+    #visualize(attachment_a_y, attachment_a_ypred_test)
+    test(clf, attachment_a_x.A.ravel(), np.array(attachment_a_y, dtype=np.float))
 
 run()

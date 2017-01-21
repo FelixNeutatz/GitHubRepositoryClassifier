@@ -32,20 +32,22 @@ test_x = scaler.transform(test_x)
 attachment_a_x = scaler.transform(attachment_a_x)
 attachment_b_x = scaler.transform(attachment_b_x)
 
-pca = PCA(n_components=300)
+pca = PCA(n_components=200)
 train_x = pca.fit_transform(train_x)
 test_x = pca.transform(test_x)
 attachment_a_x = pca.transform(attachment_a_x)
 attachment_b_x = pca.transform(attachment_b_x)
 
-clf = OneVsRestClassifier(SVC(C=1, kernel="linear"))
+clf = OneVsRestClassifier(SVC(C=0.1, kernel="linear"))
 clf.fit(train_x, train_y)
-'''
+"""
 C_range = np.logspace(-4, 4, 9)
 clf = OneVsRestClassifier(SVC(kernel="linear"))
-params = {'estimator__C': C_range}
+params = {
+  'estimator__C': C_range
+}
 clf = fit_cv(clf, train_x, train_y, params)
-'''
+"""
 print("Confusion matrix on training data")
 test(clf, train_x, train_y)
 print("Confusion matrix on test data")
@@ -53,7 +55,7 @@ test(clf, test_x, test_y)
 print("Confusion matrix on attachment a")
 test(clf, attachment_a_x, attachment_a_y)
 print("Confusion matrix on attachment b")
-test(clf, attachment_b_x, attachment_b_y)
+test(clf, attachment_b_x, attachment_b_y, cv=None)
 
 '''
 C_range = np.logspace(-4, 2, 3)
@@ -71,6 +73,6 @@ print("Confusion matrix on attachment a")
 test(clf, attachment_a_x, attachment_a_y)
 '''
 
-plot_learning_curve(clf, "SVM linear", train_x, train_y)
+plot_learning_curve(clf, "SVM linear", train_x, train_y, )
 plt.savefig("lc_svm_lin.png")
 plt.show()

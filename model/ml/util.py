@@ -1,12 +1,15 @@
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
+from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import cross_val_predict
 from sklearn.model_selection import learning_curve
 import numpy as np
 from ml.visualize import validate
 
 
-cv_def = StratifiedShuffleSplit(n_splits=5, test_size=0.2, random_state=42)
+cv_def = StratifiedShuffleSplit(n_splits=5, test_size=0.2)
+cv_det = StratifiedKFold(n_splits=5)
 
 
 def fit_cv(clf, train_x, train_y, params, cv=cv_def):
@@ -19,21 +22,24 @@ def fit_cv(clf, train_x, train_y, params, cv=cv_def):
     return clf_best
 
 
-def test(clf, X, y):
-    y_pred = clf.predict(X)
+def test(clf, X, y, cv=cv_det):
+    if cv is not None:
+      y_pred = cross_val_predict(clf, X, y, cv=cv, n_jobs=-1)
+    else:
+      y_pred = clf.predict(X)
     validate(y, y_pred)
 
 
-def plot_learning_curve(estimator, title, X, y, ylim=None, cv=cv_def,
+def plot_learning_curve(estimator, title, X, y, scoring="f1_weighted", score_name="F1-weighted", ylim=None, cv=cv_def,
                         n_jobs=4, train_sizes=np.linspace(.1, 1.0, 5)):
     plt.figure()
     plt.title(title)
     if ylim is not None:
         plt.ylim(*ylim)
     plt.xlabel("Training examples")
-    plt.ylabel("Score")
+    plt.ylabel(score_name)
     train_sizes, train_scores, test_scores = learning_curve(
-        estimator, X, y, cv=cv, n_jobs=n_jobs, train_sizes=train_sizes)
+        estimator, X, y, cv=cv, scoring=scoring, n_jobs=n_jobs, train_sizes=train_sizes)
     train_scores_mean = np.mean(train_scores, axis=1)
     train_scores_std = np.std(train_scores, axis=1)
     test_scores_mean = np.mean(test_scores, axis=1)

@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 import colorsys
 import numpy as np
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+
 from ml.PointBrowser import PointBrowser
 
 def plot(Y, train_y, train_repo_names):
@@ -55,7 +58,9 @@ def validate(y, y_pred, with_other=False):
     fancy_confusion_matrix_to_latex(c_matrix, category_list)
 
     print confusion_matrix(y, y_pred)
-    print f1_score(y, y_pred, average='weighted')
+    print "f1_weighted", f1_score(y, y_pred, average='weighted')
+    print "precision_weighted", precision_score(y, y_pred, average="weighted")
+    print "recall_weighted", recall_score(y, y_pred, average="weighted")
 
 def dict_to_bar_chart(dictionary, y_label, width=8, height=4, n=20):
 

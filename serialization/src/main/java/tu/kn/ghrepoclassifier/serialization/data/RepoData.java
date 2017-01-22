@@ -26,28 +26,28 @@ public class RepoData implements Serializable{
 	private Date pushed_at;
 	private String default_branch,language;
 	private int id;
-	
-	
+
+
 	private Set<String> branches;
-	
-	
+
+
 	private List<String> releases;
 	private Map<String,Long> languages;
 	private String license;
 	private List<CommitData> commits;
 	private List<ContributorData> contributors;
 	private ContentData readme;
-	
+
 	private ContentData indexHTML;
-	
+
 	private List<IssueData> issues;
-	
+
 	private String ourClassification;
 
 	public RepoData(GHRepository repo) {
 		this(repo,"");
 	}
-	
+
 	public RepoData(GHRepository repo, String ourClassification) {
 		this.id = repo.getId();
 		this.description = repo.getDescription();
@@ -76,6 +76,8 @@ public class RepoData implements Serializable{
 		this.default_branch = repo.getDefaultBranch();
 		this.language = repo.getLanguage();
 
+		int limit = 10000;
+
 		try {
 			this.branches = new HashSet<>();
 			branches.addAll(repo.getBranches().keySet());
@@ -88,6 +90,9 @@ public class RepoData implements Serializable{
 		try {
 			for (GHRelease release : repo.listReleases().withPageSize(100)) {
 				this.releases.add(release.getName());
+				if (this.releases.size() >= limit) {
+					break;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,6 +122,9 @@ public class RepoData implements Serializable{
 			//TODO: do binary search again in order to get all commits
 			for (GHCommit commit : repo.listCommits().withPageSize(100)){
 				this.commits.add (new CommitData(commit));
+				if (this.commits.size() >= limit) {
+					break;
+				}
 			}
 		} catch (Error e) {
 			e.printStackTrace();
@@ -128,9 +136,14 @@ public class RepoData implements Serializable{
 		try {
 			for (GHRepository.Contributor contributor : repo.listContributors().withPageSize(100)){
 				this.contributors.add(new ContributorData(contributor));
+				if (this.contributors.size() >= limit) {
+					break;
+				}
 			}
-		} catch (Exception e) {
+		} catch (Error e) {
 			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 
 		try {
@@ -155,6 +168,9 @@ public class RepoData implements Serializable{
 		try {
 			for (GHIssue issue : repo.listIssues(GHIssueState.ALL).withPageSize(100)){
 				this.issues.add (new IssueData(issue));
+				if (this.issues.size() >= limit) {
+					break;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -166,44 +182,44 @@ public class RepoData implements Serializable{
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(17, 31) // two randomly chosen prime numbers
-			// if deriving: appendSuper(super.hashCode()).
-			.append(this.id)
-			.append(this.description)
-			.append(this.homepage)
-			.append(this.name)
-			.append(this.full_name)
-			.append(this.html_url)
-			.append(this.git_url)
-			.append(this.ssh_url)
-			.append(this.clone_url)
-			.append(this.svn_url)
-			.append(this.mirror_url)
-			.append(this.has_issues)
-			.append(this.has_wiki)
-			.append(this.fork)
-			.append(this.has_downloads)
-			.append(this.has_pages)
-			.append(this._private)
-			.append(this.forks_count)
-			.append(this.stargazers_count)
-			.append(this.watchers_count)
-			.append(this.size)
-			.append(this.open_issues_count)
-			.append(this.subscribers_count)
-			.append(this.pushed_at)
-			.append(this.default_branch)
-			.append(this.language)
-			.append(this.branches)
-			.append(this.releases)
-			.append(this.languages)
-			.append(this.license)
-			.append(this.commits)
-			.append(this.contributors)
-			.append(this.readme)
-			.append(this.indexHTML)
-			.append(this.issues)
-			.append(this.ourClassification)
-			.toHashCode();
+				// if deriving: appendSuper(super.hashCode()).
+				.append(this.id)
+				.append(this.description)
+				.append(this.homepage)
+				.append(this.name)
+				.append(this.full_name)
+				.append(this.html_url)
+				.append(this.git_url)
+				.append(this.ssh_url)
+				.append(this.clone_url)
+				.append(this.svn_url)
+				.append(this.mirror_url)
+				.append(this.has_issues)
+				.append(this.has_wiki)
+				.append(this.fork)
+				.append(this.has_downloads)
+				.append(this.has_pages)
+				.append(this._private)
+				.append(this.forks_count)
+				.append(this.stargazers_count)
+				.append(this.watchers_count)
+				.append(this.size)
+				.append(this.open_issues_count)
+				.append(this.subscribers_count)
+				.append(this.pushed_at)
+				.append(this.default_branch)
+				.append(this.language)
+				.append(this.branches)
+				.append(this.releases)
+				.append(this.languages)
+				.append(this.license)
+				.append(this.commits)
+				.append(this.contributors)
+				.append(this.readme)
+				.append(this.indexHTML)
+				.append(this.issues)
+				.append(this.ourClassification)
+				.toHashCode();
 	}
 
 	@Override
@@ -215,44 +231,44 @@ public class RepoData implements Serializable{
 
 		RepoData rhs = (RepoData) obj;
 		return new EqualsBuilder()
-			// if deriving: appendSuper(super.equals(obj)).
-			.append(this.id, rhs.id)
-			.append(this.description, rhs.description)
-			.append(this.homepage, rhs.homepage)
-			.append(this.name, rhs.name)
-			.append(this.full_name, rhs.full_name)
-			.append(this.html_url, rhs.html_url)
-			.append(this.git_url, rhs.git_url)
-			.append(this.ssh_url, rhs.ssh_url)
-			.append(this.clone_url, rhs.clone_url)
-			.append(this.svn_url, rhs.svn_url)
-			.append(this.mirror_url, rhs.mirror_url)
-			.append(this.has_issues, rhs.has_issues)
-			.append(this.has_wiki, rhs.has_wiki)
-			.append(this.fork, rhs.fork)
-			.append(this.has_downloads, rhs.has_downloads)
-			.append(this.has_pages, rhs.has_pages)
-			.append(this._private, rhs._private)
-			.append(this.forks_count, rhs.forks_count)
-			.append(this.stargazers_count, rhs.stargazers_count)
-			.append(this.watchers_count, rhs.watchers_count)
-			.append(this.size, rhs.size)
-			.append(this.open_issues_count, rhs.open_issues_count)
-			.append(this.subscribers_count, rhs.subscribers_count)
-			.append(this.pushed_at, rhs.pushed_at)
-			.append(this.default_branch, rhs.default_branch)
-			.append(this.language, rhs.language)
-			.append(this.branches, rhs.branches)
-			.append(this.releases, rhs.releases)
-			.append(this.languages, rhs.languages)
-			.append(this.license, rhs.license)
-			.append(this.commits, rhs.commits)
-			.append(this.contributors, rhs.contributors)
-			.append(this.readme, rhs.readme)
-			.append(this.indexHTML, rhs.indexHTML)
-			.append(this.issues, rhs.issues)
-			.append(this.ourClassification, rhs.ourClassification)
-			.isEquals();
+				// if deriving: appendSuper(super.equals(obj)).
+				.append(this.id, rhs.id)
+				.append(this.description, rhs.description)
+				.append(this.homepage, rhs.homepage)
+				.append(this.name, rhs.name)
+				.append(this.full_name, rhs.full_name)
+				.append(this.html_url, rhs.html_url)
+				.append(this.git_url, rhs.git_url)
+				.append(this.ssh_url, rhs.ssh_url)
+				.append(this.clone_url, rhs.clone_url)
+				.append(this.svn_url, rhs.svn_url)
+				.append(this.mirror_url, rhs.mirror_url)
+				.append(this.has_issues, rhs.has_issues)
+				.append(this.has_wiki, rhs.has_wiki)
+				.append(this.fork, rhs.fork)
+				.append(this.has_downloads, rhs.has_downloads)
+				.append(this.has_pages, rhs.has_pages)
+				.append(this._private, rhs._private)
+				.append(this.forks_count, rhs.forks_count)
+				.append(this.stargazers_count, rhs.stargazers_count)
+				.append(this.watchers_count, rhs.watchers_count)
+				.append(this.size, rhs.size)
+				.append(this.open_issues_count, rhs.open_issues_count)
+				.append(this.subscribers_count, rhs.subscribers_count)
+				.append(this.pushed_at, rhs.pushed_at)
+				.append(this.default_branch, rhs.default_branch)
+				.append(this.language, rhs.language)
+				.append(this.branches, rhs.branches)
+				.append(this.releases, rhs.releases)
+				.append(this.languages, rhs.languages)
+				.append(this.license, rhs.license)
+				.append(this.commits, rhs.commits)
+				.append(this.contributors, rhs.contributors)
+				.append(this.readme, rhs.readme)
+				.append(this.indexHTML, rhs.indexHTML)
+				.append(this.issues, rhs.issues)
+				.append(this.ourClassification, rhs.ourClassification)
+				.isEquals();
 	}
 
 	public String getDescription() {

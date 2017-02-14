@@ -1,5 +1,7 @@
 homework
 tutorial
+tutorials
+md
 lecture
 github
 io
@@ -8,6 +10,13 @@ google
 facebook
 baidu
 framework
+zimu
 documentation
+docs
+servicemix
+doc
 manual
+manuals
 dataset
+datasets
+data

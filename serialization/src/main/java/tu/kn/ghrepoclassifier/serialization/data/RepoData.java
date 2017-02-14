@@ -44,6 +44,8 @@ public class RepoData implements Serializable{
 
 	private String ourClassification;
 
+	private int limit = 1000;
+
 	public RepoData(GHRepository repo) {
 		this(repo,"");
 	}
@@ -75,8 +77,6 @@ public class RepoData implements Serializable{
 		this.pushed_at = repo.getPushedAt();
 		this.default_branch = repo.getDefaultBranch();
 		this.language = repo.getLanguage();
-
-		int limit = 10000;
 
 		try {
 			this.branches = new HashSet<>();
@@ -375,12 +375,38 @@ public class RepoData implements Serializable{
 		return id;
 	}
 
+	public <E> Set<E> getSubSet(Set<E> set) {
+		Set<E> newSet = new HashSet<E>();
+		int i = 0;
+		for (E s : set) {
+			newSet.add(s);
+			i++;
+			if (i >= limit) {
+				break;
+			}
+		}
+		return newSet;
+	}
+
+	public <E> List<E> getSubList(List<E> set) {
+		List<E> newList = new ArrayList<E>();
+		int i = 0;
+		for (E s : set) {
+			newList.add(s);
+			i++;
+			if (i >= limit) {
+				break;
+			}
+		}
+		return newList;
+	}
+
 	public Set<String> getBranches() {
-		return branches;
+		return getSubSet(branches);
 	}
 
 	public List<String> listReleases() {
-		return releases;
+		return getSubList(releases);
 	}
 
 	public Map<String, Long> listLanguages() {
@@ -392,11 +418,11 @@ public class RepoData implements Serializable{
 	}
 
 	public List<CommitData> getCommits() {
-		return commits;
+		return getSubList(commits);
 	}
 
 	public List<ContributorData> listContributors() {
-		return contributors;
+		return getSubList(contributors);
 	}
 
 	public ContentData getReadme() {
@@ -412,6 +438,6 @@ public class RepoData implements Serializable{
 	}
 
 	public List<IssueData> listIssues() {
-		return issues;
+		return getSubList(issues);
 	}
 }
